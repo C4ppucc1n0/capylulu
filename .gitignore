@@ -1,0 +1,7 @@
+.dotnet/
+.nuget/
+dotnet-install.ps1
+src/**/bin/
+src/**/obj/
+dist/
+test-artifacts/
