@@ -12,6 +12,7 @@ internal sealed class PetSettings
     public bool Topmost { get; set; } = true;
     public string? SelectedCharacter { get; set; }
     public string Mood { get; set; } = "Happy";
+    public string GazeMode { get; set; } = "Follow";
 }
 
 internal static class SettingsStore

@@ -28,5 +28,8 @@
     <EmbeddedResource Include="..\..\generated_actions\*.png">
       <LogicalName>CapyLulu.GeneratedActions.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\generated_actions\*.pet.json">
+      <LogicalName>CapyLulu.GeneratedActions.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

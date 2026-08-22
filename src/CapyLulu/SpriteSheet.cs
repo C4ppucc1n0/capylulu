@@ -18,13 +18,20 @@ internal sealed class SpriteSheet
 
     private readonly BitmapSource[][] _frames;
 
-    private SpriteSheet(string sourcePath, BitmapSource[][] frames, int frameWidth, int frameHeight, int columns)
+    private SpriteSheet(
+        string sourcePath,
+        BitmapSource[][] frames,
+        int frameWidth,
+        int frameHeight,
+        int columns,
+        PetActionManifest actions)
     {
         SourcePath = sourcePath;
         _frames = frames;
         FrameWidth = frameWidth;
         FrameHeight = frameHeight;
         Columns = columns;
+        Actions = actions;
     }
 
     public string SourcePath { get; }
@@ -35,12 +42,34 @@ internal sealed class SpriteSheet
 
     public int Rows => _frames.Length;
 
+    public PetActionManifest Actions { get; }
+
     // 保留图集的原始列数作为一段动作的总时长；每行实际帧数可以更少。
     public int Columns { get; }
 
     public BitmapSource this[int row, int column] => _frames[row][column % _frames[row].Length];
 
-    public static SpriteSheet Load(Stream stream, string sourceName)
+    public int GetFrameCount(int row) => row >= 0 && row < _frames.Length ? _frames[row].Length : 0;
+
+    public int GetPlaybackFrameCount(int row) => Actions.SpriteVersionNumber >= 2
+        ? GetFrameCount(row)
+        : Columns;
+
+    public BitmapSource? GetLookFrame(int directionIndex)
+    {
+        if (!Actions.HasLookDirections || directionIndex is < 0 or >= 16)
+        {
+            return null;
+        }
+
+        var row = directionIndex < 8 ? Actions.LookRows[0] : Actions.LookRows[1];
+        var column = directionIndex % 8;
+        return row >= 0 && row < _frames.Length && column < _frames[row].Length
+            ? _frames[row][column]
+            : null;
+    }
+
+    public static SpriteSheet Load(Stream stream, string sourceName, PetActionManifest? actions = null)
     {
         using var image = SixLabors.ImageSharp.Image.Load<Rgba32>(stream);
         var layout = DetectLayout(image.Width, image.Height);
@@ -107,12 +136,17 @@ internal sealed class SpriteSheet
                 }
             }
 
+            actions ??= layout.FrameWidth == 192 && layout.FrameHeight == 208 && frames.Count >= 11
+                ? PetActionManifest.CreateV2Default()
+                : new PetActionManifest();
+
             return new SpriteSheet(
                 sourceName,
                 frames.ToArray(),
                 layout.FrameWidth,
                 layout.FrameHeight,
-                layout.Columns);
+                layout.Columns,
+                actions);
         }
         finally
         {
