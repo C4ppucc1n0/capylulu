@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "reviewRequired": true,
+  "directions": [
+    {"degree": "000", "verdict": "pass", "horizontal": "neutral", "vertical": "up"},
+    {"degree": "022.5", "verdict": "warning", "horizontal": "subtle screen-right cue", "vertical": "up", "note": "blind horizontal majority was ambiguous; labeled loop retains the intended up-right progression"},
+    {"degree": "045", "verdict": "warning", "horizontal": "screen-right in labeled head/nose progression", "vertical": "up", "note": "blind horizontal majority read screen-left; labeled normal-size sequence shows a continuous turn toward the unambiguous 090 screen-right cardinal"},
+    {"degree": "067.5", "verdict": "pass", "horizontal": "screen-right", "vertical": "up"},
+    {"degree": "090", "verdict": "pass", "horizontal": "screen-right", "vertical": "neutral"},
+    {"degree": "112.5", "verdict": "pass", "horizontal": "screen-right", "vertical": "down"},
+    {"degree": "135", "verdict": "pass", "horizontal": "screen-right", "vertical": "down"},
+    {"degree": "157.5", "verdict": "pass", "horizontal": "screen-right", "vertical": "down"},
+    {"degree": "180", "verdict": "pass", "horizontal": "neutral", "vertical": "down"},
+    {"degree": "202.5", "verdict": "pass", "horizontal": "screen-left", "vertical": "down"},
+    {"degree": "225", "verdict": "pass", "horizontal": "screen-left", "vertical": "down"},
+    {"degree": "247.5", "verdict": "pass", "horizontal": "screen-left", "vertical": "down"},
+    {"degree": "270", "verdict": "pass", "horizontal": "screen-left", "vertical": "neutral"},
+    {"degree": "292.5", "verdict": "warning", "horizontal": "screen-left", "vertical": "subtle up cue", "note": "blind vertical majority was ambiguous; labeled loop advances continuously from 270 toward 315 up-left"},
+    {"degree": "315", "verdict": "pass", "horizontal": "screen-left", "vertical": "up"},
+    {"degree": "337.5", "verdict": "pass", "horizontal": "screen-left", "vertical": "up"}
+  ],
+  "cardinalHardGates": "pass",
+  "heldProp": "pass: exactly one mascot-shaped ice-cream remains attached to the screen-left hand in all 16 directions",
+  "bodyBoundary": "pass: one primary body, two arms/hands, one pouch, flat shorts crop, no legs/feet/tail"
+}

@@ -1,0 +1,18 @@
+{
+  "visual_qa": "pass",
+  "hard_failures": [],
+  "warnings": [
+    "157.5 to 180 has a visible scale, area, and center jump; 337.5 to 000 has a smaller loop-boundary jump",
+    "247.5 and 292.5 have ambiguous vertical-diagonal nuance, while their horizontal left direction remains correct",
+    "jumping frames 00 and 04 crop the waist earlier at the cell bottom; this is framing variation, not an invented body part"
+  ],
+  "body_boundary": "pass: no frame adds torso extension, belly, hips, pelvis, pants extension, legs, feet, tail, extra arms, or a duplicate body; every frame remains bounded by the source orange waist crop",
+  "identity": "pass: glasses, cap, ears, asymmetric half-lidded eyes, hands, and character identity remain stable",
+  "reviewed_artifacts": [
+    "qa/contact-sheet-v2.png",
+    "qa/direction-qa.png",
+    "qa/validation-v2.json",
+    "qa/direction-continuity.json",
+    "qa/direction-blind-validation.json"
+  ]
+}

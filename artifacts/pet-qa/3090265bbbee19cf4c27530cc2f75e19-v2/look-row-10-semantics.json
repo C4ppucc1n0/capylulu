@@ -1,0 +1,14 @@
+{
+  "row": 10,
+  "directions": ["180", "202.5", "225", "247.5", "270", "292.5", "315", "337.5"],
+  "visual_result": "pass",
+  "checks": {
+    "slot_count": "pass: exactly eight isolated poses",
+    "direction_order": "pass: down progresses continuously through screen-left toward up",
+    "screen_left_anchor": "pass: the 270 pose projects the muzzle toward canvas left with no right-facing reversal",
+    "permanent_wink": "pass: the same eye remains closed and identity is not mirrored",
+    "source_bounded_body": "pass: all poses retain the flat upper-bust crop with no torso extension, hips, legs, feet, tail, or extra body parts",
+    "safe_margins": "pass: deterministic extended-atlas assembly found eight separated groups with no edge contact"
+  },
+  "accepted_source": "C:\\Users\\22503\\.codex\\generated_images\\01a0241d-85ab-7932-91ed-7a1a82fe6c79\\exec-9b4bee11-2505-45de-b400-12231bceaa3e.png"
+}

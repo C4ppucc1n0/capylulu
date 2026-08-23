@@ -8,9 +8,9 @@ internal sealed class PetSettings
     public double? Left { get; set; }
     public double? Top { get; set; }
     public double Scale { get; set; } = 1.0;
-    public double Opacity { get; set; } = 1.0;
     public bool Topmost { get; set; } = true;
     public string? SelectedCharacter { get; set; }
+    public bool LoafingMode { get; set; }
     public string Mood { get; set; } = "Happy";
     public string GazeMode { get; set; } = "Follow";
 }

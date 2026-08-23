@@ -1,0 +1,22 @@
+{
+  "row": 10,
+  "directions": [
+    "180",
+    "202.5",
+    "225",
+    "247.5",
+    "270",
+    "292.5",
+    "315",
+    "337.5"
+  ],
+  "visual_result": "pass",
+  "checks": {
+    "direction_order": "pass: down progresses continuously through screen-left to near-up",
+    "screen_left_anchor": "pass: at 270 the muzzle projects left while the glasses temple recedes right",
+    "identity": "pass: glasses, asymmetric half-lidded eyes, orange muzzle, cap, ears, and hands remain stable",
+    "source_bounded_body": "pass: every pose stops at the original orange waist crop; no belly extension, hips, pelvis, legs, feet, tail, or extra body parts",
+    "separation": "pass: eight isolated poses with clear chroma gaps and no overlap"
+  },
+  "accepted_source": "C:\\Users\\22503\\.codex\\generated_images\\01a0241d-85ab-7932-91ed-7a1a82fe6c79\\exec-b5de6715-bde7-48d1-8792-381892545dfb.png"
+}

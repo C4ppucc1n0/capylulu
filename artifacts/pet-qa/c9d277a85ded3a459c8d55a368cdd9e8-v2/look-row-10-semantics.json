@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "row": 10,
+  "directions": [
+    {"degree": "180", "verdict": "pass", "evidence": "eyes and head clearly aim down"},
+    {"degree": "202.5", "verdict": "pass", "evidence": "downward gaze gains a small screen-left component"},
+    {"degree": "225", "verdict": "pass", "evidence": "clear down-left diagonal"},
+    {"degree": "247.5", "verdict": "pass", "evidence": "screen-left gaze retains a downward component"},
+    {"degree": "270", "verdict": "pass", "evidence": "face and eyes clearly aim screen-left"},
+    {"degree": "292.5", "verdict": "pass", "evidence": "screen-left gaze gains an upward component"},
+    {"degree": "315", "verdict": "pass", "evidence": "clear up-left diagonal"},
+    {"degree": "337.5", "verdict": "pass", "evidence": "upward gaze retains a small screen-left component"}
+  ],
+  "continuity": "pass",
+  "identity": "pass",
+  "held_prop": "exactly one mascot-shaped ice-cream remains gripped by the screen-left hand in every direction",
+  "body_boundary": "exactly one primary body, two arms/hands, one pouch, flat shorts crop, no lower-body anatomy"
+}

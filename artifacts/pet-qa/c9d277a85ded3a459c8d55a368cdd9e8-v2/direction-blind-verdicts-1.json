@@ -1,0 +1,18 @@
+{
+  "pairs": [
+    {"pair":"horizontal-1","A":"screen-left","B":"ambiguous","reason":"A 的口鼻与主要视线明显偏向画面左侧；B 主要是抬眼正视，双眼的水平指向不一致，无法可靠判为左或右。"},
+    {"pair":"horizontal-2","A":"screen-left","B":"screen-left","reason":"A、B 的口鼻朝向和可见瞳孔都共同偏向画面左侧。"},
+    {"pair":"horizontal-3","A":"screen-right","B":"screen-left","reason":"A 的口鼻及双眼朝画面右侧，B 的轮廓和瞳孔朝画面左侧。"},
+    {"pair":"horizontal-4","A":"screen-left","B":"screen-right","reason":"A 明显左转并向左看，B 明显右转并向右看。"},
+    {"pair":"horizontal-5","A":"screen-left","B":"screen-right","reason":"A 的瞳孔落在眼白左缘且口鼻左偏，B 的瞳孔与口鼻都右偏。"},
+    {"pair":"horizontal-6","A":"screen-right","B":"screen-left","reason":"A 的双眼和口鼻朝画面右侧，B 的双眼和口鼻朝画面左侧。"},
+    {"pair":"horizontal-7","A":"ambiguous","B":"screen-right","reason":"A 近乎正面低头，缺少稳定的水平偏向；B 的瞳孔与口鼻明确朝画面右侧。"},
+    {"pair":"vertical-1","A":"down","B":"up","reason":"A 的上眼睑压低且瞳孔下落，B 的头部与瞳孔明显上抬。"},
+    {"pair":"vertical-2","A":"up","B":"down","reason":"A 的瞳孔贴近眼白上缘并抬头，B 的眼睑下压且视线斜向下方。"},
+    {"pair":"vertical-3","A":"up","B":"ambiguous","reason":"A 的头部和双眼清楚上抬；B 主要表现为向右看，垂直分量不够明确。"},
+    {"pair":"vertical-4","A":"up","B":"down","reason":"A 的瞳孔靠近眼白上部并抬头，B 的瞳孔位置偏低且眼睑呈向下凝视姿态。"},
+    {"pair":"vertical-5","A":"down","B":"up","reason":"A 正面低头且瞳孔下落，B 的头部与眼睛明显朝上。"},
+    {"pair":"vertical-6","A":"up","B":"down","reason":"A 的头部和瞳孔上扬，B 的上眼睑下压并斜向下看。"},
+    {"pair":"vertical-7","A":"ambiguous","B":"ambiguous","reason":"A、B 都主要体现向画面左侧的水平视线，缺少足够清晰且稳定的上下指向。"}
+  ]
+}

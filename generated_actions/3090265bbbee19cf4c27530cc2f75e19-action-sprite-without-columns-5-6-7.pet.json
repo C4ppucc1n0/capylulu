@@ -1,0 +1,19 @@
+{
+  "spriteVersionNumber": 2,
+  "actions": {
+    "idle": 0,
+    "dragRight": 1,
+    "dragLeft": 2,
+    "click": 3,
+    "lift": 4,
+    "drop": 4,
+    "gestureFlick": 5,
+    "gestureShake": 5,
+    "waiting": 6,
+    "working": 7,
+    "review": 8,
+    "gestureLiftDrop": 4
+  },
+  "clickRows": [3, 4, 5, 6, 7, 8],
+  "lookRows": [9, 10]
+}

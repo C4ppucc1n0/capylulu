@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "row": 9,
+  "reviewed_source": "qa/look-row-9-registered.png",
+  "identity_and_crop": "pass: glasses, asymmetric half-lidded eyes, waist crop, and bust-only anatomy remain stable",
+  "directions": [
+    {"degrees": "000", "expected": "up", "verdict": "pass", "reason": "both pupils and eyelids aim upward behind the lenses"},
+    {"degrees": "022.5", "expected": "up-right", "verdict": "pass", "reason": "upward gaze gains a small screen-right head and eye shift"},
+    {"degrees": "045", "expected": "up-right", "verdict": "pass", "reason": "clear diagonal interpolation with stable glasses"},
+    {"degrees": "067.5", "expected": "up-right", "verdict": "pass", "reason": "rightward turn increases evenly while retaining the up axis"},
+    {"degrees": "090", "expected": "right", "verdict": "pass", "reason": "profile, pupils, muzzle, and glasses perspective point screen-right"},
+    {"degrees": "112.5", "expected": "down-right", "verdict": "pass", "reason": "right profile begins an even downward pitch"},
+    {"degrees": "135", "expected": "down-right", "verdict": "pass", "reason": "both axes remain clear with attached glasses"},
+    {"degrees": "157.5", "expected": "down-right", "verdict": "pass", "reason": "deep downward-right gaze forms one step before 180"}
+  ],
+  "warnings": []
+}

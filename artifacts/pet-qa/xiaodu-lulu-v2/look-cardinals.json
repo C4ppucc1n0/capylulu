@@ -1,0 +1,61 @@
+{
+  "ok": true,
+  "strip": "D:\\workspace\\capylulu\\pet-runs\\xiaodu-lulu-v2\\decoded\\look-cardinals.png",
+  "directions": [
+    "000",
+    "090",
+    "180",
+    "270"
+  ],
+  "errors": [],
+  "anchors": [
+    {
+      "direction": "000",
+      "source_box": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "used_pixels": 143517,
+      "edge_pixels": 0,
+      "output": "D:\\workspace\\capylulu\\pet-runs\\xiaodu-lulu-v2\\decoded\\look-anchors\\000.png"
+    },
+    {
+      "direction": "090",
+      "source_box": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "used_pixels": 135910,
+      "edge_pixels": 0,
+      "output": "D:\\workspace\\capylulu\\pet-runs\\xiaodu-lulu-v2\\decoded\\look-anchors\\090.png"
+    },
+    {
+      "direction": "180",
+      "source_box": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "used_pixels": 137404,
+      "edge_pixels": 0,
+      "output": "D:\\workspace\\capylulu\\pet-runs\\xiaodu-lulu-v2\\decoded\\look-anchors\\180.png"
+    },
+    {
+      "direction": "270",
+      "source_box": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "used_pixels": 130842,
+      "edge_pixels": 0,
+      "output": "D:\\workspace\\capylulu\\pet-runs\\xiaodu-lulu-v2\\decoded\\look-anchors\\270.png"
+    }
+  ]
+}

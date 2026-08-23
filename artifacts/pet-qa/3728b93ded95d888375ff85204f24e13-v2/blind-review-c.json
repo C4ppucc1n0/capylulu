@@ -1,0 +1,89 @@
+{
+  "reviewer": "c",
+  "pairs": [
+    {
+      "pair": "horizontal-1",
+      "A": "screen-left",
+      "B": "screen-left",
+      "reason": "A 的口鼻明显向画面左侧伸出；B 的口鼻也偏左且镜腿向右侧后方延伸。"
+    },
+    {
+      "pair": "horizontal-2",
+      "A": "screen-left",
+      "B": "screen-left",
+      "reason": "两者面部中心均左移，右侧耳朵和向右延伸的镜腿强化了左转轮廓。"
+    },
+    {
+      "pair": "horizontal-3",
+      "A": "screen-left",
+      "B": "screen-left",
+      "reason": "A 的嘴部偏左，B 更呈明显左侧脸，眼镜侧臂均向画面右后方。"
+    },
+    {
+      "pair": "horizontal-4",
+      "A": "screen-right",
+      "B": "screen-left",
+      "reason": "A 的口鼻朝右且镜腿向左后方；B 的口鼻朝左且镜腿向右后方。"
+    },
+    {
+      "pair": "horizontal-5",
+      "A": "screen-left",
+      "B": "screen-right",
+      "reason": "A 呈左侧脸并露出右侧镜腿，B 的面部和嘴部明显转向画面右侧。"
+    },
+    {
+      "pair": "horizontal-6",
+      "A": "screen-right",
+      "B": "screen-left",
+      "reason": "A 低头时口鼻仍偏右，B 的口鼻偏左并显示向右后方延伸的镜腿。"
+    },
+    {
+      "pair": "horizontal-7",
+      "A": "screen-left",
+      "B": "screen-right",
+      "reason": "A 的嘴部与脸部重心偏左，B 低头时面部投影和嘴部偏向右侧。"
+    },
+    {
+      "pair": "vertical-1",
+      "A": "up",
+      "B": "down",
+      "reason": "A 抬起下巴并露出较多下脸，B 额顶前压且视线和脸部整体下俯。"
+    },
+    {
+      "pair": "vertical-2",
+      "A": "up",
+      "B": "down",
+      "reason": "A 口鼻上扬、下巴抬起，B 从上方可见更多头顶且脸部明显朝下。"
+    },
+    {
+      "pair": "vertical-3",
+      "A": "up",
+      "B": "down",
+      "reason": "A 下脸面积增大并呈仰视姿态，B 头顶占比增大且口鼻压低。"
+    },
+    {
+      "pair": "vertical-4",
+      "A": "down",
+      "B": "up",
+      "reason": "A 头顶前倾、眼口朝下，B 下巴抬高且口鼻朝上。"
+    },
+    {
+      "pair": "vertical-5",
+      "A": "down",
+      "B": "up",
+      "reason": "A 眼睑和嘴部均下压并露出更多头顶，B 抬头使口鼻与视线向上。"
+    },
+    {
+      "pair": "vertical-6",
+      "A": "up",
+      "B": "down",
+      "reason": "A 下巴和嘴部上扬，B 眉眼与口鼻下压，呈低头姿态。"
+    },
+    {
+      "pair": "vertical-7",
+      "A": "ambiguous",
+      "B": "ambiguous",
+      "reason": "两者均为近似侧脸闭眼帧，头顶、眼镜和口鼻的仰俯差异不足以可靠分类。"
+    }
+  ]
+}

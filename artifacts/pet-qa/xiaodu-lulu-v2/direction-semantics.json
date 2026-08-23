@@ -1,0 +1,28 @@
+{
+  "spriteVersionNumber": 2,
+  "status": "pass_with_review_warnings",
+  "hardCardinalsConfirmed": true,
+  "directions": [
+    { "degrees": 0, "label": "up", "visualReview": "pass" },
+    { "degrees": 22.5, "label": "up-right", "visualReview": "pass" },
+    { "degrees": 45, "label": "up-right", "visualReview": "pass" },
+    { "degrees": 67.5, "label": "up-right", "visualReview": "pass" },
+    { "degrees": 90, "label": "right", "visualReview": "pass" },
+    { "degrees": 112.5, "label": "down-right", "visualReview": "pass-with-subtle-vertical-component" },
+    { "degrees": 135, "label": "down-right", "visualReview": "pass-with-subtle-vertical-component" },
+    { "degrees": 157.5, "label": "down-right", "visualReview": "pass" },
+    { "degrees": 180, "label": "down", "visualReview": "pass" },
+    { "degrees": 202.5, "label": "down-left", "visualReview": "pass-with-subtle-vertical-component" },
+    { "degrees": 225, "label": "down-left", "visualReview": "pass-with-subtle-vertical-component" },
+    { "degrees": 247.5, "label": "down-left", "visualReview": "pass" },
+    { "degrees": 270, "label": "left", "visualReview": "pass" },
+    { "degrees": 292.5, "label": "up-left", "visualReview": "pass-with-subtle-vertical-component" },
+    { "degrees": 315, "label": "up-left", "visualReview": "pass-with-subtle-vertical-component" },
+    { "degrees": 337.5, "label": "up-left", "visualReview": "pass-with-subtle-vertical-component" }
+  ],
+  "notes": [
+    "All horizontal blind classifications passed by strict majority.",
+    "The hard up/down cardinal pair passed by strict majority.",
+    "Several diagonal vertical components were subtle or ambiguous in blind review but remain correctly ordered in the labeled continuity sheet."
+  ]
+}

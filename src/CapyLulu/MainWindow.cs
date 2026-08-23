@@ -36,6 +36,20 @@ internal sealed class MainWindow : Window
     private const int WmHotkey = 0x0312;
     private const uint ModAlt = 0x0001;
     private const uint ModControl = 0x0002;
+    private const string LoafingCharacterFileName =
+        "c9d277a85ded3a459c8d55a368cdd9e8-action-sprite.webp";
+    private const string SingingGifResourceName =
+        "CapyLulu.GifResources.c0000e47bf83481f725f2d6608e60fcf-ezgif.com-video-to-gif-converter.gif";
+
+    private static readonly string[] SingingLyrics =
+    {
+        "天空是绵绵的糖～",
+        "就算塌下来又怎样～",
+        "雨下再大又怎样～",
+        "干脆开心的淋一场～",
+        "彩虹是微笑的脸～",
+        "悲伤bye bye 快乐不需要理由～"
+    };
 
     private static readonly string[] BubbleMessages =
     {
@@ -62,12 +76,49 @@ internal sealed class MainWindow : Window
         "慢慢放下我哦。"
     };
 
+    private static readonly string[] LoafingBubbleMessages =
+    {
+        "摸鱼不是偷懒，是战略性休息。",
+        "老板不在吧？我先帮你望风。",
+        "窗口切得这么快，很熟练嘛。",
+        "别紧张，我什么都没看见。",
+        "这一分钟，先还给自己。",
+        "认真摸鱼，也是一门技术。",
+        "再发会儿呆，灵感也许就来了。",
+        "今天的进度：成功让自己喘口气。"
+    };
+
+    private static readonly string[] LoafingDragBubbleMessages =
+    {
+        "换个更隐蔽的位置。",
+        "慢点，别让老板看见我在移动！",
+        "带我去一个适合摸鱼的角落。",
+        "嘘——正在转移摸鱼阵地。"
+    };
+
+    private static readonly string[] LoafingIdleMessages =
+    {
+        "屏幕亮着，人也醒着，已经很努力了。",
+        "我负责放风，你负责放空。",
+        "偶尔停一下，脑子才有地方转弯。",
+        "放心，刚才那几秒不算浪费。",
+        "摸鱼时间很短，快乐要抓紧。"
+    };
+
     private static readonly IReadOnlyDictionary<PetGesture, string[]> GestureMessages =
         new Dictionary<PetGesture, string[]>
         {
             [PetGesture.HorizontalFlick] = ["哇——慢一点！", "差点被甩飞啦！"],
             [PetGesture.Shake] = ["晕乎乎的啦……", "世界在左右摇晃！"],
             [PetGesture.LiftDrop] = ["起飞——安全着陆！", "这次落得很稳哦！"]
+        };
+
+    private static readonly IReadOnlyDictionary<PetGesture, string[]> LoafingGestureMessages =
+        new Dictionary<PetGesture, string[]>
+        {
+            [PetGesture.HorizontalFlick] = ["摸鱼证据差点被你甩出去！", "动静小一点，容易暴露。"],
+            [PetGesture.Shake] = ["别摇啦，我的摸鱼计划要散架了。", "假装忙碌也不用这么卖力。"],
+            [PetGesture.LiftDrop] = ["摸鱼巡逻结束，安全落地。", "阵地转移成功，继续放风。"]
         };
 
     private static readonly string[] HappyMessages =
@@ -91,6 +142,7 @@ internal sealed class MainWindow : Window
             ["2289a0bd9b469e69aafce7687053de85-action-sprite.webp"] = "小肚噜噜",
             ["3090265bbbee19cf4c27530cc2f75e19-action-sprite-without-columns-5-6-7.webp"] = "眨眼噜噜",
             ["3728b93ded95d888375ff85204f24e13-action-sprite-rows-1-4-aligned-last-column.webp"] = "眼睛噜噜",
+            ["c9d277a85ded3a459c8d55a368cdd9e8-action-sprite.webp"] = "摸鱼噜噜",
             ["7c3d1f66c30bf03a042889fe8f435555-action-sprite-without-last-column.webp"] = "读书噜噜",
             ["86de7611b82965839a0286940531cbc6-action-sprite.webp"] = "背带裤噜噜"
         };
@@ -104,13 +156,15 @@ internal sealed class MainWindow : Window
     private readonly DispatcherTimer _bubbleTimer;
     private readonly DispatcherTimer _idleEasterEggTimer;
     private readonly DispatcherTimer _focusTimer;
+    private readonly DispatcherTimer _singingTimer;
     private readonly Random _random = new();
     private readonly PointerMotionTracker _motionTracker = new();
     private readonly PetSettings _settings;
     private readonly IReadOnlyList<string> _characterResources;
     private readonly MenuItem _characterMenu;
+    private readonly MenuItem _loafingMenu;
+    private readonly MenuItem _singingMenu;
     private readonly MenuItem _focusMenu;
-    private readonly MenuItem _opacityMenu;
     private readonly MenuItem _moodMenu;
     private readonly MenuItem _gazeModeMenu;
     private readonly MenuItem _topmostMenu;
@@ -121,6 +175,7 @@ internal sealed class MainWindow : Window
 
     private SpriteSheet? _spriteSheet;
     private int _currentCharacterIndex;
+    private int _previousCharacterIndex = -1;
     private int _currentRow;
     private int _currentFrame;
     private int _nextInteractionRow;
@@ -154,6 +209,12 @@ internal sealed class MainWindow : Window
     private PetInteractionState _interactionState = PetInteractionState.Idle;
     private PetGesture _pendingGesture;
     private bool _contextMenuOpen;
+    private bool _isLoafingMode;
+    private bool _isSinging;
+    private GifAnimation? _singingAnimation;
+    private double _singingStartedSeconds;
+    private int _singingFrameIndex = -1;
+    private int _singingLyricIndex = -1;
     private PetMood _mood;
     private PetGazeMode _gazeMode;
     private DateTimeOffset? _focusEndsAt;
@@ -172,7 +233,6 @@ internal sealed class MainWindow : Window
 
         _settings = SettingsStore.Load();
         _scale = Math.Clamp(_settings.Scale, MinimumScale, MaximumScale);
-        Opacity = Math.Clamp(_settings.Opacity, 0.35, 1.0);
         Topmost = _settings.Topmost;
         _mood = Enum.TryParse<PetMood>(_settings.Mood, ignoreCase: true, out var savedMood)
             ? savedMood
@@ -285,9 +345,16 @@ internal sealed class MainWindow : Window
         Content = root;
 
         _characterMenu = new MenuItem { Header = "更换角色" };
+        _loafingMenu = new MenuItem
+        {
+            Header = "摸鱼模式",
+            IsCheckable = true
+        };
+        _loafingMenu.Click += async (_, _) => await ToggleLoafingModeAsync();
+        _singingMenu = new MenuItem { Header = "唱歌" };
+        _singingMenu.Click += (_, _) => StartSinging();
         _focusMenu = new MenuItem { Header = "专注模式：10 分钟" };
         _focusMenu.Click += (_, _) => StartFocusSession();
-        _opacityMenu = new MenuItem { Header = "透明度" };
         _moodMenu = new MenuItem { Header = "当前状态" };
         _gazeModeMenu = new MenuItem();
         _topmostMenu = new MenuItem
@@ -311,8 +378,9 @@ internal sealed class MainWindow : Window
             FontSize = 13
         };
         contextMenu.Items.Add(_characterMenu);
+        contextMenu.Items.Add(_loafingMenu);
+        contextMenu.Items.Add(_singingMenu);
         contextMenu.Items.Add(_focusMenu);
-        contextMenu.Items.Add(_opacityMenu);
         contextMenu.Items.Add(_moodMenu);
         contextMenu.Items.Add(_gazeModeMenu);
         contextMenu.Items.Add(_topmostMenu);
@@ -322,7 +390,6 @@ internal sealed class MainWindow : Window
         contextMenu.Opened += (_, _) => _contextMenuOpen = true;
         contextMenu.Closed += (_, _) => _contextMenuOpen = false;
 
-        BuildOpacityMenu();
         BuildMoodMenu();
         BuildGazeModeMenu();
         ApplyMoodAppearance();
@@ -349,6 +416,12 @@ internal sealed class MainWindow : Window
         };
         _focusTimer.Tick += (_, _) => UpdateFocusTimer();
 
+        _singingTimer = new DispatcherTimer(DispatcherPriority.Render)
+        {
+            Interval = TimeSpan.FromMilliseconds(25)
+        };
+        _singingTimer.Tick += OnSingingTick;
+
         _petImage.MouseLeftButtonDown += OnPetMouseLeftButtonDown;
         _petImage.MouseMove += OnPetMouseMove;
         _petImage.MouseLeftButtonUp += OnPetMouseLeftButtonUp;
@@ -359,6 +432,8 @@ internal sealed class MainWindow : Window
 
         _characterResources = DiscoverCharacterResources();
         BuildCharacterMenu();
+        BuildLoafingMenu();
+        UpdateSingingMenuState();
         UpdatePetSize();
 
         Loaded += OnLoaded;
@@ -391,7 +466,32 @@ internal sealed class MainWindow : Window
                 .First();
         }
 
-        await SelectCharacterAsync(savedIndex >= 0 ? savedIndex : 0);
+        if (savedIndex >= 0 && IsLoafingCharacter(savedIndex))
+        {
+            savedIndex = -1;
+        }
+
+        _previousCharacterIndex = savedIndex >= 0 ? savedIndex : GetFirstNormalCharacterIndex();
+        var loafingIndex = GetLoafingCharacterIndex();
+        if (_settings.LoafingMode && loafingIndex >= 0)
+        {
+            _isLoafingMode = true;
+            if (await SelectCharacterAsync(loafingIndex))
+            {
+                ShowRandomBubble(["你的胆子真是肥嘟嘟的"]);
+            }
+            else
+            {
+                _isLoafingMode = false;
+                await SelectCharacterAsync(_previousCharacterIndex);
+            }
+        }
+        else
+        {
+            await SelectCharacterAsync(_previousCharacterIndex);
+        }
+
+        BuildLoafingMenu();
 
         UpdateLayout();
         if (_settings.Left is double left && _settings.Top is double top)
@@ -425,35 +525,277 @@ internal sealed class MainWindow : Window
         _characterMenu.Items.Clear();
         for (var index = 0; index < _characterResources.Count; index++)
         {
+            if (IsLoafingCharacter(index))
+            {
+                continue;
+            }
+
             var capturedIndex = index;
             var item = new MenuItem
             {
                 Header = GetCharacterDisplayName(_characterResources[index], index),
                 IsCheckable = true,
-                IsChecked = index == _currentCharacterIndex
+                IsChecked = !_isLoafingMode && index == _currentCharacterIndex,
+                Tag = capturedIndex
             };
-            item.Click += async (_, _) => await SelectCharacterAsync(capturedIndex);
+            item.Click += async (_, _) => await SelectNormalCharacterAsync(capturedIndex);
             _characterMenu.Items.Add(item);
         }
 
-        _characterMenu.IsEnabled = _characterResources.Count > 0;
+        _characterMenu.IsEnabled = !_isSinging && _characterMenu.Items.Count > 0;
     }
 
-    private void BuildOpacityMenu()
+    private void BuildLoafingMenu()
     {
-        _opacityMenu.Items.Clear();
-        foreach (var value in new[] { 1.00, 0.85, 0.70, 0.55 })
+        _loafingMenu.Header = "摸鱼模式";
+        _loafingMenu.IsChecked = _isLoafingMode;
+        _loafingMenu.IsEnabled = !_isSinging && GetLoafingCharacterIndex() >= 0;
+    }
+
+    private void UpdateSingingMenuState()
+    {
+        _singingMenu.Header = _isSinging ? "唱歌中…" : "唱歌";
+        _singingMenu.IsEnabled = !_isSinging;
+        _characterMenu.IsEnabled = !_isSinging && _characterMenu.Items.Count > 0;
+        _loafingMenu.IsEnabled = !_isSinging && GetLoafingCharacterIndex() >= 0;
+        _focusMenu.IsEnabled = !_isSinging;
+        _moodMenu.IsEnabled = !_isSinging;
+        _gazeModeMenu.IsEnabled = !_isSinging;
+    }
+
+    private async Task ToggleLoafingModeAsync()
+    {
+        if (_isLoafingMode)
         {
-            var capturedValue = value;
-            var item = new MenuItem
-            {
-                Header = $"{value:P0}",
-                IsCheckable = true,
-                IsChecked = Math.Abs(Opacity - value) < 0.01
-            };
-            item.Click += (_, _) => SetOpacity(capturedValue);
-            _opacityMenu.Items.Add(item);
+            await ExitLoafingModeAsync();
         }
+        else
+        {
+            await EnterLoafingModeAsync();
+        }
+    }
+
+    private async Task EnterLoafingModeAsync()
+    {
+        var loafingIndex = GetLoafingCharacterIndex();
+        if (loafingIndex < 0)
+        {
+            BuildLoafingMenu();
+            return;
+        }
+
+        if (!IsLoafingCharacter(_currentCharacterIndex))
+        {
+            _previousCharacterIndex = _currentCharacterIndex;
+        }
+
+        _isLoafingMode = true;
+        BuildLoafingMenu();
+        if (await SelectCharacterAsync(loafingIndex))
+        {
+            ShowRandomBubble(["你的胆子真是肥嘟嘟的"]);
+            return;
+        }
+
+        _isLoafingMode = false;
+        BuildLoafingMenu();
+    }
+
+    private async Task ExitLoafingModeAsync()
+    {
+        _isLoafingMode = false;
+        var targetIndex = IsNormalCharacterIndex(_previousCharacterIndex)
+            ? _previousCharacterIndex
+            : GetFirstNormalCharacterIndex();
+        BuildLoafingMenu();
+        if (await SelectCharacterAsync(targetIndex))
+        {
+            ShowRandomBubble(["好吧，先假装认真一会儿。"]);
+            return;
+        }
+
+        _isLoafingMode = true;
+        BuildLoafingMenu();
+    }
+
+    private async Task SelectNormalCharacterAsync(int index)
+    {
+        if (!IsNormalCharacterIndex(index))
+        {
+            return;
+        }
+
+        var wasLoafing = _isLoafingMode;
+        _isLoafingMode = false;
+        _previousCharacterIndex = index;
+        BuildLoafingMenu();
+        if (!await SelectCharacterAsync(index) && wasLoafing)
+        {
+            _isLoafingMode = true;
+            BuildLoafingMenu();
+        }
+    }
+
+    private int GetLoafingCharacterIndex()
+    {
+        for (var index = 0; index < _characterResources.Count; index++)
+        {
+            if (IsLoafingCharacter(index))
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    private int GetFirstNormalCharacterIndex()
+    {
+        for (var index = 0; index < _characterResources.Count; index++)
+        {
+            if (!IsLoafingCharacter(index))
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    private bool IsNormalCharacterIndex(int index) =>
+        index >= 0 && index < _characterResources.Count && !IsLoafingCharacter(index);
+
+    private bool IsLoafingCharacter(int index) =>
+        index >= 0
+        && index < _characterResources.Count
+        && _characterResources[index].EndsWith(LoafingCharacterFileName, StringComparison.OrdinalIgnoreCase);
+
+    private void StartSinging()
+    {
+        if (_isSinging)
+        {
+            return;
+        }
+
+        try
+        {
+            if (_singingAnimation is null)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                using var stream = assembly.GetManifestResourceStream(SingingGifResourceName)
+                    ?? throw new InvalidDataException("EXE 内未找到唱歌 GIF 资源。");
+                _singingAnimation = GifAnimation.Load(stream);
+            }
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(
+                $"无法播放唱歌动画：\n\n{exception.Message}",
+                "CapyLulu",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+            return;
+        }
+
+        var previousCenterX = Left + (ActualWidth / 2);
+        var previousBottom = Top + ActualHeight;
+        _animationTimer.Stop();
+        _idleEasterEggTimer.Stop();
+        _bubbleTimer.Stop();
+        _isPlayingInteraction = false;
+        _hasBufferedClick = false;
+        _interactionState = PetInteractionState.Idle;
+        _gazeDirection = -1;
+        ResetGazeTracking();
+        ResetMotionTransform();
+
+        _isSinging = true;
+        _singingStartedSeconds = NowSeconds;
+        _singingFrameIndex = -1;
+        _singingLyricIndex = -1;
+        UpdatePetSize();
+        UpdateLayout();
+        Left = previousCenterX - (ActualWidth / 2);
+        Top = previousBottom - ActualHeight;
+        KeepWindowReachable();
+        UpdateSingingMenuState();
+        UpdateSingingPlayback(0);
+        _singingTimer.Start();
+    }
+
+    private void OnSingingTick(object? sender, EventArgs e)
+    {
+        if (!_isSinging || _singingAnimation is null)
+        {
+            _singingTimer.Stop();
+            return;
+        }
+
+        var elapsedSeconds = Math.Max(0, NowSeconds - _singingStartedSeconds);
+        var songDuration = _singingAnimation.DurationSeconds * SingingLyrics.Length;
+        if (elapsedSeconds >= songDuration)
+        {
+            StopSinging();
+            return;
+        }
+
+        UpdateSingingPlayback(elapsedSeconds);
+    }
+
+    private void UpdateSingingPlayback(double elapsedSeconds)
+    {
+        if (_singingAnimation is null)
+        {
+            return;
+        }
+
+        var lyricIndex = Math.Min(
+            SingingLyrics.Length - 1,
+            (int)(elapsedSeconds / _singingAnimation.DurationSeconds));
+        if (lyricIndex != _singingLyricIndex)
+        {
+            _singingLyricIndex = lyricIndex;
+            ShowSingingLyric(SingingLyrics[lyricIndex]);
+        }
+
+        var loopSeconds = elapsedSeconds % _singingAnimation.DurationSeconds;
+        var frameIndex = _singingAnimation.GetFrameIndex(loopSeconds);
+        if (frameIndex != _singingFrameIndex)
+        {
+            _singingFrameIndex = frameIndex;
+            _petImage.Source = _singingAnimation.Frames[frameIndex];
+        }
+    }
+
+    private void ShowSingingLyric(string lyric)
+    {
+        _bubbleTimer.Stop();
+        _bubbleText.Text = lyric;
+        _bubble.Visibility = Visibility.Visible;
+        SetBubbleTailVisibility(Visibility.Visible);
+    }
+
+    private void StopSinging()
+    {
+        if (!_isSinging)
+        {
+            return;
+        }
+
+        var previousCenterX = Left + (ActualWidth / 2);
+        var previousBottom = Top + ActualHeight;
+        _singingTimer.Stop();
+        _isSinging = false;
+        _singingFrameIndex = -1;
+        _singingLyricIndex = -1;
+        HideBubble();
+        UpdatePetSize();
+        UpdateLayout();
+        Left = previousCenterX - (ActualWidth / 2);
+        Top = previousBottom - ActualHeight;
+        KeepWindowReachable();
+        UpdateSingingMenuState();
+        StartIdle();
     }
 
     private void BuildMoodMenu()
@@ -502,14 +844,18 @@ internal sealed class MainWindow : Window
         if (_focusEndsAt is DateTimeOffset activeEnd && activeEnd > now)
         {
             UpdateFocusMenu(activeEnd - now);
-            ShowRandomBubble([$"专注进行中，还剩 {FormatFocusRemaining(activeEnd - now)}。"]);
+            ShowRandomBubble(_isLoafingMode
+                ? [$"先装忙一会儿，还剩 {FormatFocusRemaining(activeEnd - now)}。"]
+                : [$"专注进行中，还剩 {FormatFocusRemaining(activeEnd - now)}。"]);
             return;
         }
 
         _focusEndsAt = now + FocusDuration;
         UpdateFocusMenu(FocusDuration);
         _focusTimer.Start();
-        ShowRandomBubble(["专注模式开始，10 分钟后提醒你！"]);
+        ShowRandomBubble(_isLoafingMode
+            ? ["摸鱼暂停，先认真十分钟。"]
+            : ["专注模式开始，10 分钟后提醒你！"]);
     }
 
     private void UpdateFocusTimer()
@@ -529,7 +875,12 @@ internal sealed class MainWindow : Window
             _focusTimer.Stop();
             _focusMenu.Header = "专注模式：10 分钟";
             HideFocusCountdown();
-            ShowRandomBubble(["10 分钟专注完成！休息一下吧～"]);
+            if (!_isSinging)
+            {
+                ShowRandomBubble(_isLoafingMode
+                    ? ["十分钟结束，奖励你光明正大摸会儿鱼。"]
+                    : ["10 分钟专注完成！休息一下吧～"]);
+            }
             return;
         }
 
@@ -586,13 +937,6 @@ internal sealed class MainWindow : Window
         SaveSettings();
     }
 
-    private void SetOpacity(double value)
-    {
-        Opacity = Math.Clamp(value, 0.35, 1.0);
-        BuildOpacityMenu();
-        SaveSettings();
-    }
-
     private void SetMood(PetMood mood)
     {
         _mood = mood;
@@ -622,11 +966,11 @@ internal sealed class MainWindow : Window
         }
     }
 
-    private async Task SelectCharacterAsync(int index)
+    private async Task<bool> SelectCharacterAsync(int index)
     {
         if (index < 0 || index >= _characterResources.Count)
         {
-            return;
+            return false;
         }
 
         _animationTimer.Stop();
@@ -659,7 +1003,9 @@ internal sealed class MainWindow : Window
             }
             StartIdle();
             UpdateCharacterMenuChecks();
+            BuildLoafingMenu();
             SaveSettings();
+            return true;
         }
         catch (Exception exception)
         {
@@ -668,6 +1014,7 @@ internal sealed class MainWindow : Window
                 "CapyLulu",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
+            return false;
         }
         finally
         {
@@ -677,11 +1024,11 @@ internal sealed class MainWindow : Window
 
     private void UpdateCharacterMenuChecks()
     {
-        for (var index = 0; index < _characterMenu.Items.Count; index++)
+        foreach (var menuItem in _characterMenu.Items)
         {
-            if (_characterMenu.Items[index] is MenuItem item)
+            if (menuItem is MenuItem { Tag: int characterIndex } item)
             {
-                item.IsChecked = index == _currentCharacterIndex;
+                item.IsChecked = !_isLoafingMode && characterIndex == _currentCharacterIndex;
             }
         }
     }
@@ -792,7 +1139,10 @@ internal sealed class MainWindow : Window
 
     private void ShowCurrentFrame()
     {
-        if (_spriteSheet is not null && _currentRow >= 0 && _currentRow < _spriteSheet.Rows)
+        if (!_isSinging
+            && _spriteSheet is not null
+            && _currentRow >= 0
+            && _currentRow < _spriteSheet.Rows)
         {
             _petImage.Source = _spriteSheet[_currentRow, _currentFrame];
         }
@@ -800,6 +1150,12 @@ internal sealed class MainWindow : Window
 
     private void OnPetMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (_isSinging)
+        {
+            e.Handled = true;
+            return;
+        }
+
         ResetIdleEasterEggTimer();
         _mouseDown = true;
         _isDragging = false;
@@ -890,7 +1246,7 @@ internal sealed class MainWindow : Window
         _springVelocity = default;
         _motionTracker.Add(cursor, _dragStartedSeconds);
         SetMotionAction(PetAction.Lift, resetFrame: true);
-        ShowRandomBubble(DragBubbleMessages);
+        ShowRandomBubble(_isLoafingMode ? LoafingDragBubbleMessages : DragBubbleMessages);
     }
 
     private void StartDropInteraction(Vector releaseVelocity, PetGesture gesture)
@@ -928,7 +1284,8 @@ internal sealed class MainWindow : Window
             _ => PetAction.Click
         };
 
-        if (GestureMessages.TryGetValue(gesture, out var messages))
+        var gestureMessages = _isLoafingMode ? LoafingGestureMessages : GestureMessages;
+        if (gestureMessages.TryGetValue(gesture, out var messages))
         {
             ShowRandomBubble(messages);
         }
@@ -951,6 +1308,11 @@ internal sealed class MainWindow : Window
         var elapsed = Math.Clamp(now - _lastRenderSeconds, 0.001, 0.05);
         _lastRenderSeconds = now;
         if (!IsLoaded || Visibility != Visibility.Visible || _spriteSheet is null)
+        {
+            return;
+        }
+
+        if (_isSinging)
         {
             return;
         }
@@ -1361,13 +1723,22 @@ internal sealed class MainWindow : Window
     {
         var frameWidth = _spriteSheet?.FrameWidth ?? 288;
         var frameHeight = _spriteSheet?.FrameHeight ?? 312;
+        if (_isSinging && _singingAnimation is not null)
+        {
+            _petImage.Width = frameWidth * _scale;
+            _petImage.Height = _petImage.Width
+                * _singingAnimation.PixelHeight
+                / _singingAnimation.PixelWidth;
+            return;
+        }
+
         _petImage.Width = frameWidth * _scale;
         _petImage.Height = frameHeight * _scale;
     }
 
     private void ShowRandomBubble()
     {
-        ShowRandomBubble(BubbleMessages);
+        ShowRandomBubble(_isLoafingMode ? LoafingBubbleMessages : BubbleMessages);
     }
 
     private void ShowRandomBubble(IReadOnlyList<string> messages)
@@ -1424,12 +1795,20 @@ internal sealed class MainWindow : Window
         _ => 260
     };
 
-    private IReadOnlyList<string> GetMoodMessages() => _mood switch
+    private IReadOnlyList<string> GetMoodMessages()
     {
-        PetMood.Sleepy => SleepyMessages,
-        PetMood.Working => WorkingMessages,
-        _ => HappyMessages
-    };
+        if (_isLoafingMode)
+        {
+            return LoafingIdleMessages;
+        }
+
+        return _mood switch
+        {
+            PetMood.Sleepy => SleepyMessages,
+            PetMood.Working => WorkingMessages,
+            _ => HappyMessages
+        };
+    }
 
     private void SetBubbleTailVisibility(Visibility visibility)
     {
@@ -1468,12 +1847,16 @@ internal sealed class MainWindow : Window
         _settings.Left = Left;
         _settings.Top = Top;
         _settings.Scale = _scale;
-        _settings.Opacity = Opacity;
         _settings.Topmost = Topmost;
         _settings.Mood = _mood.ToString();
         _settings.GazeMode = _gazeMode.ToString();
-        _settings.SelectedCharacter = _characterResources.Count > 0
-            ? _characterResources[_currentCharacterIndex]
+        _settings.LoafingMode = _isLoafingMode;
+        var savedCharacterIndex = _isLoafingMode && IsNormalCharacterIndex(_previousCharacterIndex)
+            ? _previousCharacterIndex
+            : _currentCharacterIndex;
+        _settings.SelectedCharacter = savedCharacterIndex >= 0
+            && savedCharacterIndex < _characterResources.Count
+            ? _characterResources[savedCharacterIndex]
             : null;
         SettingsStore.Save(_settings);
     }
@@ -1549,6 +1932,7 @@ internal sealed class MainWindow : Window
         CompositionTarget.Rendering -= OnRendering;
         _idleEasterEggTimer.Stop();
         _focusTimer.Stop();
+        _singingTimer.Stop();
         if (_windowSource is not null)
         {
             UnregisterHotKey(_windowSource.Handle, ToggleHotkeyId);

@@ -1,0 +1,89 @@
+{
+  "reviewer": "a",
+  "pairs": [
+    {
+      "pair": "horizontal-1",
+      "A": "screen-left",
+      "B": "screen-right",
+      "reason": "A 的口鼻与脸部透视偏向画面左侧，B 的眼神和面部朝向偏右。"
+    },
+    {
+      "pair": "horizontal-2",
+      "A": "screen-right",
+      "B": "screen-left",
+      "reason": "A 的瞳孔与面部朝右，B 的口鼻明显落在左侧轮廓方向。"
+    },
+    {
+      "pair": "horizontal-3",
+      "A": "screen-right",
+      "B": "screen-left",
+      "reason": "A 的视线偏向画面右侧，B 呈明显向左的侧脸透视。"
+    },
+    {
+      "pair": "horizontal-4",
+      "A": "screen-right",
+      "B": "screen-left",
+      "reason": "A、B 的口鼻分别靠近各自画面的右侧与左侧，侧脸方向清楚。"
+    },
+    {
+      "pair": "horizontal-5",
+      "A": "screen-left",
+      "B": "screen-right",
+      "reason": "A 的口鼻和近侧镜片朝左，B 的口鼻与眼神朝右。"
+    },
+    {
+      "pair": "horizontal-6",
+      "A": "screen-right",
+      "B": "screen-left",
+      "reason": "A 低头时口鼻偏右，B 的面部中轴和视线偏左。"
+    },
+    {
+      "pair": "horizontal-7",
+      "A": "screen-left",
+      "B": "screen-right",
+      "reason": "A 的视线及脸部重心偏左，B 的口鼻明显转向右侧。"
+    },
+    {
+      "pair": "vertical-1",
+      "A": "up",
+      "B": "down",
+      "reason": "A 抬头且瞳孔上扬，B 低头并向下俯视。"
+    },
+    {
+      "pair": "vertical-2",
+      "A": "up",
+      "B": "down",
+      "reason": "A 的下巴抬起、视线向上，B 的头顶前倾且目光向下。"
+    },
+    {
+      "pair": "vertical-3",
+      "A": "up",
+      "B": "down",
+      "reason": "A 仰头看向上方，B 低头看向下方。"
+    },
+    {
+      "pair": "vertical-4",
+      "A": "down",
+      "B": "up",
+      "reason": "A 的眼睑和口鼻呈俯视姿态，B 的下巴及视线明显上抬。"
+    },
+    {
+      "pair": "vertical-5",
+      "A": "down",
+      "B": "up",
+      "reason": "A 正面低头、目光下垂，B 的侧脸与视线朝上。"
+    },
+    {
+      "pair": "vertical-6",
+      "A": "up",
+      "B": "down",
+      "reason": "A 的侧脸略抬、视线较高，B 的眼神和头部姿态更向下。"
+    },
+    {
+      "pair": "vertical-7",
+      "A": "ambiguous",
+      "B": "ambiguous",
+      "reason": "两张均为近似水平的左侧脸，眼睑与口鼻高度差异不足以可靠判定上下。"
+    }
+  ]
+}

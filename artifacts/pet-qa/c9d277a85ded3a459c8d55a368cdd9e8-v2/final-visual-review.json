@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "verdict": "pass",
+  "sourceFidelity": {
+    "heldIceCream": "pass: exactly one mascot-shaped ice-cream remains gripped by the screen-left hand in every valid frame",
+    "primaryBody": "pass: exactly one primary body with two arms/hands and one pouch",
+    "sourceCrop": "pass: flat brown-shorts crop retained; no legs, feet, tail, third hand, or lower-body extension"
+  },
+  "actions": "pass: readable, stable, and unclipped",
+  "directions": "pass: all four cardinal hard gates and the ordered 16-direction loop are correct",
+  "alphaHoleReview": "000 y=28 is the natural exterior gap around the top bun/head contour, not a destructive interior hole",
+  "warnings": [
+    "022.5 and 045 have subtle horizontal cues in blind review, while the labeled loop remains continuous toward 090 screen-right",
+    "292.5 has a subtle vertical-up cue in blind review, while the labeled loop remains continuous from 270 toward 315",
+    "337.5 to 000 has a mild visual recentering/area change but no identity break or conspicuous snap",
+    "jumping is intentionally smaller to preserve vertical travel inside the cell"
+  ]
+}

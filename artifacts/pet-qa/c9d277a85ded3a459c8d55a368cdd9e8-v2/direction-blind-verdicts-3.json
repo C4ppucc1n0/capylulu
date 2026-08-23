@@ -1,0 +1,18 @@
+{
+  "pairs": [
+    {"pair":"horizontal-1","A":"screen-left","B":"screen-left","reason":"A 的头部与瞳孔均偏向画面左侧；B 的双眼瞳孔也明显落在眼白左侧。"},
+    {"pair":"horizontal-2","A":"screen-left","B":"screen-left","reason":"A、B 的口鼻朝向及瞳孔水平偏移都指向画面左侧。"},
+    {"pair":"horizontal-3","A":"screen-right","B":"screen-left","reason":"A 的双眼瞳孔贴近眼白右缘，B 的可见瞳孔落在眼白左缘。"},
+    {"pair":"horizontal-4","A":"screen-left","B":"screen-right","reason":"A 的瞳孔和头部轮廓朝画面左侧，B 的双眼瞳孔朝画面右侧。"},
+    {"pair":"horizontal-5","A":"screen-left","B":"screen-right","reason":"A 的可见瞳孔靠左，B 的可见瞳孔靠右，水平意图清楚。"},
+    {"pair":"horizontal-6","A":"screen-right","B":"screen-left","reason":"A 的双眼瞳孔集中在眼白右侧，B 则集中在眼白左侧。"},
+    {"pair":"horizontal-7","A":"screen-left","B":"screen-right","reason":"A 正面双眼的瞳孔整体偏左，B 侧脸的瞳孔明显偏向画面右侧。"},
+    {"pair":"vertical-1","A":"down","B":"up","reason":"A 低眉并向下凝视，B 抬头且瞳孔位于眼白上方。"},
+    {"pair":"vertical-2","A":"up","B":"down","reason":"A 的头部和双眼明显上扬，B 的眼睑压低且视线向下。"},
+    {"pair":"vertical-3","A":"up","B":"down","reason":"A 抬起口鼻、瞳孔靠上，B 低眉且瞳孔位置较低。"},
+    {"pair":"vertical-4","A":"up","B":"down","reason":"A 的眼球上翻并伴随抬头姿态，B 的眼睑和瞳孔呈下视姿态。"},
+    {"pair":"vertical-5","A":"down","B":"up","reason":"A 正面低眉向下看，B 抬头且瞳孔明显上移。"},
+    {"pair":"vertical-6","A":"up","B":"down","reason":"A 的头部上仰、瞳孔靠上，B 低眉并把视线压向下方。"},
+    {"pair":"vertical-7","A":"down","B":"down","reason":"A、B 都呈低眉侧脸姿态，瞳孔相对眼白中心偏下。"}
+  ]
+}
