@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Polygon = System.Windows.Shapes.Polygon;
 
@@ -39,7 +40,7 @@ internal sealed class MainWindow : Window
     private const string LoafingCharacterFileName =
         "c9d277a85ded3a459c8d55a368cdd9e8-action-sprite.webp";
     private const string SingingGifResourceName =
-        "CapyLulu.GifResources.c0000e47bf83481f725f2d6608e60fcf-ezgif.com-video-to-gif-converter.gif";
+        "CapyLulu.GifResources.flycapylulu.gif";
 
     private static readonly string[] SingingLyrics =
     {
@@ -53,27 +54,44 @@ internal sealed class MainWindow : Window
 
     private static readonly string[] BubbleMessages =
     {
-        "今天也要可可爱爱！",
-        "你刚刚是不是点我啦？",
-        "嘿嘿，抓到你了。",
-        "休息一下再继续吧。",
-        "我有在认真陪你哦。",
-        "这次是什么动作呢？",
-        "给你一点好运气！",
-        "再点一下也可以呀。",
-        "保持好心情～",
-        "让我活动一下！"
+        "你来啦，我刚好也在等你。",
+        "今天过得怎么样？慢慢来，我听着呢。",
+        "不用一直很厉害，做你自己就很好。",
+        "累了就靠一会儿，我不催你。",
+        "刚刚那一下，是在和我打招呼吗？",
+        "我会安安静静陪你把今天过完。",
+        "记得喝口水，也给心情补充一点能量。",
+        "如果今天有点难，我们就把它切成小块。",
+        "你认真做事的样子，我都有看到。",
+        "偶尔发呆没关系，我陪你。",
+        "今天也给自己留一点温柔吧。",
+        "无论进度快慢，我都站你这边。",
+        "要不要先深呼吸一下？我陪你一起。",
+        "你不说话也没关系，陪伴不一定要有声音。",
+        "刚才辛苦了，来收下一小份夸奖。",
+        "偷偷告诉你：你已经做得比想象中好了。",
+        "等你忙完，我们一起松口气。",
+        "现在心情好吗？不好也可以。",
+        "我在这里，不会突然跑掉。",
+        "再点一下，就当我们碰了个拳。",
+        "嘿，今日份陪伴已经签到。",
+        "这次换我给你一点好运气。",
+        "你负责向前走，我负责在旁边晃悠。",
+        "今天的你，也值得被好好照顾。"
     };
 
     private static readonly string[] DragBubbleMessages =
     {
-        "要出发啦！",
-        "轻一点抱我嘛～",
-        "带我去看看！",
-        "我跟上啦！",
-        "唔，飞起来了！",
-        "这个位置不错！",
-        "慢慢放下我哦。"
+        "想换个位置陪你吗？",
+        "轻一点抱我，我会乖乖跟着。",
+        "放到你一抬眼就能看到的地方吧。",
+        "带我一起去新的角落。",
+        "慢慢来，我没有急着去哪儿。",
+        "这里离你近一点，我喜欢。",
+        "搬家途中也要牵好我哦。",
+        "你把我放在哪里，我就在哪里陪你。",
+        "这个位置不错，能看见你认真生活。",
+        "好啦，安全落地，我继续陪你。"
     };
 
     private static readonly string[] LoafingBubbleMessages =
@@ -108,9 +126,27 @@ internal sealed class MainWindow : Window
     private static readonly IReadOnlyDictionary<PetGesture, string[]> GestureMessages =
         new Dictionary<PetGesture, string[]>
         {
-            [PetGesture.HorizontalFlick] = ["哇——慢一点！", "差点被甩飞啦！"],
-            [PetGesture.Shake] = ["晕乎乎的啦……", "世界在左右摇晃！"],
-            [PetGesture.LiftDrop] = ["起飞——安全着陆！", "这次落得很稳哦！"]
+            [PetGesture.HorizontalFlick] =
+            [
+                "哇——慢一点，我想稳稳跟着你。",
+                "差点被甩飞啦，还好没有把你弄丢。",
+                "被你甩得心都飞起来啦。",
+                "抓紧了，这次不会走丢。"
+            ],
+            [PetGesture.Shake] =
+            [
+                "晕乎乎的，不过还在你身边。",
+                "世界在摇，我先抱紧一点。",
+                "好啦好啦，陪你闹一会儿。",
+                "摇完记得一起歇口气。"
+            ],
+            [PetGesture.LiftDrop] =
+            [
+                "安全落地！谢谢你稳稳接住我。",
+                "起飞一小会儿，再回到你身边。",
+                "这趟旅行很短，但有你就很好。",
+                "落地成功，继续陪你过今天。"
+            ]
         };
 
     private static readonly IReadOnlyDictionary<PetGesture, string[]> LoafingGestureMessages =
@@ -123,17 +159,44 @@ internal sealed class MainWindow : Window
 
     private static readonly string[] HappyMessages =
     {
-        "今天也要元气满满！", "好耶，继续前进！", "开心陪着你～"
+        "你一来，我今天的好心情就签到啦。",
+        "今天有什么小开心？我想和你一起记住。",
+        "好耶，我们慢慢把今天过得闪闪发亮。",
+        "看到你，我就忍不住开心一点。",
+        "不管今天忙不忙，我都给你留一个笑脸。",
+        "走吧，我陪你去遇见一点好事。",
+        "你的努力有被看到，我第一个鼓掌。",
+        "今天也站在你这边，坚定不换队。",
+        "给你一颗不会过期的好心情。",
+        "哪怕只完成一件小事，也值得庆祝。"
     };
 
     private static readonly string[] SleepyMessages =
     {
-        "让我眯一会儿……", "呼噜……我还醒着。", "今天慢一点也没关系。"
+        "困了就眯一会儿，我替你守着屏幕。",
+        "今天慢一点也没关系，我陪你一起缓一缓。",
+        "不想说话的话，我们就安静待着。",
+        "呼噜……别担心，我没有走远。",
+        "肩膀放松一点，先把自己照顾好。",
+        "累不是你的错，是身体在提醒你休息。",
+        "先闭一会儿眼，醒来我还在。",
+        "事情可以等等，你也值得被温柔对待。",
+        "今晚早点休息，好吗？我会乖乖陪着。",
+        "把疲惫分我一点，你就轻松一点。"
     };
 
     private static readonly string[] WorkingMessages =
     {
-        "专注模式启动！", "一起认真完成它。", "我在旁边给你加油。"
+        "我们只管眼前这一小步，其他的等会儿再想。",
+        "你专心，我在旁边安静陪着。",
+        "卡住也没关系，停一下再继续。",
+        "认真工作的你很可靠，也别忘了照顾自己。",
+        "不求一下子完成，稳稳推进就很好。",
+        "我帮你守住这段专注时间。",
+        "做完这一点，就奖励自己喝口水吧。",
+        "别怕任务多，我们一个一个来。",
+        "今天的进度不定义你，但每一步都算数。",
+        "需要喘口气时，抬头就能看到我。"
     };
 
     private static readonly IReadOnlyDictionary<string, string> CharacterNames =
@@ -152,11 +215,16 @@ internal sealed class MainWindow : Window
     private readonly TextBlock _bubbleText;
     private readonly Border _focusCountdown;
     private readonly TextBlock _focusCountdownText;
+    private readonly Button _singingSupportButton;
+    private readonly Grid _singingEffectsLayer;
+    private readonly Border _singingResponse;
+    private readonly TextBlock _singingResponseText;
     private readonly DispatcherTimer _animationTimer;
     private readonly DispatcherTimer _bubbleTimer;
     private readonly DispatcherTimer _idleEasterEggTimer;
     private readonly DispatcherTimer _focusTimer;
     private readonly DispatcherTimer _singingTimer;
+    private readonly DispatcherTimer _singingResponseTimer;
     private readonly Random _random = new();
     private readonly PointerMotionTracker _motionTracker = new();
     private readonly PetSettings _settings;
@@ -215,6 +283,8 @@ internal sealed class MainWindow : Window
     private double _singingStartedSeconds;
     private int _singingFrameIndex = -1;
     private int _singingLyricIndex = -1;
+    private int _singingSupportCount;
+    private bool _singingNoSupportPromptShown;
     private PetMood _mood;
     private PetGazeMode _gazeMode;
     private DateTimeOffset? _focusEndsAt;
@@ -311,6 +381,75 @@ internal sealed class MainWindow : Window
         };
         RenderOptions.SetBitmapScalingMode(_petImage, BitmapScalingMode.HighQuality);
 
+        _singingSupportButton = new Button
+        {
+            Content = "♥",
+            ToolTip = "给宠物应援",
+            Width = 44,
+            Height = 44,
+            Margin = new Thickness(10, 0, 0, 0),
+            Padding = new Thickness(0),
+            FontFamily = new FontFamily("Segoe UI Symbol"),
+            FontSize = 25,
+            FontWeight = FontWeights.Bold,
+            Foreground = Brushes.White,
+            Background = new SolidColorBrush(Color.FromRgb(244, 105, 145)),
+            BorderBrush = new SolidColorBrush(Color.FromRgb(187, 55, 96)),
+            BorderThickness = new Thickness(1.5),
+            Cursor = Cursors.Hand,
+            VerticalAlignment = VerticalAlignment.Center,
+            Visibility = Visibility.Collapsed
+        };
+        _singingSupportButton.Click += (_, _) => RegisterSingingSupport();
+
+        var performanceContent = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        performanceContent.Children.Add(_petImage);
+        performanceContent.Children.Add(_singingSupportButton);
+
+        _singingEffectsLayer = new Grid
+        {
+            IsHitTestVisible = false,
+            ClipToBounds = true
+        };
+
+        var performanceLayer = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        performanceLayer.Children.Add(performanceContent);
+        performanceLayer.Children.Add(_singingEffectsLayer);
+
+        _singingResponseText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromRgb(93, 42, 62)),
+            FontFamily = new FontFamily("Microsoft YaHei UI"),
+            FontSize = 13,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
+            TextAlignment = TextAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        _singingResponse = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(225, 255, 232, 240)),
+            BorderBrush = new SolidColorBrush(Color.FromRgb(226, 126, 157)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(12),
+            Padding = new Thickness(12, 5, 12, 5),
+            Margin = new Thickness(0, 6, 0, 0),
+            Height = 38,
+            MaxWidth = 290,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Visibility = Visibility.Collapsed,
+            IsHitTestVisible = false,
+            Child = _singingResponseText
+        };
+
         _focusCountdownText = new TextBlock
         {
             Foreground = Brushes.White,
@@ -336,11 +475,14 @@ internal sealed class MainWindow : Window
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         Grid.SetRow(bubbleLayer, 0);
-        Grid.SetRow(_petImage, 1);
-        Grid.SetRow(_focusCountdown, 2);
+        Grid.SetRow(performanceLayer, 1);
+        Grid.SetRow(_singingResponse, 2);
+        Grid.SetRow(_focusCountdown, 3);
         root.Children.Add(bubbleLayer);
-        root.Children.Add(_petImage);
+        root.Children.Add(performanceLayer);
+        root.Children.Add(_singingResponse);
         root.Children.Add(_focusCountdown);
         Content = root;
 
@@ -421,6 +563,12 @@ internal sealed class MainWindow : Window
             Interval = TimeSpan.FromMilliseconds(25)
         };
         _singingTimer.Tick += OnSingingTick;
+
+        _singingResponseTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(2400)
+        };
+        _singingResponseTimer.Tick += (_, _) => HideSingingResponse();
 
         _petImage.MouseLeftButtonDown += OnPetMouseLeftButtonDown;
         _petImage.MouseMove += OnPetMouseMove;
@@ -713,6 +861,12 @@ internal sealed class MainWindow : Window
         _singingStartedSeconds = NowSeconds;
         _singingFrameIndex = -1;
         _singingLyricIndex = -1;
+        _singingSupportCount = 0;
+        _singingNoSupportPromptShown = false;
+        _bubble.Opacity = 1;
+        _singingSupportButton.Visibility = Visibility.Visible;
+        HideSingingResponse();
+        _singingEffectsLayer.Children.Clear();
         UpdatePetSize();
         UpdateLayout();
         Left = previousCenterX - (ActualWidth / 2);
@@ -737,6 +891,15 @@ internal sealed class MainWindow : Window
         {
             StopSinging();
             return;
+        }
+
+        UpdateSingingLyricPulse(elapsedSeconds);
+        if (_singingSupportCount == 0
+            && !_singingNoSupportPromptShown
+            && elapsedSeconds >= songDuration * 0.65)
+        {
+            _singingNoSupportPromptShown = true;
+            ShowSingingResponse("是不是唱得太投入，把你听睡着了？");
         }
 
         UpdateSingingPlayback(elapsedSeconds);
@@ -775,6 +938,144 @@ internal sealed class MainWindow : Window
         SetBubbleTailVisibility(Visibility.Visible);
     }
 
+    private void UpdateSingingLyricPulse(double elapsedSeconds)
+    {
+        const double pulseSeconds = 1.4;
+        var phase = elapsedSeconds * Math.PI * 2 / pulseSeconds;
+        _bubble.Opacity = 0.90 + ((Math.Sin(phase) + 1) * 0.05);
+    }
+
+    private void RegisterSingingSupport()
+    {
+        if (!_isSinging)
+        {
+            return;
+        }
+
+        _singingSupportCount++;
+        ShowSingingResponse(_singingSupportCount == 1
+            ? "你有在认真听诶～"
+            : "好啦好啦，我知道我唱得不错。");
+        SpawnSingingSupportEffect();
+        PlaySingingReaction();
+    }
+
+    private void ShowSingingResponse(string message)
+    {
+        _singingResponseTimer.Stop();
+        _singingResponseText.Text = message;
+        _singingResponse.Visibility = Visibility.Visible;
+        _singingResponseTimer.Start();
+    }
+
+    private void HideSingingResponse()
+    {
+        _singingResponseTimer.Stop();
+        _singingResponse.Visibility = _isSinging
+            ? Visibility.Hidden
+            : Visibility.Collapsed;
+    }
+
+    private void SpawnSingingSupportEffect()
+    {
+        var symbol = (_singingSupportCount % 3) switch
+        {
+            1 => "♥",
+            2 => "♪",
+            _ => "♫"
+        };
+        var effect = new TextBlock
+        {
+            Text = symbol,
+            FontFamily = new FontFamily("Segoe UI Symbol"),
+            FontSize = 25,
+            FontWeight = FontWeights.Bold,
+            Foreground = symbol == "♥"
+                ? new SolidColorBrush(Color.FromRgb(245, 82, 132))
+                : new SolidColorBrush(Color.FromRgb(119, 83, 190)),
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 12, 0),
+            IsHitTestVisible = false
+        };
+        var scale = new ScaleTransform(0.85, 0.85);
+        var translate = new TranslateTransform(_random.NextDouble() * 12 - 6, 18);
+        effect.RenderTransformOrigin = new Point(0.5, 0.5);
+        effect.RenderTransform = new TransformGroup
+        {
+            Children = { scale, translate }
+        };
+        _singingEffectsLayer.Children.Add(effect);
+
+        var duration = TimeSpan.FromMilliseconds(720);
+        var rise = new DoubleAnimation(18, -62, duration)
+        {
+            EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+            FillBehavior = FillBehavior.Stop
+        };
+        var grow = new DoubleAnimation(0.85, 1.20, duration)
+        {
+            EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+            FillBehavior = FillBehavior.Stop
+        };
+        var fade = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(420))
+        {
+            BeginTime = TimeSpan.FromMilliseconds(300),
+            FillBehavior = FillBehavior.Stop
+        };
+        fade.Completed += (_, _) => _singingEffectsLayer.Children.Remove(effect);
+        translate.BeginAnimation(TranslateTransform.YProperty, rise);
+        scale.BeginAnimation(ScaleTransform.ScaleXProperty, grow);
+        scale.BeginAnimation(ScaleTransform.ScaleYProperty, grow);
+        effect.BeginAnimation(OpacityProperty, fade);
+    }
+
+    private void PlaySingingReaction()
+    {
+        var quick = TimeSpan.FromMilliseconds(145);
+        var ease = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+        DoubleAnimation Reaction(double target) => new(0, target, quick)
+        {
+            AutoReverse = true,
+            EasingFunction = ease,
+            FillBehavior = FillBehavior.Stop
+        };
+        DoubleAnimation ScaleReaction(double target) => new(1, target, quick)
+        {
+            AutoReverse = true,
+            EasingFunction = ease,
+            FillBehavior = FillBehavior.Stop
+        };
+
+        switch ((_singingSupportCount - 1) % 3)
+        {
+            case 0:
+                _interactionScale.BeginAnimation(ScaleTransform.ScaleXProperty, ScaleReaction(1.08));
+                _interactionScale.BeginAnimation(ScaleTransform.ScaleYProperty, ScaleReaction(1.08));
+                _motionTranslate.BeginAnimation(TranslateTransform.YProperty, Reaction(-8));
+                break;
+            case 1:
+                _interactionScale.BeginAnimation(ScaleTransform.ScaleXProperty, ScaleReaction(0.97));
+                _interactionScale.BeginAnimation(ScaleTransform.ScaleYProperty, ScaleReaction(0.97));
+                _motionRotate.BeginAnimation(RotateTransform.AngleProperty, Reaction(-6));
+                break;
+            default:
+                _interactionScale.BeginAnimation(ScaleTransform.ScaleXProperty, ScaleReaction(1.08));
+                _interactionScale.BeginAnimation(ScaleTransform.ScaleYProperty, ScaleReaction(0.94));
+                _motionRotate.BeginAnimation(RotateTransform.AngleProperty, Reaction(5));
+                break;
+        }
+    }
+
+    private void ResetSingingReactionAnimations()
+    {
+        _interactionScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        _interactionScale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+        _motionRotate.BeginAnimation(RotateTransform.AngleProperty, null);
+        _motionTranslate.BeginAnimation(TranslateTransform.YProperty, null);
+        ResetMotionTransform();
+    }
+
     private void StopSinging()
     {
         if (!_isSinging)
@@ -784,10 +1085,16 @@ internal sealed class MainWindow : Window
 
         var previousCenterX = Left + (ActualWidth / 2);
         var previousBottom = Top + ActualHeight;
+        var receivedSupport = _singingSupportCount > 0;
         _singingTimer.Stop();
         _isSinging = false;
         _singingFrameIndex = -1;
         _singingLyricIndex = -1;
+        _bubble.Opacity = 1;
+        _singingSupportButton.Visibility = Visibility.Collapsed;
+        HideSingingResponse();
+        _singingEffectsLayer.Children.Clear();
+        ResetSingingReactionAnimations();
         HideBubble();
         UpdatePetSize();
         UpdateLayout();
@@ -796,6 +1103,11 @@ internal sealed class MainWindow : Window
         KeepWindowReachable();
         UpdateSingingMenuState();
         StartIdle();
+        ShowTemporaryBubble(
+            receivedSupport
+                ? "谢谢你的应援，再送你一个飞吻～"
+                : "没有掌声也没关系，我自己鼓掌。",
+            TimeSpan.FromMilliseconds(3600));
     }
 
     private void BuildMoodMenu()
@@ -846,7 +1158,7 @@ internal sealed class MainWindow : Window
             UpdateFocusMenu(activeEnd - now);
             ShowRandomBubble(_isLoafingMode
                 ? [$"先装忙一会儿，还剩 {FormatFocusRemaining(activeEnd - now)}。"]
-                : [$"专注进行中，还剩 {FormatFocusRemaining(activeEnd - now)}。"]);
+                : [$"我还在陪你专注，剩下 {FormatFocusRemaining(activeEnd - now)}，慢慢来。"]);
             return;
         }
 
@@ -855,7 +1167,7 @@ internal sealed class MainWindow : Window
         _focusTimer.Start();
         ShowRandomBubble(_isLoafingMode
             ? ["摸鱼暂停，先认真十分钟。"]
-            : ["专注模式开始，10 分钟后提醒你！"]);
+            : ["接下来的 10 分钟，我安静陪你专注。"]);
     }
 
     private void UpdateFocusTimer()
@@ -879,7 +1191,7 @@ internal sealed class MainWindow : Window
             {
                 ShowRandomBubble(_isLoafingMode
                     ? ["十分钟结束，奖励你光明正大摸会儿鱼。"]
-                    : ["10 分钟专注完成！休息一下吧～"]);
+                    : ["10 分钟完成啦，你很棒。伸个懒腰，我陪你休息一下～"]);
             }
             return;
         }
@@ -1152,6 +1464,7 @@ internal sealed class MainWindow : Window
     {
         if (_isSinging)
         {
+            RegisterSingingSupport();
             e.Handled = true;
             return;
         }
@@ -1725,10 +2038,11 @@ internal sealed class MainWindow : Window
         var frameHeight = _spriteSheet?.FrameHeight ?? 312;
         if (_isSinging && _singingAnimation is not null)
         {
-            _petImage.Width = frameWidth * _scale;
-            _petImage.Height = _petImage.Width
-                * _singingAnimation.PixelHeight
-                / _singingAnimation.PixelWidth;
+            var fitScale = Math.Min(
+                frameWidth / (double)_singingAnimation.PixelWidth,
+                frameHeight / (double)_singingAnimation.PixelHeight);
+            _petImage.Width = _singingAnimation.PixelWidth * fitScale * _scale;
+            _petImage.Height = _singingAnimation.PixelHeight * fitScale * _scale;
             return;
         }
 
@@ -1750,10 +2064,23 @@ internal sealed class MainWindow : Window
         }
 
         _lastBubbleIndex = index;
-        _bubbleText.Text = messages[index];
+        var message = messages[index];
+        _bubbleText.Text = message;
         _bubble.Visibility = Visibility.Visible;
         SetBubbleTailVisibility(Visibility.Visible);
         _bubbleTimer.Stop();
+        var displayMilliseconds = Math.Clamp(1400 + (message.Length * 60), 1900, 3400);
+        _bubbleTimer.Interval = TimeSpan.FromMilliseconds(displayMilliseconds);
+        _bubbleTimer.Start();
+    }
+
+    private void ShowTemporaryBubble(string message, TimeSpan duration)
+    {
+        _bubbleTimer.Stop();
+        _bubbleText.Text = message;
+        _bubble.Visibility = Visibility.Visible;
+        SetBubbleTailVisibility(Visibility.Visible);
+        _bubbleTimer.Interval = duration;
         _bubbleTimer.Start();
     }
 
@@ -1933,6 +2260,7 @@ internal sealed class MainWindow : Window
         _idleEasterEggTimer.Stop();
         _focusTimer.Stop();
         _singingTimer.Stop();
+        _singingResponseTimer.Stop();
         if (_windowSource is not null)
         {
             UnregisterHotKey(_windowSource.Handle, ToggleHotkeyId);
