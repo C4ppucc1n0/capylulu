@@ -6,3 +6,4 @@ src/**/obj/
 dist/
 test-artifacts/
 .pet-work/
+output/
