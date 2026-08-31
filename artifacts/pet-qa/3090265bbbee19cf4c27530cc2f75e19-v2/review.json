@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "frames_root": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames",
+  "frames_root": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames",
   "states": [
     "idle",
     "running-right",
@@ -13,9 +13,7 @@
     "review"
   ],
   "errors": [],
-  "warnings": [
-    "running-left used extraction method slots; component extraction is preferred"
-  ],
+  "warnings": [],
   "rows": [
     {
       "state": "idle",
@@ -28,93 +26,93 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\idle\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\idle\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24932,
+          "nontransparent_pixels": 19770,
           "bbox": [
-            18,
+            30,
             5,
-            174,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 105
+          "chroma_adjacent_pixels": 200
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\idle\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\idle\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24296,
+          "nontransparent_pixels": 19906,
           "bbox": [
-            19,
+            29,
             5,
-            172,
+            163,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 94
+          "chroma_adjacent_pixels": 186
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\idle\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\idle\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24951,
+          "nontransparent_pixels": 19332,
           "bbox": [
-            19,
+            30,
             5,
-            173,
+            161,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 117
+          "chroma_adjacent_pixels": 190
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\idle\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\idle\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24902,
+          "nontransparent_pixels": 18733,
           "bbox": [
-            19,
+            36,
             5,
-            172,
+            156,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 96
+          "chroma_adjacent_pixels": 175
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\idle\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\idle\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 23824,
+          "nontransparent_pixels": 18938,
           "bbox": [
-            21,
+            32,
             5,
-            170,
+            159,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 100
+          "chroma_adjacent_pixels": 179
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\idle\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\idle\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25337,
+          "nontransparent_pixels": 19161,
           "bbox": [
-            16,
+            32,
             5,
-            176,
+            159,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 114
+          "chroma_adjacent_pixels": 202
         }
       ]
     },
@@ -129,123 +127,123 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26849,
+          "nontransparent_pixels": 16459,
           "bbox": [
-            11,
+            27,
             5,
-            181,
+            164,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 164
+          "chroma_adjacent_pixels": 329
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26762,
+          "nontransparent_pixels": 16987,
           "bbox": [
-            6,
+            25,
             5,
-            186,
+            166,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 162
+          "chroma_adjacent_pixels": 329
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26739,
+          "nontransparent_pixels": 17159,
           "bbox": [
-            8,
+            23,
             5,
-            183,
+            169,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 207
+          "chroma_adjacent_pixels": 355
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26047,
+          "nontransparent_pixels": 16573,
           "bbox": [
-            13,
+            24,
             5,
-            178,
+            168,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 203
+          "chroma_adjacent_pixels": 330
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25670,
+          "nontransparent_pixels": 16306,
           "bbox": [
-            18,
+            26,
             5,
-            173,
+            166,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 189
+          "chroma_adjacent_pixels": 320
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 23895,
+          "nontransparent_pixels": 16149,
           "bbox": [
-            20,
+            25,
             5,
-            171,
+            167,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 174
+          "chroma_adjacent_pixels": 304
         },
         {
           "index": 6,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\06.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\06.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 23823,
+          "nontransparent_pixels": 15564,
           "bbox": [
-            19,
+            32,
             5,
-            172,
+            160,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 203
+          "chroma_adjacent_pixels": 308
         },
         {
           "index": 7,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-right\\07.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-right\\07.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 23653,
+          "nontransparent_pixels": 16116,
           "bbox": [
-            16,
+            29,
             5,
-            175,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 167
+          "chroma_adjacent_pixels": 297
         }
       ]
     },
@@ -253,132 +251,130 @@
       "state": "running-left",
       "expected_frames": 8,
       "actual_frames": 8,
-      "extraction_method": "slots",
+      "extraction_method": "components",
       "ok": true,
       "errors": [],
-      "warnings": [
-        "running-left used extraction method slots; component extraction is preferred"
-      ],
+      "warnings": [],
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24882,
+          "nontransparent_pixels": 16459,
           "bbox": [
-            20,
+            27,
             5,
-            171,
+            164,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 127
+          "chroma_adjacent_pixels": 329
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24902,
+          "nontransparent_pixels": 16987,
           "bbox": [
-            17,
+            25,
             5,
-            174,
+            166,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 207
+          "chroma_adjacent_pixels": 329
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24684,
+          "nontransparent_pixels": 17159,
           "bbox": [
-            17,
+            23,
             5,
-            175,
+            169,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 156
+          "chroma_adjacent_pixels": 355
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24531,
+          "nontransparent_pixels": 16573,
           "bbox": [
-            17,
+            24,
             5,
-            174,
+            168,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 180
+          "chroma_adjacent_pixels": 330
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24615,
+          "nontransparent_pixels": 16306,
           "bbox": [
-            18,
+            26,
             5,
-            173,
+            166,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 195
+          "chroma_adjacent_pixels": 320
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24449,
+          "nontransparent_pixels": 16149,
           "bbox": [
-            19,
+            25,
             5,
-            172,
+            167,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 139
+          "chroma_adjacent_pixels": 304
         },
         {
           "index": 6,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\06.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\06.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24388,
+          "nontransparent_pixels": 15564,
           "bbox": [
-            18,
+            32,
             5,
-            173,
+            160,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 178
+          "chroma_adjacent_pixels": 308
         },
         {
           "index": 7,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running-left\\07.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running-left\\07.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 23260,
+          "nontransparent_pixels": 16116,
           "bbox": [
-            22,
+            29,
             5,
-            170,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 166
+          "chroma_adjacent_pixels": 297
         }
       ]
     },
@@ -393,63 +389,63 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waving\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waving\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24348,
+          "nontransparent_pixels": 20177,
           "bbox": [
-            15,
+            21,
             5,
-            177,
+            170,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 84
+          "chroma_adjacent_pixels": 165
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waving\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waving\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24840,
+          "nontransparent_pixels": 20159,
           "bbox": [
-            16,
             5,
-            176,
-            203
+            7,
+            187,
+            200
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 74
+          "chroma_adjacent_pixels": 210
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waving\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waving\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24093,
+          "nontransparent_pixels": 21336,
           "bbox": [
-            17,
+            19,
             5,
-            175,
+            172,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 85
+          "chroma_adjacent_pixels": 193
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waving\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waving\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 23991,
+          "nontransparent_pixels": 20284,
           "bbox": [
-            17,
+            20,
             5,
-            175,
+            171,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 53
+          "chroma_adjacent_pixels": 181
         }
       ]
     },
@@ -464,25 +460,25 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\jumping\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\jumping\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25349,
+          "nontransparent_pixels": 23893,
           "bbox": [
-            14,
+            20,
             5,
-            178,
+            171,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 172
+          "chroma_adjacent_pixels": 249
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\jumping\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\jumping\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24336,
+          "nontransparent_pixels": 19745,
           "bbox": [
             17,
             5,
@@ -490,52 +486,52 @@
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 135
+          "chroma_adjacent_pixels": 210
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\jumping\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\jumping\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24752,
+          "nontransparent_pixels": 21034,
           "bbox": [
-            15,
+            9,
+            5,
+            182,
+            203
+          ],
+          "edge_pixels": 0,
+          "chroma_adjacent_pixels": 216
+        },
+        {
+          "index": 3,
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\jumping\\03.png",
+          "width": 192,
+          "height": 208,
+          "nontransparent_pixels": 19337,
+          "bbox": [
+            16,
             5,
             176,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 127
-        },
-        {
-          "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\jumping\\03.png",
-          "width": 192,
-          "height": 208,
-          "nontransparent_pixels": 23939,
-          "bbox": [
-            18,
-            5,
-            173,
-            203
-          ],
-          "edge_pixels": 0,
-          "chroma_adjacent_pixels": 117
+          "chroma_adjacent_pixels": 190
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\jumping\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\jumping\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25041,
+          "nontransparent_pixels": 23809,
           "bbox": [
-            14,
+            21,
             5,
-            177,
+            171,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 156
+          "chroma_adjacent_pixels": 297
         }
       ]
     },
@@ -550,123 +546,123 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27878,
+          "nontransparent_pixels": 19860,
           "bbox": [
-            8,
+            29,
             5,
-            184,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 206
+          "chroma_adjacent_pixels": 306
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27530,
+          "nontransparent_pixels": 19777,
           "bbox": [
-            9,
+            31,
             5,
-            182,
+            161,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 189
+          "chroma_adjacent_pixels": 282
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27628,
+          "nontransparent_pixels": 19895,
           "bbox": [
-            9,
+            32,
             5,
-            183,
+            160,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 198
+          "chroma_adjacent_pixels": 279
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 28385,
+          "nontransparent_pixels": 19192,
           "bbox": [
+            33,
             5,
-            12,
-            187,
-            195
+            158,
+            203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 184
+          "chroma_adjacent_pixels": 273
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 21273,
+          "nontransparent_pixels": 19534,
           "bbox": [
+            33,
             5,
-            34,
-            187,
-            174
+            159,
+            203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 132
+          "chroma_adjacent_pixels": 273
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27446,
+          "nontransparent_pixels": 19986,
           "bbox": [
+            30,
             5,
-            13,
-            187,
-            194
+            162,
+            203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 177
+          "chroma_adjacent_pixels": 330
         },
         {
           "index": 6,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\06.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\06.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27592,
+          "nontransparent_pixels": 19758,
           "bbox": [
-            7,
+            29,
             5,
-            184,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 212
+          "chroma_adjacent_pixels": 290
         },
         {
           "index": 7,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\failed\\07.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\failed\\07.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27750,
+          "nontransparent_pixels": 19792,
           "bbox": [
-            9,
+            29,
             5,
-            183,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 218
+          "chroma_adjacent_pixels": 302
         }
       ]
     },
@@ -681,93 +677,93 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waiting\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waiting\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25876,
+          "nontransparent_pixels": 18734,
           "bbox": [
-            13,
+            32,
             5,
-            179,
+            160,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 142
+          "chroma_adjacent_pixels": 186
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waiting\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waiting\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25788,
+          "nontransparent_pixels": 18807,
           "bbox": [
-            15,
+            34,
             5,
-            177,
+            158,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 132
+          "chroma_adjacent_pixels": 198
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waiting\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waiting\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25625,
+          "nontransparent_pixels": 18074,
           "bbox": [
-            15,
+            34,
             5,
-            177,
+            157,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 107
+          "chroma_adjacent_pixels": 192
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waiting\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waiting\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26508,
+          "nontransparent_pixels": 18727,
           "bbox": [
-            8,
+            34,
             5,
-            183,
+            157,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 155
+          "chroma_adjacent_pixels": 163
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waiting\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waiting\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25870,
+          "nontransparent_pixels": 19842,
           "bbox": [
-            14,
+            18,
             5,
-            178,
+            174,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 135
+          "chroma_adjacent_pixels": 196
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\waiting\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\waiting\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25771,
+          "nontransparent_pixels": 20012,
           "bbox": [
-            14,
+            28,
             5,
-            177,
+            164,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 113
+          "chroma_adjacent_pixels": 238
         }
       ]
     },
@@ -782,93 +778,93 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 27096,
+          "nontransparent_pixels": 19126,
           "bbox": [
-            10,
+            30,
             5,
-            182,
+            162,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 151
+          "chroma_adjacent_pixels": 147
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25739,
+          "nontransparent_pixels": 18754,
           "bbox": [
-            14,
+            33,
             5,
-            177,
+            159,
+            203
+          ],
+          "edge_pixels": 0,
+          "chroma_adjacent_pixels": 143
+        },
+        {
+          "index": 2,
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running\\02.png",
+          "width": 192,
+          "height": 208,
+          "nontransparent_pixels": 18478,
+          "bbox": [
+            36,
+            5,
+            156,
             203
           ],
           "edge_pixels": 0,
           "chroma_adjacent_pixels": 130
         },
         {
-          "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running\\02.png",
-          "width": 192,
-          "height": 208,
-          "nontransparent_pixels": 25732,
-          "bbox": [
-            12,
-            5,
-            180,
-            203
-          ],
-          "edge_pixels": 0,
-          "chroma_adjacent_pixels": 146
-        },
-        {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26225,
+          "nontransparent_pixels": 18302,
           "bbox": [
-            12,
+            36,
             5,
-            179,
+            156,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 154
+          "chroma_adjacent_pixels": 139
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 24731,
+          "nontransparent_pixels": 19530,
           "bbox": [
-            18,
+            21,
             5,
-            174,
+            171,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 134
+          "chroma_adjacent_pixels": 150
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\running\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\running\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26718,
+          "nontransparent_pixels": 19739,
           "bbox": [
-            13,
+            24,
             5,
-            179,
+            168,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 135
+          "chroma_adjacent_pixels": 156
         }
       ]
     },
@@ -883,93 +879,93 @@
       "frames": [
         {
           "index": 0,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\review\\00.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\review\\00.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26705,
+          "nontransparent_pixels": 17690,
           "bbox": [
-            13,
+            37,
             5,
-            179,
+            154,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 173
+          "chroma_adjacent_pixels": 126
         },
         {
           "index": 1,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\review\\01.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\review\\01.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26665,
+          "nontransparent_pixels": 17823,
           "bbox": [
-            10,
+            35,
             5,
-            182,
+            157,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 140
+          "chroma_adjacent_pixels": 130
         },
         {
           "index": 2,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\review\\02.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\review\\02.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26435,
+          "nontransparent_pixels": 16393,
           "bbox": [
-            12,
+            41,
             5,
-            180,
+            151,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 133
+          "chroma_adjacent_pixels": 138
         },
         {
           "index": 3,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\review\\03.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\review\\03.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 25833,
+          "nontransparent_pixels": 17489,
           "bbox": [
-            13,
+            38,
             5,
-            179,
+            153,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 132
+          "chroma_adjacent_pixels": 137
         },
         {
           "index": 4,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\review\\04.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\review\\04.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26140,
+          "nontransparent_pixels": 16973,
           "bbox": [
-            15,
+            40,
             5,
-            176,
+            152,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 147
+          "chroma_adjacent_pixels": 115
         },
         {
           "index": 5,
-          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-v2\\frames\\review\\05.png",
+          "file": "D:\\workspace\\capylulu\\.pet-work\\3090265bbbee19cf4c27530cc2f75e19-video-rebuild-v2\\frames\\review\\05.png",
           "width": 192,
           "height": 208,
-          "nontransparent_pixels": 26821,
+          "nontransparent_pixels": 17393,
           "bbox": [
-            13,
+            39,
             5,
-            178,
+            153,
             203
           ],
           "edge_pixels": 0,
-          "chroma_adjacent_pixels": 162
+          "chroma_adjacent_pixels": 113
         }
       ]
     }

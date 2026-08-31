@@ -1,14 +1,16 @@
 {
   "row": 10,
-  "directions": ["180", "202.5", "225", "247.5", "270", "292.5", "315", "337.5"],
-  "visual_result": "pass",
-  "checks": {
-    "slot_count": "pass: exactly eight isolated poses",
-    "direction_order": "pass: down progresses continuously through screen-left toward up",
-    "screen_left_anchor": "pass: the 270 pose projects the muzzle toward canvas left with no right-facing reversal",
-    "permanent_wink": "pass: the same eye remains closed and identity is not mirrored",
-    "source_bounded_body": "pass: all poses retain the flat upper-bust crop with no torso extension, hips, legs, feet, tail, or extra body parts",
-    "safe_margins": "pass: deterministic extended-atlas assembly found eight separated groups with no edge contact"
-  },
-  "accepted_source": "C:\\Users\\22503\\.codex\\generated_images\\01a0241d-85ab-7932-91ed-7a1a82fe6c79\\exec-9b4bee11-2505-45de-b400-12231bceaa3e.png"
+  "ok": true,
+  "directions": [
+    {"direction": "180", "verdict": "pass", "evidence": "both pupils low and visible; muzzle dipped"},
+    {"direction": "202.5", "verdict": "pass", "evidence": "downward gaze begins shifting viewer-left"},
+    {"direction": "225", "verdict": "pass", "evidence": "balanced down-left pupil and restrained head yaw"},
+    {"direction": "247.5", "verdict": "pass", "evidence": "stronger viewer-left yaw with residual downward gaze"},
+    {"direction": "270", "verdict": "pass", "evidence": "both pupils and compact muzzle shift viewer-left with subtle head yaw"},
+    {"direction": "292.5", "verdict": "pass", "evidence": "viewer-left gaze begins rising"},
+    {"direction": "315", "verdict": "pass", "evidence": "clear up-left gaze with compact integrated muzzle"},
+    {"direction": "337.5", "verdict": "pass", "evidence": "near-up gaze retains viewer-left bias for loop closure"}
+  ],
+  "continuity": "Clockwise progression is monotonic from down through viewer-left toward up, with the same planted baseline and center as row 9.",
+  "registration": "A single shared scale correction of 0.94132653 was applied to the coherent row before atlas assembly; no individual cell was composited or retimed."
 }

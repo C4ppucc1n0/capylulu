@@ -1,19 +1,11 @@
 {
-  "visual_qa": "pass",
-  "hard_failures": [],
-  "warnings": [
-    "337.5 to 000 has a visible loop-boundary scale change; 000 to 022.5 has a moderate center shift",
-    "247.5 and 292.5 have ambiguous vertical-diagonal nuance, while all horizontal pairings and the 090/270 hard gate are correct",
-    "reported transparent interior holes are normal negative spaces between fingers, ears, and head rather than missing face or torso pixels",
-    "drag-left motion is subtle but distinguishable from other standard actions"
-  ],
-  "body_boundary": "pass: every frame retains the source upper-bust flat crop with no torso extension, belly, hips, pelvis, pants, legs, feet, tail, extra or duplicate arms, or second body",
-  "identity": "pass: the permanent wink stays on the same character side without mirroring; open eye, cap and stem, ears, orange muzzle, tooth, and hands remain stable",
-  "reviewed_artifacts": [
-    "qa/contact-sheet-v2.png",
-    "qa/direction-qa.png",
-    "qa/validation-v2.json",
-    "qa/direction-continuity.json",
-    "qa/direction-blind-validation.json"
+  "ok": true,
+  "final_visual_qa": "pass",
+  "qa_note": "Nine standard actions preserve identity, proportion, baseline, and semantics. The wave row reproduces the video-derived raised paw, head tilt, and wink. All 16 look directions form a clockwise loop; repaired side and diagonal faces keep both eyes visible, restrained yaw, and a compact integrated muzzle.",
+  "repair_notes": "none",
+  "accepted_review_warnings": [
+    "135 and 157.5 have subtle horizontal components in blind review",
+    "247.5 has a subtle downward component in blind review",
+    "337.5 to 000 has a larger silhouette-return diff but no center or scale jump"
   ]
 }

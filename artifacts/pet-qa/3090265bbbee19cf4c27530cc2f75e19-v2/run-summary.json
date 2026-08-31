@@ -1,0 +1,10 @@
+{
+  "pet_id": "3090265bbbee19cf4c27530cc2f75e19",
+  "source": "uploaded video 0s-2s",
+  "design_change": "Rebuilt Lulu as a full-body yellow-orange 3D toy with both eyes normally open; the wink is reserved for the video-derived waving action.",
+  "video_motion": "neutral pose, small approach/body bob, mouth opens, both paws rise, head tilts, screen-left paw waves, wink",
+  "side_face_revision": "Look directions use the approved running-left/right face proportions: subtle 20-25 degree head yaw, both eyes visible, compact integrated muzzle, and pupil-led direction.",
+  "atlas": {"columns": 8, "rows": 11, "cell_width": 192, "cell_height": 208, "sprite_version_number": 2},
+  "validation": "pass",
+  "final_visual_qa": "pass"
+}

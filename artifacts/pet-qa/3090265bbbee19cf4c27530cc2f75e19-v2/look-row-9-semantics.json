@@ -1,13 +1,16 @@
 {
   "row": 9,
-  "directions": ["000", "022.5", "045", "067.5", "090", "112.5", "135", "157.5"],
-  "visual_result": "pass",
-  "checks": {
-    "slot_count": "pass: exactly eight isolated poses",
-    "direction_order": "pass: up progresses continuously through screen-right toward down",
-    "permanent_wink": "pass: the same eye remains closed and identity is not mirrored",
-    "source_bounded_body": "pass: every pose ends at the original upper-bust crop with no torso extension, hips, legs, feet, tail, or extra body parts",
-    "registration": "pass: deterministic row registration completed"
-  },
-  "accepted_source": "C:\\Users\\22503\\.codex\\generated_images\\01a0241d-85ab-7932-91ed-7a1a82fe6c79\\exec-ecc3bcc0-1768-4220-a702-2ddf40c84ee6.png"
+  "ok": true,
+  "directions": [
+    {"direction": "000", "verdict": "pass", "evidence": "both pupils high; muzzle and chin lifted"},
+    {"direction": "022.5", "verdict": "pass", "evidence": "upward gaze begins shifting viewer-right"},
+    {"direction": "045", "verdict": "pass", "evidence": "balanced up-right pupil and head yaw"},
+    {"direction": "067.5", "verdict": "pass", "evidence": "stronger viewer-right yaw with residual upward gaze"},
+    {"direction": "090", "verdict": "pass", "evidence": "pupils, nose and projected muzzle read viewer-right at near-level height"},
+    {"direction": "112.5", "verdict": "pass", "evidence": "viewer-right yaw begins dipping"},
+    {"direction": "135", "verdict": "pass", "evidence": "clear down-right gaze and muzzle dip"},
+    {"direction": "157.5", "verdict": "pass", "evidence": "near-down gaze retains slight viewer-right bias"}
+  ],
+  "continuity": "Clockwise progression is monotonic from up through viewer-right toward down, without reversal or duplicated cardinal cells.",
+  "registration": "All cells share the registered scale and planted foot baseline in qa/look-row-9-registered.png."
 }
