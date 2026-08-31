@@ -232,7 +232,6 @@ internal sealed class MainWindow : Window
     private readonly MenuItem _characterMenu;
     private readonly MenuItem _loafingMenu;
     private readonly MenuItem _singingMenu;
-    private readonly MenuItem _matchGameMenu;
     private readonly MenuItem _focusMenu;
     private readonly MenuItem _moodMenu;
     private readonly MenuItem _gazeModeMenu;
@@ -287,7 +286,6 @@ internal sealed class MainWindow : Window
     private int _singingSupportCount;
     private bool _singingNoSupportPromptShown;
     private MusicPlayerWindow? _musicPlayerWindow;
-    private MatchGameWindow? _matchGameWindow;
     private PetMood _mood;
     private PetGazeMode _gazeMode;
     private DateTimeOffset? _focusEndsAt;
@@ -500,8 +498,6 @@ internal sealed class MainWindow : Window
         _singingMenu.Click += (_, _) => StartSinging();
         var musicPlayerItem = new MenuItem { Header = "音乐播放器" };
         musicPlayerItem.Click += (_, _) => OpenMusicPlayer();
-        _matchGameMenu = new MenuItem { Header = "噜噜消消乐" };
-        _matchGameMenu.Click += (_, _) => OpenMatchGame();
         _focusMenu = new MenuItem { Header = "专注模式：10 分钟" };
         _focusMenu.Click += (_, _) => StartFocusSession();
         _moodMenu = new MenuItem { Header = "当前状态" };
@@ -530,7 +526,6 @@ internal sealed class MainWindow : Window
         contextMenu.Items.Add(_loafingMenu);
         contextMenu.Items.Add(_singingMenu);
         contextMenu.Items.Add(musicPlayerItem);
-        contextMenu.Items.Add(_matchGameMenu);
         contextMenu.Items.Add(_focusMenu);
         contextMenu.Items.Add(_moodMenu);
         contextMenu.Items.Add(_gazeModeMenu);
@@ -613,25 +608,6 @@ internal sealed class MainWindow : Window
         _musicPlayerWindow.Closed += (_, _) => _musicPlayerWindow = null;
         _musicPlayerWindow.Show();
         _musicPlayerWindow.Activate();
-    }
-
-    private void OpenMatchGame()
-    {
-        if (_matchGameWindow is { IsLoaded: true })
-        {
-            if (_matchGameWindow.WindowState == WindowState.Minimized)
-            {
-                _matchGameWindow.WindowState = WindowState.Normal;
-            }
-
-            _matchGameWindow.Activate();
-            return;
-        }
-
-        _matchGameWindow = new MatchGameWindow(Topmost);
-        _matchGameWindow.Closed += (_, _) => _matchGameWindow = null;
-        _matchGameWindow.Show();
-        _matchGameWindow.Activate();
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
