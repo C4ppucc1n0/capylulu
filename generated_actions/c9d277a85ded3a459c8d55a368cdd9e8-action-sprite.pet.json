@@ -1,4 +1,7 @@
 {
+  "id": "loafing-lulu",
+  "displayName": "摸鱼噜噜",
+  "roles": ["loafing"],
   "spriteVersionNumber": 2,
   "actions": {
     "idle": 0,

@@ -1,4 +1,7 @@
 {
+  "id": "blinking-lulu",
+  "displayName": "眨眼噜噜",
+  "roles": ["normal"],
   "spriteVersionNumber": 2,
   "actions": {
     "idle": 0,

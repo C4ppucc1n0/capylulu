@@ -1,22 +1,17 @@
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CapyLulu;
 
-internal sealed class PetSettings
-{
-    public double? Left { get; set; }
-    public double? Top { get; set; }
-    public double Scale { get; set; } = 1.0;
-    public bool Topmost { get; set; } = true;
-    public string? SelectedCharacter { get; set; }
-    public bool LoafingMode { get; set; }
-    public string Mood { get; set; } = "Happy";
-    public string GazeMode { get; set; } = "Follow";
-}
-
 internal static class SettingsStore
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     private static readonly string SettingsDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "CapyLulu");
@@ -33,10 +28,11 @@ internal static class SettingsStore
             }
 
             var json = File.ReadAllText(SettingsPath);
-            return JsonSerializer.Deserialize<PetSettings>(json) ?? new PetSettings();
+            return JsonSerializer.Deserialize<PetSettings>(json, JsonOptions) ?? new PetSettings();
         }
-        catch
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)
         {
+            PreserveUnreadableSettings();
             return new PetSettings();
         }
     }
@@ -46,15 +42,34 @@ internal static class SettingsStore
         try
         {
             Directory.CreateDirectory(SettingsDirectory);
-            var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-            File.WriteAllText(SettingsPath, json);
+            var json = JsonSerializer.Serialize(settings, JsonOptions);
+            var temporaryPath = SettingsPath + ".tmp";
+            File.WriteAllText(temporaryPath, json);
+            File.Move(temporaryPath, SettingsPath, overwrite: true);
         }
-        catch
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             // 设置写入失败不应影响桌宠继续运行。
+        }
+    }
+
+    private static void PreserveUnreadableSettings()
+    {
+        try
+        {
+            if (!File.Exists(SettingsPath))
+            {
+                return;
+            }
+
+            var backupPath = Path.Combine(
+                SettingsDirectory,
+                $"settings.invalid-{DateTime.UtcNow:yyyyMMddHHmmss}.json");
+            File.Move(SettingsPath, backupPath, overwrite: false);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // 无法备份时仍回退到默认设置。
         }
     }
 }

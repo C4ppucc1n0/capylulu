@@ -53,6 +53,12 @@ internal sealed class PetActionManifest
 
     public int SpriteVersionNumber { get; set; } = 1;
 
+    public string? Id { get; set; }
+
+    public string? DisplayName { get; set; }
+
+    public string[] Roles { get; set; } = [];
+
     public Dictionary<string, int> Actions { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     public int[] ClickRows { get; set; } = [];
@@ -60,6 +66,8 @@ internal sealed class PetActionManifest
     public int[] LookRows { get; set; } = [];
 
     public bool HasLookDirections => SpriteVersionNumber >= 2 && LookRows.Length == 2;
+
+    public bool HasRole(string role) => Roles.Contains(role, StringComparer.OrdinalIgnoreCase);
 
     public int? GetRow(PetAction action, int rowCount)
     {

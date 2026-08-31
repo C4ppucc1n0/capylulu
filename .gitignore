@@ -3,6 +3,8 @@
 dotnet-install.ps1
 src/**/bin/
 src/**/obj/
+tests/**/bin/
+tests/**/obj/
 dist/
 test-artifacts/
 .pet-work/

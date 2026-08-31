@@ -14,6 +14,7 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Resources\*.json</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\gif_resources\*.png">
       <LogicalName>CapyLulu.GifResources.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <Resource Remove="Resources\dialogues.zh-CN.json" />
+    <EmbeddedResource Include="Resources\dialogues.zh-CN.json"
+                      LogicalName="CapyLulu.Resources.dialogues.zh-CN.json">
+      <WithCulture>false</WithCulture>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

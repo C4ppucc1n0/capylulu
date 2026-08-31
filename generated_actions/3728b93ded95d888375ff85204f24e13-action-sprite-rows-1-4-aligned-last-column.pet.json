@@ -1,4 +1,7 @@
 {
+  "id": "bright-eyes-lulu",
+  "displayName": "眼睛噜噜",
+  "roles": ["normal"],
   "spriteVersionNumber": 2,
   "actions": {
     "idle": 0,

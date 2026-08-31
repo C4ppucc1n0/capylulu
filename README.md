@@ -43,7 +43,7 @@ dist/CapyLulu/CapyLulu.exe
 
 把新的合规动作图放进项目根目录的 `generated_actions` 后，重新执行构建脚本；新生成的单文件 EXE 会在右键“更换角色”中提供普通角色。摸鱼专属角色由“摸鱼模式”单独切换，不在普通角色列表重复显示。
 
-动作图旁可放置同名的 `*.pet.json` 动作清单。旧资源不需要清单，仍按“第 1 行待机，其余行互动”兼容播放。v2 资源使用 `8 × 11`、单格 `192 × 208` 的图集：前 9 行是语义动作，后 2 行是从 `000` 向上开始、每隔 `22.5°` 顺时针排列的 16 个注视方向。
+动作图旁可放置同名的 `*.pet.json` 角色清单。清单使用稳定 `id`、`displayName` 和 `roles` 描述角色身份，并记录动作行；`loafing` role 用于摸鱼专属角色。旧资源不需要清单，仍按“第 1 行待机，其余行互动”兼容播放。v2 资源使用 `8 × 11`、单格 `192 × 208` 的图集：前 9 行是语义动作，后 2 行是从 `000` 向上开始、每隔 `22.5°` 顺时针排列的 16 个注视方向。
 
 ## 功能规格
 
@@ -57,6 +57,8 @@ dist/CapyLulu/CapyLulu.exe
 - `generated_actions/`：产品实际加载并打包进 EXE 的动作资源，是运行时资源的唯一正式来源。
 - `gif_resources/`：唱歌等临时演出的 GIF 资源；构建时内嵌进 EXE，运行时不依赖外部文件。
 - `raw_images/`：原始角色图片和其他输入素材，不作为运行时资源直接加载。
+- `src/CapyLulu/Resources/`：内嵌的产品文案等可变内容；发布后仍包含在单文件 EXE 中。
+- `tests/CapyLulu.Validation/`：不依赖外部测试框架的离线验证程序，覆盖交互算法、角色清单和正式图集。
 - `dist/`：本地构建产物，不提交到 Git。
 
 原先的 `pet-runs/` 已按上述职责拆分，不再作为固定目录使用。
@@ -68,3 +70,11 @@ dist/CapyLulu/CapyLulu.exe
 ```
 
 构建脚本使用项目内的 `.dotnet` SDK（如果存在），发布 Windows x64 自包含版本。
+
+## 离线验证
+
+```powershell
+.\.dotnet\dotnet.exe run --project tests\CapyLulu.Validation\CapyLulu.Validation.csproj --configuration Debug
+```
+
+验证程序会检查注视与手势算法、专注计时、文案资源、角色 ID 唯一性，并实际解码 `generated_actions` 中所有正式图集，确认清单引用的动作行均存在。

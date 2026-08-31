@@ -47,13 +47,30 @@ internal sealed class SpriteSheet
     // 保留图集的原始列数作为一段动作的总时长；每行实际帧数可以更少。
     public int Columns { get; }
 
-    public BitmapSource this[int row, int column] => _frames[row][column % _frames[row].Length];
+    public BitmapSource this[int row, int column]
+    {
+        get
+        {
+            var frameCount = GetFrameCount(row);
+            if (frameCount == 0)
+            {
+                throw new InvalidDataException($"动作图第 {row + 1} 行没有可播放帧。");
+            }
+
+            return _frames[row][column % frameCount];
+        }
+    }
 
     public int GetFrameCount(int row) => row >= 0 && row < _frames.Length ? _frames[row].Length : 0;
 
     public int GetPlaybackFrameCount(int row) => Actions.SpriteVersionNumber >= 2
         ? GetFrameCount(row)
         : Columns;
+
+    public IReadOnlyList<int> GetPlayableClickRows() => Actions
+        .GetClickRows(Rows)
+        .Where(row => GetFrameCount(row) > 0)
+        .ToArray();
 
     public BitmapSource? GetLookFrame(int directionIndex)
     {
@@ -129,16 +146,14 @@ internal sealed class SpriteSheet
                     rowFrames.Add(ToBitmapSource(sourceFrames[row][column], horizontalOffset));
                 }
 
-                // 整行为空时不视为动作，避免被排进互动轮换。
-                if (rowFrames.Count > 0)
-                {
-                    frames.Add(rowFrames.ToArray());
-                }
+                // 保留空行占位，确保 manifest 中的物理行号不会因空行而偏移。
+                frames.Add(rowFrames.ToArray());
             }
 
             actions ??= layout.FrameWidth == 192 && layout.FrameHeight == 208 && frames.Count >= 11
                 ? PetActionManifest.CreateV2Default()
                 : new PetActionManifest();
+            ValidateReferencedRows(actions, frames);
 
             return new SpriteSheet(
                 sourceName,
@@ -161,6 +176,28 @@ internal sealed class SpriteSheet
                 {
                     frame?.Dispose();
                 }
+            }
+        }
+    }
+
+    private static void ValidateReferencedRows(
+        PetActionManifest actions,
+        IReadOnlyList<BitmapSource[]> frames)
+    {
+        var referencedRows = actions.Actions.Values
+            .Concat(actions.ClickRows)
+            .Concat(actions.LookRows)
+            .Distinct();
+        foreach (var row in referencedRows)
+        {
+            if (row < 0 || row >= frames.Count)
+            {
+                throw new InvalidDataException($"动作清单引用了不存在的第 {row + 1} 行。");
+            }
+
+            if (frames[row].Length == 0)
+            {
+                throw new InvalidDataException($"动作清单引用的第 {row + 1} 行没有可播放帧。");
             }
         }
     }

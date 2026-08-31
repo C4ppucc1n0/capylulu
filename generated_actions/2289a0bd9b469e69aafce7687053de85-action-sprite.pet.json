@@ -1,4 +1,7 @@
 {
+  "id": "xiaodu-lulu",
+  "displayName": "小肚噜噜",
+  "roles": ["normal"],
   "spriteVersionNumber": 2,
   "actions": {
     "idle": 0,
