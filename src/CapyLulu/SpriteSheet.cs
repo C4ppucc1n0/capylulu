@@ -1,5 +1,4 @@
 using System.IO;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -88,9 +87,9 @@ internal sealed class SpriteSheet
 
     public static SpriteSheet Load(Stream stream, string sourceName, PetActionManifest? actions = null)
     {
-        using var image = SixLabors.ImageSharp.Image.Load<Rgba32>(stream);
+        using var image = SixLabors.ImageSharp.Image.Load<Bgra32>(stream);
         var layout = DetectLayout(image.Width, image.Height);
-        var sourceFrames = new Image<Rgba32>[layout.Rows][];
+        var sourceFrames = new Image<Bgra32>[layout.Rows][];
         var anchors = new int[layout.Rows, layout.Columns];
         var hasVisibleContent = new bool[layout.Rows, layout.Columns];
         var allAnchors = new List<int>(layout.Rows * layout.Columns);
@@ -99,7 +98,7 @@ internal sealed class SpriteSheet
         {
             for (var row = 0; row < layout.Rows; row++)
             {
-                sourceFrames[row] = new Image<Rgba32>[layout.Columns];
+                sourceFrames[row] = new Image<Bgra32>[layout.Columns];
                 for (var column = 0; column < layout.Columns; column++)
                 {
                     var frame = image.Clone(context => context.Crop(
@@ -150,9 +149,7 @@ internal sealed class SpriteSheet
                 frames.Add(rowFrames.ToArray());
             }
 
-            actions ??= layout.FrameWidth == 192 && layout.FrameHeight == 208 && frames.Count >= 11
-                ? PetActionManifest.CreateV2Default()
-                : new PetActionManifest();
+            actions = ApplyV2Defaults(actions, layout, frames.Count);
             ValidateReferencedRows(actions, frames);
 
             return new SpriteSheet(
@@ -178,6 +175,46 @@ internal sealed class SpriteSheet
                 }
             }
         }
+    }
+
+    // v2 图集按固定行序排布，所以清单只需要写身份信息；缺什么补什么，写了的一律优先。
+    // 逐字段而不是整份兜底：行数不够时不注入对应默认值，否则 ValidateReferencedRows 会
+    // 因为引用了不存在的行而让整个角色加载失败。
+    private static PetActionManifest ApplyV2Defaults(
+        PetActionManifest? actions,
+        GridLayout layout,
+        int rowCount)
+    {
+        // 完全没有清单时只认「不会认错」的完整 v2 形态；其余仍按 v1 兼容播放。
+        var isFullV2Layout = layout.FrameWidth == 192 && layout.FrameHeight == 208 && rowCount >= 11;
+        actions ??= new PetActionManifest
+        {
+            SpriteVersionNumber = isFullV2Layout ? 2 : 1
+        };
+
+        if (actions.SpriteVersionNumber < 2)
+        {
+            return actions;
+        }
+
+        var defaults = PetActionManifest.CreateV2Default();
+        if (actions.Actions.Count == 0 && rowCount >= 9)
+        {
+            actions.Actions = defaults.Actions;
+        }
+
+        if (actions.ClickRows.Length == 0 && rowCount >= 9)
+        {
+            actions.ClickRows = defaults.ClickRows;
+        }
+
+        // 注视行是第 10、11 行；只有 9 行的 v2 图集不该被强行安上注视功能。
+        if (actions.LookRows.Length == 0 && rowCount >= 11)
+        {
+            actions.LookRows = defaults.LookRows;
+        }
+
+        return actions;
     }
 
     private static void ValidateReferencedRows(
@@ -222,7 +259,7 @@ internal sealed class SpriteSheet
         return candidates[0];
     }
 
-    private static int FindHorizontalAnchor(Image<Rgba32> image)
+    private static int FindHorizontalAnchor(Image<Bgra32> image)
     {
         const byte visibleAlpha = 40;
         var minY = image.Height;
@@ -289,7 +326,7 @@ internal sealed class SpriteSheet
         return image.Width / 2;
     }
 
-    private static bool HasVisibleContent(Image<Rgba32> image)
+    private static bool HasVisibleContent(Image<Bgra32> image)
     {
         const byte visibleAlpha = 40;
         var hasVisiblePixel = false;
@@ -311,7 +348,7 @@ internal sealed class SpriteSheet
         return hasVisiblePixel;
     }
 
-    private static BitmapSource ToBitmapSource(Image<Rgba32> image, int horizontalOffset)
+    private static BitmapSource ToBitmapSource(Image<Bgra32> image, int horizontalOffset)
     {
         var pixels = new byte[image.Width * image.Height * 4];
         image.CopyPixelDataTo(pixels);
@@ -339,22 +376,7 @@ internal sealed class SpriteSheet
             pixels = translated;
         }
 
-        for (var index = 0; index < pixels.Length; index += 4)
-        {
-            (pixels[index], pixels[index + 2]) = (pixels[index + 2], pixels[index]);
-        }
-
-        var bitmap = BitmapSource.Create(
-            image.Width,
-            image.Height,
-            96,
-            96,
-            PixelFormats.Bgra32,
-            null,
-            pixels,
-            image.Width * 4);
-        bitmap.Freeze();
-        return bitmap;
+        return BitmapConversion.ToBitmapSource(image.Width, image.Height, pixels);
     }
 
     private static void FeatherHorizontalCutEdges(byte[] pixels, int width, int height)

@@ -71,15 +71,9 @@ internal sealed class PetActionManifest
 
     public int? GetRow(PetAction action, int rowCount)
     {
-        var key = action switch
-        {
-            PetAction.DragRight => "dragRight",
-            PetAction.DragLeft => "dragLeft",
-            PetAction.GestureFlick => "gestureFlick",
-            PetAction.GestureShake => "gestureShake",
-            PetAction.GestureLiftDrop => "gestureLiftDrop",
-            _ => char.ToLowerInvariant(action.ToString()[0]) + action.ToString()[1..]
-        };
+        // 枚举名转小驼峰即为清单键名（Idle→idle、GestureLiftDrop→gestureLiftDrop）。
+        var name = action.ToString();
+        var key = char.ToLowerInvariant(name[0]) + name[1..];
 
         return Actions.TryGetValue(key, out var row) && row >= 0 && row < rowCount
             ? row
@@ -88,7 +82,8 @@ internal sealed class PetActionManifest
 
     public IReadOnlyList<int> GetClickRows(int rowCount)
     {
-        var validRows = ClickRows.Where(row => row > 0 && row < rowCount).Distinct().ToArray();
+        // 显式声明的互动行允许包含第 0 行；下面的兜底则有意跳过第 0 行（待机）。
+        var validRows = ClickRows.Where(row => row >= 0 && row < rowCount).Distinct().ToArray();
         if (validRows.Length > 0)
         {
             return validRows;
@@ -113,8 +108,22 @@ internal sealed class PetActionManifest
 
         try
         {
-            return JsonSerializer.Deserialize<PetActionManifest>(stream, JsonOptions)
-                ?? null;
+            var manifest = JsonSerializer.Deserialize<PetActionManifest>(stream, JsonOptions);
+            if (manifest is null)
+            {
+                return null;
+            }
+
+            // 反序列化会新建字典并丢掉初始化时的比较器，这里补回大小写不敏感。
+            // 逐项赋值而非用拷贝构造：清单里若同时写了 "idle" 和 "Idle"，后者覆盖前者，不抛异常。
+            var actions = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            foreach (var pair in manifest.Actions)
+            {
+                actions[pair.Key] = pair.Value;
+            }
+
+            manifest.Actions = actions;
+            return manifest;
         }
         catch (JsonException)
         {

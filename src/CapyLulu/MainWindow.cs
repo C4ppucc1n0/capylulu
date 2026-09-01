@@ -79,6 +79,7 @@ internal sealed partial class MainWindow : Window
     private PetGazeMode _gazeMode;
     private HwndSource? _windowSource;
     private bool _hotkeyRegistered;
+    private bool _startupPositionRestored;
 
     public MainWindow()
     {
@@ -261,6 +262,8 @@ internal sealed partial class MainWindow : Window
             Left = workArea.Right - ActualWidth - 36;
             Top = workArea.Bottom - ActualHeight - 30;
         }
+
+        _startupPositionRestored = true;
     }
 
     private void BuildCharacterMenu()
@@ -438,8 +441,7 @@ internal sealed partial class MainWindow : Window
             return;
         }
 
-        var previousCenterX = Left + (ActualWidth / 2);
-        var previousBottom = Top + ActualHeight;
+        var anchor = CaptureAnchor();
         _animationTimer.Stop();
         _idleEasterEggTimer.Stop();
         _bubbleTimer.Stop();
@@ -460,11 +462,7 @@ internal sealed partial class MainWindow : Window
         _singingSupportButton.Visibility = Visibility.Visible;
         HideSingingResponse();
         _singingEffectsLayer.Children.Clear();
-        UpdatePetSize();
-        UpdateLayout();
-        Left = previousCenterX - (ActualWidth / 2);
-        Top = previousBottom - ActualHeight;
-        KeepWindowReachable();
+        RestoreAnchor(anchor);
         UpdateSingingMenuState();
         UpdateSingingPlayback(0);
         _singingTimer.Start();
@@ -676,8 +674,7 @@ internal sealed partial class MainWindow : Window
             return;
         }
 
-        var previousCenterX = Left + (ActualWidth / 2);
-        var previousBottom = Top + ActualHeight;
+        var anchor = CaptureAnchor();
         var receivedSupport = _singingSupportCount > 0;
         _singingTimer.Stop();
         _isSinging = false;
@@ -689,11 +686,7 @@ internal sealed partial class MainWindow : Window
         _singingEffectsLayer.Children.Clear();
         ResetSingingReactionAnimations();
         HideBubble();
-        UpdatePetSize();
-        UpdateLayout();
-        Left = previousCenterX - (ActualWidth / 2);
-        Top = previousBottom - ActualHeight;
-        KeepWindowReachable();
+        RestoreAnchor(anchor);
         UpdateSingingMenuState();
         StartIdle();
         ShowTemporaryBubble(
@@ -876,21 +869,13 @@ internal sealed partial class MainWindow : Window
         {
             var character = _characters[index];
             var sheet = await Task.Run(() => _characterCatalog.LoadSprite(character));
-            var previousCenterX = Left + (ActualWidth / 2);
-            var previousBottom = Top + ActualHeight;
+            var anchor = CaptureAnchor();
             _spriteSheet = sheet;
             _currentCharacterIndex = index;
             _clickRows = sheet.GetPlayableClickRows();
             _nextInteractionRow = 0;
             _hasBufferedClick = false;
-            UpdatePetSize();
-            UpdateLayout();
-            if (IsLoaded)
-            {
-                Left = previousCenterX - (ActualWidth / 2);
-                Top = previousBottom - ActualHeight;
-                KeepWindowReachable();
-            }
+            RestoreAnchor(anchor);
             StartIdle();
             UpdateCharacterMenuChecks();
             BuildLoafingMenu();
@@ -1093,6 +1078,26 @@ internal sealed partial class MainWindow : Window
             return;
         }
 
+        FinishDrag();
+        e.Handled = true;
+    }
+
+    // 中途失去鼠标捕获（系统弹窗、其他程序抢焦点）时收不到抬起事件；
+    // 不在这里收尾的话 _isDragging 会一直为真，把窗口逐帧钉在拖拽目标位置。
+    private void OnPetLostMouseCapture(object sender, MouseEventArgs e)
+    {
+        if (!_mouseDown)
+        {
+            return;
+        }
+
+        FinishDrag();
+    }
+
+    private void FinishDrag()
+    {
+        // 必须先清标志：ReleaseMouseCapture 会同步触发 LostMouseCapture，
+        // 靠 _mouseDown 守卫避免收尾逻辑执行两次。
         _mouseDown = false;
         var cursor = GetCursorPositionInDip();
         _motionTracker.Add(cursor, NowSeconds);
@@ -1120,7 +1125,6 @@ internal sealed partial class MainWindow : Window
         }
 
         _isDragging = false;
-        e.Handled = true;
     }
 
     private void StartDragInteraction(Point cursor)
@@ -1583,14 +1587,9 @@ internal sealed partial class MainWindow : Window
             return;
         }
 
-        var oldCenterX = Left + ActualWidth / 2;
-        var oldBottom = Top + ActualHeight;
+        var anchor = CaptureAnchor();
         _scale = value;
-        UpdatePetSize();
-        UpdateLayout();
-        Left = oldCenterX - ActualWidth / 2;
-        Top = oldBottom - ActualHeight;
-        KeepWindowReachable();
+        RestoreAnchor(anchor);
         SaveSettings();
     }
 
@@ -1611,6 +1610,25 @@ internal sealed partial class MainWindow : Window
         _petImage.Width = frameWidth * _scale;
         _petImage.Height = frameHeight * _scale;
     }
+
+    // 窗口按内容自适应大小，改变尺寸前后要保持「底边中点」不动，否则角色会跳位。
+    private WindowAnchor CaptureAnchor() => new(Left + (ActualWidth / 2), Top + ActualHeight);
+
+    private void RestoreAnchor(WindowAnchor anchor)
+    {
+        UpdatePetSize();
+        UpdateLayout();
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        Left = anchor.CenterX - (ActualWidth / 2);
+        Top = anchor.Bottom - ActualHeight;
+        KeepWindowReachable();
+    }
+
+    private readonly record struct WindowAnchor(double CenterX, double Bottom);
 
     private void ShowRandomBubble()
     {
@@ -1655,19 +1673,16 @@ internal sealed partial class MainWindow : Window
 
     private void ResetIdleEasterEggTimer()
     {
-        _idleEasterEggTimer?.Stop();
-        if (_idleEasterEggTimer is null)
-        {
-            return;
-        }
-
+        _idleEasterEggTimer.Stop();
         _idleEasterEggTimer.Interval = TimeSpan.FromSeconds(_random.Next(35, 71));
         _idleEasterEggTimer.Start();
     }
 
     private void StartIdleEasterEgg()
     {
-        if (_mouseDown || _isPlayingInteraction || _spriteSheet?.Rows < 2)
+        // 图集解码失败时 _spriteSheet 为 null；用 ?. 会让比较结果为 false，
+        // 于是弹出「只有气泡没有宠物」的画面。
+        if (_mouseDown || _isPlayingInteraction || _spriteSheet is null || _spriteSheet.Rows < 2)
         {
             ResetIdleEasterEggTimer();
             return;
@@ -1718,7 +1733,9 @@ internal sealed partial class MainWindow : Window
 
     private void SaveSettings()
     {
-        if (!IsLoaded)
+        // OnLoaded 恢复位置之前，Left/Top 还是 WPF 给的临时值；
+        // 此时存盘会把用户上次摆好的位置覆盖掉，下一次启动就再也读不回来。
+        if (!IsLoaded || !_startupPositionRestored)
         {
             return;
         }

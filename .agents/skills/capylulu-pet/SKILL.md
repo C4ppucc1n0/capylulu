@@ -12,7 +12,7 @@ Keep the pet production workflow, temporary files, QA evidence, and shipped asse
 - Put reusable repository guidance in this skill. Never store generated images or run outputs inside the skill directory.
 - Use `.pet-work/<pet-id>/` for prompts, decoded images, extracted frames, repair attempts, and other disposable run data. This directory is ignored by Git.
 - Put curated evidence worth retaining in `artifacts/pet-qa/<pet-id>/`. Keep final validation JSON, contact sheets, direction QA, and useful previews; exclude duplicated atlases and per-frame extraction trees.
-- Put only application-ready assets in `generated_actions/`: the final sprite atlas and its optional sibling `*.pet.json` action manifest.
+- Put only application-ready assets in `generated_actions/`: the final sprite atlas and its sibling `*.pet.json` character manifest. For a standard v2 atlas the manifest carries identity only (`id`, `displayName`, `roles`, `spriteVersionNumber`); the application supplies the action table. It is optional entirely, at the cost of falling back to a filename-derived id and no `loafing` role.
 - Treat `raw_images/` as source references. Do not modify source artwork unless the user explicitly requests it.
 - Treat `dist/` as disposable build output.
 
@@ -30,7 +30,8 @@ Read [references/repository-layout.md](references/repository-layout.md) before m
 ## Constraints
 
 - Do not regenerate or restyle pet artwork unless the user asks for a visual change.
-- Preserve existing character filenames when replacing an atlas so saved character selections remain compatible.
+- Preserve the manifest `id` when replacing an atlas so saved character selections remain compatible. The atlas filename is not the identity and may change; the application persists `SelectedCharacterId`, which comes from the manifest.
 - Preserve old resources without manifests; the application intentionally supports them.
+- Only write `actions`, `clickRows`, or `lookRows` into a manifest when the atlas deviates from the standard v2 row order. Copying the default table into every character is what this convention exists to avoid.
 - Do not commit `.pet-work/` or `dist/`.
 - Do not delete source images, curated QA evidence, or shipped assets without explicit scope or a verified replacement.

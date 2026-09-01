@@ -1,5 +1,4 @@
 using System.IO;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
@@ -47,7 +46,7 @@ internal sealed class GifAnimation
 
     public static GifAnimation Load(Stream stream)
     {
-        using var image = SixLabors.ImageSharp.Image.Load<Rgba32>(stream);
+        using var image = SixLabors.ImageSharp.Image.Load<Bgra32>(stream);
         if (image.Frames.Count == 0)
         {
             throw new InvalidDataException("唱歌 GIF 中没有可播放的帧。");
@@ -73,25 +72,10 @@ internal sealed class GifAnimation
             image.Height);
     }
 
-    private static BitmapSource ToBitmapSource(Image<Rgba32> image)
+    private static BitmapSource ToBitmapSource(Image<Bgra32> image)
     {
         var pixels = new byte[image.Width * image.Height * 4];
         image.CopyPixelDataTo(pixels);
-        for (var index = 0; index < pixels.Length; index += 4)
-        {
-            (pixels[index], pixels[index + 2]) = (pixels[index + 2], pixels[index]);
-        }
-
-        var bitmap = BitmapSource.Create(
-            image.Width,
-            image.Height,
-            96,
-            96,
-            PixelFormats.Bgra32,
-            null,
-            pixels,
-            image.Width * 4);
-        bitmap.Freeze();
-        return bitmap;
+        return BitmapConversion.ToBitmapSource(image.Width, image.Height, pixels);
     }
 }
