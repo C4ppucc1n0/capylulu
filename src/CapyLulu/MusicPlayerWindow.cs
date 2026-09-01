@@ -21,14 +21,16 @@ internal sealed class MusicPlayerWindow : Window
         "CapyLulu.GifResources.music-player-cover.png";
     private const double SongDurationSeconds = 200;
 
+    // 波形条每 25ms 刷新一次；共用两支冻结画刷，避免每帧新建 76 个 SolidColorBrush。
+    private static readonly SolidColorBrush ActiveWaveBrush = CreateFrozenBrush(Color.FromArgb(170, 42, 155, 105));
+    private static readonly SolidColorBrush InactiveWaveBrush = CreateFrozenBrush(Color.FromArgb(68, 40, 49, 45));
+
     private readonly Image _coverImage;
     private readonly RotateTransform _recordRotation = new();
     private readonly Button _playButton;
     private readonly TextBlock _currentTimeText;
     private readonly Slider _progressSlider;
     private readonly Rectangle[] _waveBars;
-    private readonly Button _loopButton;
-    private readonly Button _favoriteButton;
     private readonly DispatcherTimer _renderTimer;
     private readonly Stopwatch _tickClock = Stopwatch.StartNew();
     private double _elapsedSeconds = 86;
@@ -37,6 +39,7 @@ internal sealed class MusicPlayerWindow : Window
     private bool _isLooping = true;
     private bool _isFavorite = true;
     private bool _isSeeking;
+    private int _paintedActiveBars;
 
     public MusicPlayerWindow()
     {
@@ -101,17 +104,16 @@ internal sealed class MusicPlayerWindow : Window
             out _playButton,
             out _currentTimeText,
             out _progressSlider,
-            out _waveBars,
-            out _loopButton);
+            out _waveBars);
         Grid.SetRow(player, 2);
         stage.Children.Add(player);
 
-        _favoriteButton = BuildFavoriteButton();
-        _favoriteButton.HorizontalAlignment = HorizontalAlignment.Right;
-        _favoriteButton.VerticalAlignment = VerticalAlignment.Center;
-        _favoriteButton.Margin = new Thickness(0, 0, 4, 0);
-        Grid.SetRow(_favoriteButton, 0);
-        stage.Children.Add(_favoriteButton);
+        var favoriteButton = BuildFavoriteButton();
+        favoriteButton.HorizontalAlignment = HorizontalAlignment.Right;
+        favoriteButton.VerticalAlignment = VerticalAlignment.Center;
+        favoriteButton.Margin = new Thickness(0, 0, 4, 0);
+        Grid.SetRow(favoriteButton, 0);
+        stage.Children.Add(favoriteButton);
 
         LoadCoverImage();
         UpdatePlaybackUi();
@@ -369,8 +371,7 @@ internal sealed class MusicPlayerWindow : Window
         out Button playButton,
         out TextBlock currentTime,
         out Slider progress,
-        out Rectangle[] waveBars,
-        out Button loopButton)
+        out Rectangle[] waveBars)
     {
         var player = new Grid
         {
@@ -400,7 +401,7 @@ internal sealed class MusicPlayerWindow : Window
                 RadiusX = 1,
                 RadiusY = 1,
                 VerticalAlignment = VerticalAlignment.Center,
-                Fill = new SolidColorBrush(Color.FromArgb(75, 40, 49, 45))
+                Fill = InactiveWaveBrush
             };
             bars.Add(bar);
             waveform.Children.Add(bar);
@@ -468,7 +469,6 @@ internal sealed class MusicPlayerWindow : Window
                 : Color.FromRgb(43, 50, 47));
         };
         controls.Children.Add(loopControl);
-        loopButton = loopControl;
 
         var transport = new StackPanel
         {
@@ -666,14 +666,28 @@ internal sealed class MusicPlayerWindow : Window
 
         _currentTimeText.Text = FormatTime(_elapsedSeconds);
         var progress = Math.Clamp(_elapsedSeconds / SongDurationSeconds, 0, 1);
+        // 只重绘状态真正变化的那几条；条数不变时整段循环都可以跳过。
         var activeBars = (int)Math.Round(progress * _waveBars.Length);
-        for (var index = 0; index < _waveBars.Length; index++)
+        if (activeBars == _paintedActiveBars)
         {
-            _waveBars[index].Fill = new SolidColorBrush(index < activeBars
-                ? Color.FromArgb(170, 42, 155, 105)
-                : Color.FromArgb(68, 40, 49, 45));
+            return;
         }
 
+        var start = Math.Min(activeBars, _paintedActiveBars);
+        var end = Math.Max(activeBars, _paintedActiveBars);
+        for (var index = start; index < end; index++)
+        {
+            _waveBars[index].Fill = index < activeBars ? ActiveWaveBrush : InactiveWaveBrush;
+        }
+
+        _paintedActiveBars = activeBars;
+    }
+
+    private static SolidColorBrush CreateFrozenBrush(Color color)
+    {
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
     }
 
     private void ShowQueueHint(Button queueButton)

@@ -23,7 +23,9 @@ Do not retain duplicate final atlases, raw image-generation outputs, or extracte
 
 ## `generated_actions`
 
-Runtime product assets embedded into CapyLulu during publishing. Each character uses an application-ready PNG or WebP atlas. A v2 character may include a sibling `*.pet.json` manifest with action rows and look-direction rows.
+Runtime product assets embedded into CapyLulu during publishing. Each character uses an application-ready PNG or WebP atlas alongside a sibling `*.pet.json` manifest.
+
+A standard v2 manifest carries identity only — `id`, `displayName`, `roles`, `spriteVersionNumber` — because the v2 row order is a fixed convention the application already knows. Add `actions`, `clickRows`, or `lookRows` only to override an atlas that deviates from it; whatever is omitted is filled in from the convention, and an atlas with fewer than 11 rows is not given look-direction rows.
 
 This is the authoritative location for assets that ship in the EXE.
 

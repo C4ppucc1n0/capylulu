@@ -75,7 +75,8 @@
                        MouseLeftButtonDown="OnPetMouseLeftButtonDown"
                        MouseLeftButtonUp="OnPetMouseLeftButtonUp"
                        MouseMove="OnPetMouseMove"
-                       MouseWheel="OnPetMouseWheel">
+                       MouseWheel="OnPetMouseWheel"
+                       LostMouseCapture="OnPetLostMouseCapture">
                     <Image.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform x:Name="_moodScale" ScaleX="1" ScaleY="1" />

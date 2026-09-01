@@ -12,9 +12,13 @@
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Resources\*.json</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <!-- 发布版不带符号；Debug 版保留 pdb，崩溃时才有堆栈可看。 -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <DefaultItemExcludes>$(DefaultItemExcludes);Resources\*.json</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,13 +3,14 @@ using System.Reflection;
 
 namespace CapyLulu;
 
+// Actions 为 null 表示资源没有附带清单，由 SpriteSheet.Load 按实际行数决定默认动作表。
 internal sealed record CharacterDefinition(
     string Id,
     string DisplayName,
     string ResourceName,
-    PetActionManifest Actions)
+    PetActionManifest? Actions)
 {
-    public bool IsLoafing => Actions.HasRole("loafing");
+    public bool IsLoafing => Actions?.HasRole("loafing") ?? false;
 }
 
 internal sealed class CharacterCatalog
@@ -50,13 +51,15 @@ internal sealed class CharacterCatalog
 
     private CharacterDefinition CreateDefinition(string resourceName)
     {
-        var manifest = PetActionManifest.LoadForResource(_assembly, resourceName)
-            ?? new PetActionManifest();
+        // 这里不要用 new PetActionManifest() 兜底：那是 v1 清单，会让 v2 图集失去注视与帧数推断。
+        var manifest = PetActionManifest.LoadForResource(_assembly, resourceName);
         var fileName = resourceName[ResourcePrefix.Length..];
         var fallbackId = Path.GetFileNameWithoutExtension(fileName);
+        var id = manifest?.Id;
+        var displayName = manifest?.DisplayName;
         return new CharacterDefinition(
-            string.IsNullOrWhiteSpace(manifest.Id) ? fallbackId : manifest.Id,
-            string.IsNullOrWhiteSpace(manifest.DisplayName) ? fallbackId : manifest.DisplayName,
+            string.IsNullOrWhiteSpace(id) ? fallbackId : id,
+            string.IsNullOrWhiteSpace(displayName) ? fallbackId : displayName,
             resourceName,
             manifest);
     }

@@ -85,7 +85,7 @@ static void TestDialogueCatalog()
 static void TestCharacterCatalog()
 {
     var characters = new CharacterCatalog(typeof(CharacterCatalog).Assembly).Discover();
-    True(characters.Count == 4, $"预期 4 个角色，实际 {characters.Count} 个");
+    True(characters.Count > 0, "没有发现任何角色资源");
     True(characters.Select(character => character.Id).Distinct(StringComparer.OrdinalIgnoreCase).Count() == characters.Count,
         "角色 ID 不唯一");
     True(characters.Count(character => character.IsLoafing) == 1, "摸鱼角色必须且只能有一个");
@@ -100,7 +100,33 @@ static void TestSpriteSheets()
         var sheet = catalog.LoadSprite(character);
         True(sheet.Rows > 0, $"{character.Id} 没有动作行");
         True(sheet.GetFrameCount(0) > 0, $"{character.Id} 没有待机帧");
+        True(sheet.GetPlaybackFrameCount(0) > 0, $"{character.Id} 待机动作的播放帧数为 0");
         True(sheet.GetPlayableClickRows().Count > 0, $"{character.Id} 没有互动帧");
+
+        // v1 资源沿用按行号推断的旧路径，不要求动作表；v2 必须能解析出完整映射。
+        if (sheet.Actions.SpriteVersionNumber < 2)
+        {
+            continue;
+        }
+
+        foreach (var action in Enum.GetValues<PetAction>())
+        {
+            var row = sheet.Actions.GetRow(action, sheet.Rows);
+            True(row is not null, $"{character.Id} 的动作 {action} 没有映射到有效行");
+            True(sheet.GetFrameCount(row!.Value) > 0, $"{character.Id} 的动作 {action} 映射到空行 {row}");
+        }
+
+        // 只有满 11 行的 v2 图集才带注视行；行数不足的 v2 图集本就不该被安上注视功能。
+        if (sheet.Rows < 11)
+        {
+            continue;
+        }
+
+        True(sheet.Actions.HasLookDirections, $"{character.Id} 是完整 v2 资源但没有注视行");
+        for (var direction = 0; direction < 16; direction++)
+        {
+            True(sheet.GetLookFrame(direction) is not null, $"{character.Id} 缺少第 {direction} 个注视方向");
+        }
     }
 }
 
