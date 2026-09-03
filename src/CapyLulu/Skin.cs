@@ -64,6 +64,7 @@ internal static class Skin
         Hex(0x7CBA85),
         Hex(0x6EA8DC),
         Hex(0xE67C92),
+        Hex(0xB79AD6),
         Hex(0xEECD6A)
     ];
 

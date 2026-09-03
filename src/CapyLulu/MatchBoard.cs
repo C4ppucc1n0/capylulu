@@ -48,14 +48,25 @@ internal sealed class MatchBoard
 
     public void ResetWaveCount() => ClearedWaveCount = 0;
 
-    // 重新生成一局：填满、无天然三连、至少有一步合法交换。
+    // 重新生成一局：填满、无天然三连、有路可走但不能一眼全是路。
+    // 合法交换压在 OpeningSwapCap 以内，玩家得真的扫一遍盘面才找得到；
+    // 抽不到就退回"至少有一步"的底线，循环有界。
     public void Reset()
     {
-        do
+        for (var attempt = 0; ; attempt++)
         {
             FillWithoutTriples();
+            var swaps = CountLegalSwaps();
+            if (swaps == 0)
+            {
+                continue;
+            }
+
+            if (swaps <= MatchGameOptions.OpeningSwapCap || attempt >= MatchGameOptions.OpeningTries)
+            {
+                return;
+            }
         }
-        while (!HasLegalSwap());
     }
 
     // 试探交换能否成三连；不留下任何数据变化。
@@ -146,8 +157,13 @@ internal sealed class MatchBoard
         return new FallResult(moves, spawns);
     }
 
-    public bool HasLegalSwap()
+    public bool HasLegalSwap() => CountLegalSwaps() > 0;
+
+    // 盘面上一共有多少步能成型的交换。这个数就是「找消除有多容易」的度量：
+    // 开局难度靠它定，也靠它守住——纯色种类或生成规则一变，它立刻跟着变。
+    public int CountLegalSwaps()
     {
+        var count = 0;
         for (var row = 0; row < Rows; row++)
         {
             for (var column = 0; column < Columns; column++)
@@ -155,17 +171,17 @@ internal sealed class MatchBoard
                 var cell = new Cell(row, column);
                 if (column + 1 < Columns && WouldMatch(cell, new Cell(row, column + 1)))
                 {
-                    return true;
+                    count++;
                 }
 
                 if (row + 1 < Rows && WouldMatch(cell, new Cell(row + 1, column)))
                 {
-                    return true;
+                    count++;
                 }
             }
         }
 
-        return false;
+        return count;
     }
 
     // 洗牌是一次纯置换，所以窗口可以让同一批方块滑到新位置而不是整盘重建。

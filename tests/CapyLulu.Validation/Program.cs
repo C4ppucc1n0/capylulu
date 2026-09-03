@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using CapyLulu;
 
 var tests = new (string Name, Action Run)[]
@@ -25,7 +26,9 @@ var tests = new (string Name, Action Run)[]
     ("match board resolves the dominant drag axis", TestMatchBoardDragStep),
     ("match board progress counts only real clears", TestMatchBoardProgress),
     ("match game options stay inside the spec bands", TestMatchGameOptions),
-    ("skin bevels mirror each other and press reversibly", TestSkin)
+    ("skin bevels mirror each other and press reversibly", TestSkin),
+    ("match board opening keeps matches hard to spot", TestMatchBoardOpeningDifficulty),
+    ("tile art gives every kind its own look", TestTileArt)
 };
 
 var failures = new List<string>();
@@ -400,8 +403,9 @@ static void TestMatchGameOptions()
         MatchGameOptions.FallBaseMs + ((MatchGameOptions.Rows - 1) * MatchGameOptions.FallPerRowMs));
     Between(220, 320, longestFall, "整列清空后的下落");
 
-    True(MatchGameOptions.TileKindCount is >= 5 and <= 6, "方块种类应为 5 到 6 种");
     True(MatchGameOptions.RewardWaveTarget > 0, "奖励目标必须为正");
+    True(MatchGameOptions.OpeningSwapCap > 0, "开局合法交换上限必须为正");
+    True(MatchGameOptions.OpeningTries > 0, "开局重抽次数必须为正");
 
     // 清场是「反对角线依次淡出」，总时长必须真的等于最后一条对角线的起始
     // 加一次淡出，否则 GIF 会压在还没淡完的方块上。
@@ -445,29 +449,39 @@ static void Between(int low, int high, int actual, string subject)
 
 // 基准棋盘 (2r+c)%5：同行相邻差 1、同列相邻差 2，所以天然一个三连都没有，
 // 可以在上面精确地摆出要测的形状而不引入意外匹配。
+//
+// 模数写死 5，不跟着 TileKindCount 走。偶数模会让同一列每 3 行重复一次
+// （6 的时候 2*3 ≡ 0），于是摆出来的三连会被基准盘自己接上一格变成四连，
+// 摆 T 形时更是直接多出一格。第 6 种方块在这个夹具里不出现，
+// 不影响任何一条断言 —— 夹具只需要一块没有三连的填充盘。
 static int[,] BaseGrid()
 {
+    const int fillerKinds = 5;
     var kinds = new int[MatchGameOptions.Rows, MatchGameOptions.Columns];
     for (var row = 0; row < MatchGameOptions.Rows; row++)
     {
         for (var column = 0; column < MatchGameOptions.Columns; column++)
         {
-            kinds[row, column] = ((2 * row) + column) % MatchGameOptions.TileKindCount;
+            kinds[row, column] = ((2 * row) + column) % fillerKinds;
         }
     }
 
     return kinds;
 }
 
+static void TestSkin() => OnSta(AssertSkin);
+
+static void TestTileArt() => OnSta(AssertTileArt);
+
 // WPF 控件只能在 STA 线程上造，而顶层语句的 Main 是 MTA，所以借一条线程跑。
-static void TestSkin()
+static void OnSta(Action assert)
 {
     Exception? failure = null;
     var thread = new Thread(() =>
     {
         try
         {
-            AssertSkin();
+            assert();
         }
         catch (Exception exception)
         {
@@ -482,6 +496,50 @@ static void TestSkin()
         throw failure;
     }
 }
+
+// 开局难度就是"有多少步能成型的交换"。这条断言把它钉住：种类数或生成规则
+// 一被调松，可走的步数立刻涨回去，肉眼玩几局未必察觉，断言会立刻红。
+static void TestMatchBoardOpeningDifficulty()
+{
+    var random = new Random(20260903);
+    var worst = 0;
+    for (var trial = 0; trial < 2000; trial++)
+    {
+        var swaps = new MatchBoard(random).CountLegalSwaps();
+        True(swaps >= 1, $"第 {trial} 局开局无路可走");
+        True(swaps <= MatchGameOptions.OpeningSwapCap,
+            $"第 {trial} 局开局有 {swaps} 步合法交换，超过上限 {MatchGameOptions.OpeningSwapCap}");
+        worst = Math.Max(worst, swaps);
+    }
+
+    // 上限得真的在起作用。要是它高到从来碰不到，上面那条就只是同义反复。
+    Equal(MatchGameOptions.OpeningSwapCap, worst);
+}
+
+// TileKindCount 超过 MatchTileArt 备好的图案数时，Apply 会取模回绕，
+// 于是两种方块长得一模一样 —— 棋盘照样能玩，只是这两种永远分不清。
+static void AssertTileArt()
+{
+    var looks = new List<(Color Background, string Glyph)>();
+    for (var kind = 0; kind < MatchGameOptions.TileKindCount; kind++)
+    {
+        var tile = MatchTileArt.Create(kind);
+        var glyph = (Shape)tile.Child;
+        looks.Add((((SolidColorBrush)tile.Background).Color, DescribeGlyph(glyph)));
+    }
+
+    Equal(MatchGameOptions.TileKindCount, looks.Distinct().Count());
+
+    // 底色也必须两两不同：只靠形状区分的话，截图取色那一整套验证就分不出种类了。
+    Equal(MatchGameOptions.TileKindCount, looks.Select(look => look.Background).Distinct().Count());
+}
+
+// 形状用"类型 + 顶点数"概括，够区分圆、方和各种角数的星。
+static string DescribeGlyph(Shape glyph) => glyph switch
+{
+    Polygon polygon => $"polygon{polygon.Points.Count}",
+    _ => glyph.GetType().Name
+};
 
 static void AssertSkin()
 {

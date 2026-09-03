@@ -4,7 +4,18 @@ internal static class MatchGameOptions
 {
     public const int Rows = 7;
     public const int Columns = 7;
-    public const int TileKindCount = 5;
+    // 方块种类。5 种时开局的合法交换中位数是 14 步（84 组相邻里有 14 组能成型），
+    // 一眼就能撞见一处，所以提到 6 —— 中位数降到 10。
+    // 上限就是 MatchTileArt 备好的图案数，再往上加会有两种方块长得一模一样。
+    public const int TileKindCount = 6;
+
+    // 开局盘面允许的合法交换数上限。「找消除太容易」的直接度量就是这个数，
+    // 所以直接卡住它：种类数把中位数压到 10，这条再把开局压到 6 以内。
+    public const int OpeningSwapCap = 6;
+
+    // 抽这么多次仍达不到上限，就退回"至少有一步"这条底线。
+    // 循环有界，运气差也不会卡在生成里。
+    public const int OpeningTries = 200;
 
     // 攒够这么多轮有效消除就放一次庆祝。改成关卡目标或分数目标时只动这一个值。
     public const int RewardWaveTarget = 10;
