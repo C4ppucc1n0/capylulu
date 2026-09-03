@@ -26,6 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- OFL 1.1 中文像素字体。作为 WPF Resource 内嵌，单文件发布无需系统安装。 -->
+    <Resource Include="Resources\Fonts\FusionPixel12pxProportionalSC.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- 动作图编译进单文件 EXE，不在运行时从外部文件夹读取。 -->
     <EmbeddedResource Include="..\..\generated_actions\*.webp">
       <LogicalName>CapyLulu.GeneratedActions.%(Filename)%(Extension)</LogicalName>

@@ -62,7 +62,7 @@ dist/CapyLulu/CapyLulu.exe
 
 - 消消乐已进入运行时代码：右键菜单打开，同时只允许一个棋盘窗口；窗口固定 560x726 DIP、不置顶、标题栏可最小化。每局从 24 个方块 GIF 中随机抽取 6 个作为本局方块种类；方块以半速播放且同类同步。每次奖励演出从 `celebrate/` 下的 3 段 GIF 中随机播放 1 段。拖动规则、下落补块和验收标准见 `docs/match-game-requirements.md`，参考视频关键帧保存在 `docs/assets/match-game-reference/`。
 - 消消乐的基础难度由 `MatchGameOptions` 的两个常量决定：`TileKindCount`（方块种类，上限是 `MatchTileArt` 备好的图案数）和 `OpeningSwapCap`（开局允许的合法交换数上限）。难度的度量就是 `MatchBoard.CountLegalSwaps()`，验证程序会逐局把它卡在上限内。
-- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、四种框（`Raised`/`Sunken`/`Plot`/`Shell`）、像素图标和按钮只有那一份，改一个值全局生效。所有边框厚度都是美术像素 `Skin.U` 的整数倍——改这一个常量就能整体调粗调细。图标是点阵字符串（`Skin.Art`），加一个图标就是加一个字符串数组，不引入图片资源。消消乐、音乐播放器和桌宠气泡/应援条/倒计时都从那里取色。右键菜单的模板在 `App.xaml` 的 `Application.Resources` 里（菜单是独立弹出窗口，隐式样式从这一级覆盖最省事），颜色同样取自 `Skin`。
+- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、四种框（`Raised`/`Sunken`/`Plot`/`Shell`）、像素图标、按钮悬停反馈和木纹只有一份。界面使用内嵌的 Fusion Pixel 12px 简体中文像素字体；右键菜单、ToolTip、桌宠气泡、播放器和消消乐共用同一套木框、羊皮纸和点阵图标。
 
 ## 仓库目录职责
 
@@ -70,7 +70,7 @@ dist/CapyLulu/CapyLulu.exe
 - `.pet-work/`：可随时重新生成的中间文件，例如拆帧、临时预览和组装副本；该目录不会提交到 Git。
 - `artifacts/pet-qa/`：需要保留和评审的验收证据，例如方向检查、接触表、预览动画和验证报告。
 - `generated_actions/`：产品实际加载并打包进 EXE 的动作资源，是运行时资源的唯一正式来源。
-- `gif_resources/`：唱歌等演出 GIF；消消乐方块位于 `match-game/block/`，结算动画位于 `match-game/celebrate/`。构建时全部内嵌进 EXE，运行时不依赖外部文件。
+- `gif_resources/`：唱歌等演出 GIF；消消乐方块位于 `match-game/block/`，结算动画位于 `match-game/celebrate/`。构建时全部内嵌进 EXE，运行时不依赖外部文件；视频选段、避水印和导出验收见 `docs/gif-extraction-standards.md`。
 - `raw_images/`：原始角色图片和其他输入素材，不作为运行时资源直接加载。
 - `src/CapyLulu/Resources/`：内嵌的产品文案等可变内容；发布后仍包含在单文件 EXE 中。
 - `tests/CapyLulu.Validation/`：不依赖外部测试框架的离线验证程序，覆盖交互算法、角色清单和正式图集。
@@ -93,3 +93,7 @@ dist/CapyLulu/CapyLulu.exe
 ```
 
 验证程序会检查注视与手势算法、专注计时、文案资源、角色 ID 唯一性，并实际解码 `generated_actions` 中所有正式图集。对每张 v2 图集，还会确认 12 个语义动作都映射到有帧可播的行，以及 16 个注视方向都能取到画面。
+
+## 第三方字体
+
+界面内嵌 [Fusion Pixel Font](https://github.com/TakWolf/fusion-pixel-font) 的 12px 简体中文比例版本，字体采用 SIL Open Font License 1.1。许可证副本位于 `src/CapyLulu/Resources/Fonts/OFL-Fusion-Pixel.txt`。

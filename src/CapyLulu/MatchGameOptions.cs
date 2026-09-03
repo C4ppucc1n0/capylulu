@@ -22,7 +22,8 @@ internal static class MatchGameOptions
 
     public const double TileSize = 56;
     public const double TileGap = 8;
-    public const double TileCornerRadius = 14;
+    // 小圆角保留柔和感，但不再像移动端圆角卡片；硬朗轮廓更贴近像素游戏棋子。
+    public const double TileCornerRadius = 6;
     public const double BlockPlaybackRate = 0.5;
 
     // 与桌宠的 PetBehaviorOptions.DragThreshold 无关，棋盘用自己的阈值。

@@ -85,6 +85,7 @@ internal sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        ApplyMenuIcons();
 
         // 应援按钮不写在 XAML 里：走 Skin.CreateButton 才能和两个窗口共用同一副斜面。
         _singingSupportButton = Skin.CreateButton(
@@ -149,6 +150,27 @@ internal sealed partial class MainWindow : Window
         BuildLoafingMenu();
         UpdateSingingMenuState();
         UpdatePetSize();
+    }
+
+    // 菜单不再只靠一列文字区分功能。图标沿用全局点阵画法，既保持像素感，
+    // 也让频繁使用的音乐、消消乐和专注入口能一眼扫到。
+    private void ApplyMenuIcons()
+    {
+        SetMenuIcon(_characterMenu, Skin.Art.Wheat, Skin.Accent);
+        SetMenuIcon(_loafingMenu, Skin.Art.Moon, Skin.WoodMid);
+        SetMenuIcon(_singingMenu, Skin.Art.MusicNote, Skin.Gold);
+        SetMenuIcon(_musicMenu, Skin.Art.Record, Skin.Ink);
+        SetMenuIcon(_matchMenu, Skin.Art.MatchGrid, Skin.Accent);
+        SetMenuIcon(_focusMenu, Skin.Art.Hourglass, Skin.Gold);
+        SetMenuIcon(_moodMenu, Skin.Art.Heart, Skin.Crimson);
+        SetMenuIcon(_gazeModeMenu, Skin.Art.Eye, Skin.MatchBoardLine);
+        SetMenuIcon(_topmostMenu, Skin.Art.Pin, Skin.WoodDark);
+        SetMenuIcon(_exitMenu, Skin.Art.Door, Skin.Crimson);
+    }
+
+    private static void SetMenuIcon(MenuItem item, string[] art, SolidColorBrush color)
+    {
+        item.Icon = Skin.Icon(art, 2, color);
     }
 
     private async void OnLoafingMenuClick(object sender, RoutedEventArgs e) =>

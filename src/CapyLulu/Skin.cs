@@ -18,8 +18,8 @@ internal static class Skin
     // 单位的整数倍——线细了就变成网页描边，正是之前那版看着不对的根源。
     public const double U = 4;
 
-    public const string FontName = "Microsoft YaHei UI";
-    public static readonly FontFamily Font = new(FontName);
+    public const string FontName = "Fusion Pixel 12px Prop zh_hans";
+    public static readonly FontFamily Font = new($"./Resources/Fonts/#{FontName}");
 
     // 描边与文字
     public static readonly SolidColorBrush Outline = Hex(0x3D2415);
@@ -45,8 +45,10 @@ internal static class Skin
 
     // 强调
     public static readonly SolidColorBrush Accent = Hex(0x5D9C48);
+    public static readonly SolidColorBrush AccentLight = Hex(0x78B95F);
     public static readonly SolidColorBrush Gold = Hex(0xF0B830);
     public static readonly SolidColorBrush Crimson = Hex(0xC7452C);
+    public static readonly SolidColorBrush CrimsonLight = Hex(0xDF654A);
 
     // 消消乐棋盘与结算演出的专用色。格子采用参考画面里的深蓝层次；
     // Bonus 遮罩单独盖在棋盘上，不能再靠降低前景 GIF 的透明度冒充暗化。
@@ -204,7 +206,13 @@ internal static class Skin
     {
         // 按钮脸用次级底色而不是 Parchment：面板本身就是 Parchment，
         // 同色的话按钮只剩一圈描边，看不出是"浮"在面板上的。
-        var bevel = Raised(face, body: body ?? ParchmentDim);
+        var restingBody = body ?? ParchmentDim;
+        var hoverBody = ReferenceEquals(restingBody, Accent)
+            ? AccentLight
+            : ReferenceEquals(restingBody, Crimson)
+                ? CrimsonLight
+                : Parchment;
+        var bevel = Raised(face, body: restingBody);
         var button = new Button
         {
             Width = width,
@@ -219,9 +227,22 @@ internal static class Skin
 
         button.PreviewMouseLeftButtonDown += (_, _) => SetPressed(bevel, true);
         button.PreviewMouseLeftButtonUp += (_, _) => SetPressed(bevel, false);
-        button.MouseLeave += (_, _) => SetPressed(bevel, false);
+        button.MouseEnter += (_, _) => SetFaceBackground(bevel, hoverBody);
+        button.MouseLeave += (_, _) =>
+        {
+            SetPressed(bevel, false);
+            SetFaceBackground(bevel, restingBody);
+        };
         button.Click += (_, _) => onClick();
         return button;
+    }
+
+    private static void SetFaceBackground(Border bevel, Brush brush)
+    {
+        if (bevel.Child is Border lit && lit.Child is Border inner)
+        {
+            inner.Background = brush;
+        }
     }
 
     // 文字按钮：脸就是一个居中的 TextBlock。
@@ -428,6 +449,110 @@ internal static class Skin
             "000000000"
         ];
 
+        public static readonly string[] MusicNote =
+        [
+            "....000..",
+            "....0.00.",
+            "....0..00",
+            "....0...0",
+            "....0...0",
+            ".0000...0",
+            "00000.000",
+            "00000.000",
+            ".000...0."
+        ];
+
+        public static readonly string[] Record =
+        [
+            "..00000..",
+            ".00...00.",
+            "00..0..00",
+            "0..000..0",
+            "0.00.00.0",
+            "0..000..0",
+            "00..0..00",
+            ".00...00.",
+            "..00000.."
+        ];
+
+        public static readonly string[] MatchGrid =
+        [
+            "000.000.0",
+            "000.000.0",
+            "000.000.0",
+            ".........",
+            "000.000.0",
+            "000.000.0",
+            "000.000.0",
+            ".........",
+            "0...0...0"
+        ];
+
+        public static readonly string[] Hourglass =
+        [
+            "000000000",
+            ".0000000.",
+            "..00000..",
+            "...000...",
+            "....0....",
+            "...000...",
+            "..00000..",
+            ".0000000.",
+            "000000000"
+        ];
+
+        public static readonly string[] Eye =
+        [
+            ".........",
+            "...000...",
+            ".0000000.",
+            "00..0..00",
+            "0..000..0",
+            "00..0..00",
+            ".0000000.",
+            "...000...",
+            "........."
+        ];
+
+        public static readonly string[] Pin =
+        [
+            "..000000.",
+            "...000...",
+            "...000...",
+            "..00000..",
+            ".0000000.",
+            "....0....",
+            "....0....",
+            "....0....",
+            "....0...."
+        ];
+
+        public static readonly string[] Moon =
+        [
+            "....000..",
+            "..00000..",
+            ".0000....",
+            "0000.....",
+            "0000.....",
+            "0000.....",
+            ".0000....",
+            "..00000..",
+            "....000.."
+        ];
+
+        public static readonly string[] Door =
+        [
+            ".0000000.",
+            ".00....0.",
+            ".00....0.",
+            ".00....0.",
+            ".00..0.0.",
+            ".00....0.",
+            ".00....0.",
+            ".00....0.",
+            ".0000000."
+        ];
+
         // 麦穗，给标题栏当徽标。星露谷满屏都是这种小作物图标，
         // 比原来那个纯色小方块像回事。
         public static readonly string[] Wheat =
@@ -498,7 +623,13 @@ internal static class Skin
     {
         var group = new DrawingGroup();
         group.Children.Add(new GeometryDrawing(WoodMid, null, new RectangleGeometry(new Rect(0, 0, U * 8, U * 8))));
+        group.Children.Add(new GeometryDrawing(WoodLight, null, new RectangleGeometry(new Rect(0, 0, U * 8, U / 2))));
         group.Children.Add(new GeometryDrawing(WoodDark, null, new RectangleGeometry(new Rect(0, U * 7.5, U * 8, U / 2))));
+        // 两簇错开的硬边小木结，平铺后不会形成机械的点阵。
+        group.Children.Add(new GeometryDrawing(WoodDark, null, new RectangleGeometry(new Rect(U, U * 2, U * 2, U / 2))));
+        group.Children.Add(new GeometryDrawing(WoodLight, null, new RectangleGeometry(new Rect(U * 1.5, U * 1.5, U, U / 2))));
+        group.Children.Add(new GeometryDrawing(WoodDark, null, new RectangleGeometry(new Rect(U * 5, U * 5.5, U * 2, U / 2))));
+        group.Children.Add(new GeometryDrawing(WoodLight, null, new RectangleGeometry(new Rect(U * 5.5, U * 5, U, U / 2))));
         var brush = new DrawingBrush(group)
         {
             TileMode = TileMode.Tile,

@@ -35,33 +35,43 @@
                     VerticalAlignment="Bottom"
                     MinWidth="150"
                     MaxWidth="270"
-                    Background="{x:Static local:Skin.Parchment}"
+                    Padding="3"
+                    Background="{x:Static local:Skin.WoodGrain}"
                     BorderBrush="{x:Static local:Skin.Outline}"
                     BorderThickness="2"
-                    CornerRadius="2"
                     Visibility="Hidden">
-                <TextBlock x:Name="_bubbleText"
-                           Margin="16,9"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="{x:Static local:Skin.Ink}"
-                           TextAlignment="Center"
-                           TextWrapping="Wrap" />
+                <Border Background="{x:Static local:Skin.Paper}"
+                        BorderBrush="{x:Static local:Skin.Highlight}"
+                        BorderThickness="2,2,0,0">
+                    <Border BorderBrush="{x:Static local:Skin.Shadow}"
+                            BorderThickness="0,0,2,2">
+                        <TextBlock x:Name="_bubbleText"
+                                   Margin="16,9"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{x:Static local:Skin.Ink}"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap" />
+                    </Border>
+                </Border>
             </Border>
-            <Polygon x:Name="_bubbleTail"
-                     Width="14"
-                     Height="9"
+            <Grid x:Name="_bubbleTail"
+                     Width="18"
+                     Height="12"
                      Margin="0,0,0,-7"
                      HorizontalAlignment="Center"
                      VerticalAlignment="Bottom"
-                     Fill="{x:Static local:Skin.Parchment}"
-                     Points="0,0 14,0 7,9"
-                     Stretch="Fill"
-                     Stroke="{x:Static local:Skin.Outline}"
-                     StrokeThickness="2"
-                     Visibility="Hidden" />
+                     Visibility="Hidden">
+                <Polygon Fill="{x:Static local:Skin.Outline}"
+                         Points="0,0 18,0 9,12"
+                         Stretch="Fill" />
+                <Polygon Margin="3,0,3,3"
+                         Fill="{x:Static local:Skin.Parchment}"
+                         Points="0,0 12,0 6,8"
+                         Stretch="Fill" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="1" HorizontalAlignment="Center">
@@ -100,8 +110,8 @@
                                       IsCheckable="True"
                                       Click="OnLoafingMenuClick" />
                             <MenuItem x:Name="_singingMenu" Header="唱歌" Click="OnSingingMenuClick" />
-                            <MenuItem Header="音乐播放器" Click="OnMusicPlayerMenuClick" />
-                            <MenuItem Header="消消乐" Click="OnMatchGameMenuClick" />
+                            <MenuItem x:Name="_musicMenu" Header="音乐播放器" Click="OnMusicPlayerMenuClick" />
+                            <MenuItem x:Name="_matchMenu" Header="消消乐" Click="OnMatchGameMenuClick" />
                             <MenuItem x:Name="_focusMenu"
                                       Header="专注模式：10 分钟"
                                       Click="OnFocusMenuClick" />
@@ -112,7 +122,7 @@
                                       IsCheckable="True"
                                       Click="OnTopmostMenuClick" />
                             <Separator />
-                            <MenuItem Header="退出程序" Click="OnExitMenuClick" />
+                            <MenuItem x:Name="_exitMenu" Header="退出程序" Click="OnExitMenuClick" />
                         </ContextMenu>
                     </Image.ContextMenu>
                 </Image>
@@ -126,43 +136,51 @@
 
         <Border x:Name="_singingResponse"
                 Grid.Row="2"
-                Height="38"
+                Height="44"
                 Margin="0,6,0,0"
-                Padding="12,5"
+                Padding="3"
                 HorizontalAlignment="Center"
-                Background="{x:Static local:Skin.Parchment}"
+                Background="{x:Static local:Skin.WoodGrain}"
                 BorderBrush="{x:Static local:Skin.Outline}"
                 BorderThickness="2"
-                CornerRadius="2"
                 IsHitTestVisible="False"
                 MaxWidth="290"
                 Visibility="Collapsed">
-            <TextBlock x:Name="_singingResponseText"
-                       HorizontalAlignment="Center"
-                       FontSize="13"
-                       FontWeight="SemiBold"
-                       Foreground="{x:Static local:Skin.Crimson}"
-                       TextAlignment="Center"
-                       TextWrapping="Wrap" />
+            <Border Padding="10,4"
+                    Background="{x:Static local:Skin.Paper}"
+                    BorderBrush="{x:Static local:Skin.Highlight}"
+                    BorderThickness="2,2,0,0">
+                <TextBlock x:Name="_singingResponseText"
+                           HorizontalAlignment="Center"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{x:Static local:Skin.Crimson}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Border>
         </Border>
 
         <Border x:Name="_focusCountdown"
                 Grid.Row="3"
                 Margin="0,5,0,0"
-                Padding="12,5"
+                Padding="3"
                 HorizontalAlignment="Center"
-                Background="{x:Static local:Skin.Field}"
+                Background="{x:Static local:Skin.WoodGrain}"
                 BorderBrush="{x:Static local:Skin.Outline}"
                 BorderThickness="2"
-                CornerRadius="2"
                 IsHitTestVisible="False"
                 Visibility="Collapsed">
-            <TextBlock x:Name="_focusCountdownText"
-                       HorizontalAlignment="Center"
-                       FontSize="14"
-                       FontWeight="SemiBold"
-                       Foreground="{x:Static local:Skin.Parchment}"
-                       TextAlignment="Center" />
+            <Border Padding="12,5"
+                    Background="{x:Static local:Skin.Field}"
+                    BorderBrush="{x:Static local:Skin.Highlight}"
+                    BorderThickness="2,2,0,0">
+                <TextBlock x:Name="_focusCountdownText"
+                           HorizontalAlignment="Center"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{x:Static local:Skin.Parchment}"
+                           TextAlignment="Center" />
+            </Border>
         </Border>
     </Grid>
 </Window>

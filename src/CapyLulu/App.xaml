@@ -46,6 +46,32 @@
             </Setter>
         </Style>
 
+        <!-- 原生 ToolTip 的灰色圆角框会瞬间破坏像素感；统一换成小羊皮纸木牌。 -->
+        <Style TargetType="ToolTip">
+            <Setter Property="FontFamily" Value="{x:Static local:Skin.Font}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{x:Static local:Skin.Ink}" />
+            <Setter Property="HasDropShadow" Value="False" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border Background="{x:Static local:Skin.WoodGrain}"
+                                BorderBrush="{x:Static local:Skin.Outline}"
+                                BorderThickness="2"
+                                Padding="2">
+                            <Border Background="{x:Static local:Skin.Paper}"
+                                    BorderBrush="{x:Static local:Skin.Highlight}"
+                                    BorderThickness="2,2,0,0"
+                                    Padding="8,5">
+                                <ContentPresenter />
+                            </Border>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="MenuItem">
             <Setter Property="Padding" Value="12,6" />
             <Setter Property="Template">
@@ -58,11 +84,17 @@
                                 Background="Transparent">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="26" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="_icon"
+                                                  Margin="0,0,6,0"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  ContentSource="Icon" />
                                 <TextBlock x:Name="_check"
+                                           Panel.ZIndex="1"
                                            VerticalAlignment="Center"
                                            FontWeight="Bold"
                                            Foreground="{x:Static local:Skin.Accent}"
@@ -98,6 +130,7 @@
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="_check" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="_icon" Property="Visibility" Value="Hidden" />
                             </Trigger>
                             <!-- 选中的那一条像被拿起来的木牌：木色底配羊皮纸字。
                                  字色只改 _header，不改 MenuItem 自己：MenuItem 是个

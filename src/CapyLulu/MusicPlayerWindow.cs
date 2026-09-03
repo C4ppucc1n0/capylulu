@@ -154,12 +154,14 @@ internal sealed class MusicPlayerWindow : Window
         {
             Text = "CAPYLULU  ·  RADIO",
             Foreground = Skin.Ink,
-            FontFamily = new FontFamily("Segoe UI Semibold"),
             FontSize = 13,
             FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center
         });
-        bar.Children.Add(brand);
+        var plaque = Skin.Raised(brand, Skin.U * 1.5);
+        plaque.HorizontalAlignment = HorizontalAlignment.Left;
+        plaque.VerticalAlignment = VerticalAlignment.Center;
+        bar.Children.Add(plaque);
 
         var windowButtons = new StackPanel { Orientation = Orientation.Horizontal };
         var minimize = Skin.CreateButton(
@@ -405,7 +407,7 @@ internal sealed class MusicPlayerWindow : Window
     private static TextBlock BuildTimeText(string text, HorizontalAlignment alignment) => new()
     {
         Text = text,
-        FontFamily = new FontFamily("Segoe UI"),
+        FontFamily = Skin.Font,
         FontSize = 11,
         Foreground = Skin.Muted,
         HorizontalAlignment = alignment,
