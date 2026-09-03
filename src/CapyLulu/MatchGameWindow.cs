@@ -68,7 +68,7 @@ internal sealed class MatchGameWindow : Window
     {
         Title = "CapyLulu 消消乐";
         Width = 560;
-        Height = 726;
+        Height = 704;
         // 棋盘尺寸在动画期间不得变化，所以不让改大小；但 NoResize 会连
         // WS_MINIMIZEBOX 一起去掉，最小化按钮就点不动了，得用 CanMinimize。
         ResizeMode = ResizeMode.CanMinimize;
@@ -200,32 +200,38 @@ internal sealed class MatchGameWindow : Window
     // 每消一轮点亮一颗——比一行"3/10"直观，也是星露谷到处在用的读数方式。
     private static Border BuildHeader(out Image[] progressStars)
     {
-        var row = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(14, 3, 14, 4)
-        };
+        // 读数条横贯整行：标签靠左、星星靠右。原来是个小盒子浮在 500 DIP 宽的
+        // 空档正中，那条空羊皮纸是这个窗口最显空的地方。
+        var row = new Grid { Margin = new Thickness(14, 3, 14, 4) };
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         row.Children.Add(new TextBlock
         {
             Text = "奖励进度",
             Foreground = Skin.Muted,
             FontSize = 14,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 10, 0)
+            VerticalAlignment = VerticalAlignment.Center
         });
+
+        var stars = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(stars, 1);
+        row.Children.Add(stars);
         progressStars = new Image[RewardWaveTarget];
         for (var index = 0; index < progressStars.Length; index++)
         {
             var star = Skin.Icon(Skin.Art.Star, 3, Skin.WoodMid);
             star.Margin = new Thickness(2, 0, 2, 0);
             progressStars[index] = star;
-            row.Children.Add(star);
+            stars.Children.Add(star);
         }
 
         var badge = Skin.Sunken(row);
-        badge.HorizontalAlignment = HorizontalAlignment.Center;
-        badge.Margin = new Thickness(0, 2, 0, 10);
+        badge.Margin = new Thickness(6, 2, 6, 8);
         return badge;
     }
 
@@ -271,9 +277,16 @@ internal sealed class MatchGameWindow : Window
             Text = "拖动相邻的两个方块交换位置",
             Foreground = Skin.Muted,
             FontSize = 13,
+            Margin = new Thickness(12, 4, 12, 5),
             VerticalAlignment = VerticalAlignment.Center
         };
-        footer.Children.Add(hintText);
+
+        // 提示条也做成横贯整格的内凹槽，和表头那条读数条对称。
+        // 原来它是一行浮字，右边空着 200 DIP 的羊皮纸。
+        var strip = Skin.Sunken(hintText);
+        strip.Height = 34;
+        strip.Margin = new Thickness(0, 0, 8, 0);
+        footer.Children.Add(strip);
 
         var restart = Skin.CreateButton("重新开始", 96, 34, Restart, 13);
         Grid.SetColumn(restart, 1);

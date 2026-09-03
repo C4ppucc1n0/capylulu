@@ -41,9 +41,11 @@ internal sealed class MusicPlayerWindow : Window
     public MusicPlayerWindow()
     {
         Title = "CapyLulu 音乐播放器";
-        Width = 740;
-        Height = 620;
-        MinWidth = 700;
+        // 尺寸按最宽的内容块定：走带那一排 360 + 左右各 40 + 外壳木框 24 两边。
+        // 原来 740 宽而最宽的内容只有 360，唱片盒左右各空掉 190 DIP。
+        Width = 496;
+        Height = 612;
+        MinWidth = 460;
         MinHeight = 600;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
         WindowStyle = WindowStyle.None;
