@@ -22,6 +22,7 @@ internal sealed class MusicPlayerWindow : Window
     private readonly Image _coverImage;
     private readonly RotateTransform _recordRotation = new();
     private readonly Button _playButton;
+    private readonly Image _playIcon = Skin.Icon(Skin.Art.Pause, 3, Skin.Parchment);
     private readonly TextBlock _currentTimeText;
     // 进度用两根按比例分账的柱子表示，不存像素宽度，所以窗口拉伸时自己就对。
     private readonly ColumnDefinition _playedLane;
@@ -59,7 +60,7 @@ internal sealed class MusicPlayerWindow : Window
 
         root.Children.Add(BuildTitleBar());
 
-        var content = new Grid { Margin = new Thickness(38, 4, 38, 24) };
+        var content = new Grid { Margin = new Thickness(10, 2, 10, 6) };
         Grid.SetRow(content, 1);
         root.Children.Add(content);
 
@@ -115,7 +116,7 @@ internal sealed class MusicPlayerWindow : Window
         var bar = new Grid
         {
             Background = Brushes.Transparent,
-            Margin = new Thickness(24, 8, 16, 0)
+            Margin = new Thickness(4, 2, 2, 0)
         };
         bar.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -137,16 +138,9 @@ internal sealed class MusicPlayerWindow : Window
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center
         };
-        brand.Children.Add(new Rectangle
-        {
-            Width = 10,
-            Height = 10,
-            Fill = Skin.Accent,
-            Stroke = Skin.Outline,
-            StrokeThickness = 2,
-            Margin = new Thickness(0, 0, 10, 0),
-            VerticalAlignment = VerticalAlignment.Center
-        });
+        var wheat = Skin.Icon(Skin.Art.Wheat, 2, Skin.Accent);
+        wheat.Margin = new Thickness(0, 0, 8, 0);
+        brand.Children.Add(wheat);
         brand.Children.Add(new TextBlock
         {
             Text = "CAPYLULU  ·  RADIO",
@@ -159,9 +153,10 @@ internal sealed class MusicPlayerWindow : Window
         bar.Children.Add(brand);
 
         var windowButtons = new StackPanel { Orientation = Orientation.Horizontal };
-        var minimize = Skin.CreateButton("－", 34, 34, () => WindowState = WindowState.Minimized, 15);
+        var minimize = Skin.CreateButton(
+            Skin.Icon(Skin.Art.Minimize, 2, Skin.Ink), 34, 34, () => WindowState = WindowState.Minimized);
         minimize.ToolTip = "最小化";
-        var close = Skin.CreateButton("×", 34, 34, Close, 17);
+        var close = Skin.CreateButton(Skin.Icon(Skin.Art.Close, 2, Skin.Ink), 34, 34, Close);
         close.ToolTip = "关闭";
         windowButtons.Children.Add(minimize);
         windowButtons.Children.Add(close);
@@ -199,8 +194,8 @@ internal sealed class MusicPlayerWindow : Window
     {
         var holder = new Grid
         {
-            Width = 300,
-            Height = 300,
+            Width = 252,
+            Height = 252,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, -4, 0, 0)
@@ -213,24 +208,24 @@ internal sealed class MusicPlayerWindow : Window
         // 那种写实打光是另一套语言，跟别处的平涂对不上。
         vinylLayer.Children.Add(new Ellipse
         {
-            Fill = Skin.Frozen(Color.FromRgb(30, 26, 24)),
+            Fill = Skin.Frozen(Color.FromRgb(42, 28, 18)),
             Stroke = Skin.Outline,
-            StrokeThickness = 4
+            StrokeThickness = Skin.U
         });
         vinylLayer.Children.Add(new Ellipse
         {
-            Margin = new Thickness(20),
-            Fill = Skin.Frozen(Color.FromRgb(46, 40, 36)),
+            Margin = new Thickness(Skin.U * 4),
+            Fill = Skin.Frozen(Color.FromRgb(62, 44, 30)),
             IsHitTestVisible = false
         });
 
         // 纹路留着，但改成实色细线，不再靠半透明叠出层次。
-        for (var inset = 30; inset <= 66; inset += 12)
+        for (var inset = 24; inset <= 52; inset += 10)
         {
             vinylLayer.Children.Add(new Ellipse
             {
                 Margin = new Thickness(inset),
-                Stroke = Skin.Frozen(Color.FromRgb(72, 62, 55)),
+                Stroke = Skin.Frozen(Color.FromRgb(94, 68, 46)),
                 StrokeThickness = 2,
                 IsHitTestVisible = false
             });
@@ -238,23 +233,23 @@ internal sealed class MusicPlayerWindow : Window
 
         coverImage = new Image
         {
-            Width = 198,
-            Height = 198,
+            Width = 166,
+            Height = 166,
             Stretch = Stretch.UniformToFill,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Clip = new EllipseGeometry(new Point(99, 99), 99, 99)
+            Clip = new EllipseGeometry(new Point(83, 83), 83, 83)
         };
         RenderOptions.SetBitmapScalingMode(coverImage, BitmapScalingMode.HighQuality);
         holder.Children.Add(coverImage);
 
         holder.Children.Add(new Ellipse
         {
-            Width = 16,
-            Height = 16,
+            Width = Skin.U * 4,
+            Height = Skin.U * 4,
             Fill = Skin.Parchment,
             Stroke = Skin.Outline,
-            StrokeThickness = 2,
+            StrokeThickness = Skin.U / 2,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             IsHitTestVisible = false
@@ -326,7 +321,7 @@ internal sealed class MusicPlayerWindow : Window
         lanes.Children.Add(new Rectangle { Fill = Skin.Accent });
 
         var groove = Skin.Sunken(lanes);
-        groove.Height = 16;
+        groove.Height = 20;
         groove.Cursor = Cursors.Hand;
         groove.VerticalAlignment = VerticalAlignment.Center;
         groove.MouseLeftButtonDown += (_, e) =>
@@ -363,14 +358,14 @@ internal sealed class MusicPlayerWindow : Window
         Grid.SetRow(controls, 2);
         player.Children.Add(controls);
 
-        Button? loopControl = null;
-        loopControl = BuildControlButton("↻", "循环播放", 22, () =>
+        // 开着是作物绿、关了是灰——同一张点阵换个颜色重画，尺寸不变。
+        var loopIcon = Skin.Icon(Skin.Art.Loop, 3, Skin.Accent);
+        var loopControl = BuildControlButton(loopIcon, "循环播放", () =>
         {
             _isLooping = !_isLooping;
-            Skin.LabelOf(loopControl!).Foreground = _isLooping ? Skin.Accent : Skin.Ink;
+            loopIcon.Source = Skin.IconSource(Skin.Art.Loop, _isLooping ? Skin.Accent : Skin.Muted);
         });
         loopControl.HorizontalAlignment = HorizontalAlignment.Left;
-        Skin.LabelOf(loopControl).Foreground = Skin.Accent;
         controls.Children.Add(loopControl);
 
         var transport = new StackPanel
@@ -378,20 +373,27 @@ internal sealed class MusicPlayerWindow : Window
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Center
         };
-        transport.Children.Add(BuildControlButton("◀", "上一首", 17, RestartSong));
+        transport.Children.Add(
+            BuildControlButton(Skin.Icon(Skin.Art.Previous, 2, Skin.Ink), "上一首", RestartSong));
 
-        playButton = Skin.CreateButton(
-            "Ⅱ", 54, 54, TogglePlayback, 22, Skin.Accent, Skin.Parchment, "Segoe UI Symbol");
+        playButton = Skin.CreateButton(_playIcon, 54, 54, TogglePlayback, Skin.Accent);
         playButton.ToolTip = "暂停";
         playButton.Margin = new Thickness(14, 0, 14, 0);
         transport.Children.Add(playButton);
 
-        transport.Children.Add(BuildControlButton("▶", "下一首", 17, RestartSong));
+        transport.Children.Add(
+            BuildControlButton(Skin.Icon(Skin.Art.Next, 2, Skin.Ink), "下一首", RestartSong));
         Grid.SetColumn(transport, 1);
         controls.Children.Add(transport);
 
-        Button? queue = null;
-        queue = BuildControlButton("≡", "播放列表", 22, () => ShowQueueHint(queue!));
+        // 点一下把图标换成“第几首”，再点换回来。两块叠在一格里轮流显示。
+        var queueIcon = Skin.Icon(Skin.Art.Queue, 3, Skin.Ink);
+        var queueCount = Skin.Label("1 / 1", 12);
+        queueCount.Visibility = Visibility.Collapsed;
+        var queueFace = new Grid();
+        queueFace.Children.Add(queueIcon);
+        queueFace.Children.Add(queueCount);
+        var queue = BuildControlButton(queueFace, "播放列表", () => ShowQueueHint(queueIcon, queueCount));
         queue.HorizontalAlignment = HorizontalAlignment.Right;
         Grid.SetColumn(queue, 2);
         controls.Children.Add(queue);
@@ -408,25 +410,35 @@ internal sealed class MusicPlayerWindow : Window
         VerticalAlignment = VerticalAlignment.Center
     };
 
-    // 三个走带键、循环键、列表键都是同一张 42x42 的木牌，只有字不同。
-    private static Button BuildControlButton(string content, string toolTip, double fontSize, Action onClick)
+    // 三个走带键、循环键、列表键都是同一张 42x42 的木牌，只有点阵不同。
+    private static Button BuildControlButton(UIElement face, string toolTip, Action onClick)
     {
-        var button = Skin.CreateButton(
-            content, 42, 42, onClick, fontSize, fontFamily: "Segoe UI Symbol");
+        var button = Skin.CreateButton(face, 42, 42, onClick);
         button.ToolTip = toolTip;
         return button;
     }
 
     private Button BuildFavoriteButton()
     {
-        Button? button = null;
-        button = Skin.CreateButton("♥  82", 80, 36, () =>
+        var heart = Skin.Icon(Skin.Art.Heart, 2, Skin.Crimson);
+        heart.Margin = new Thickness(0, 0, 6, 0);
+        var count = Skin.Label("82", 14, Skin.Crimson);
+        var face = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        face.Children.Add(heart);
+        face.Children.Add(count);
+
+        var button = Skin.CreateButton(face, 84, 36, () =>
         {
             _isFavorite = !_isFavorite;
-            var label = Skin.LabelOf(button!);
-            label.Text = _isFavorite ? "♥  82" : "♡  81";
-            label.Foreground = _isFavorite ? Skin.Crimson : Skin.Muted;
-        }, 16, foreground: Skin.Crimson, fontFamily: "Segoe UI Symbol");
+            heart.Source = Skin.IconSource(Skin.Art.Heart, _isFavorite ? Skin.Crimson : Skin.Muted);
+            count.Text = _isFavorite ? "82" : "81";
+            count.Foreground = _isFavorite ? Skin.Crimson : Skin.Muted;
+        });
         button.ToolTip = "收藏";
         return button;
     }
@@ -488,7 +500,7 @@ internal sealed class MusicPlayerWindow : Window
     private void SetPlayback(bool isPlaying)
     {
         _isPlaying = isPlaying;
-        Skin.LabelOf(_playButton).Text = isPlaying ? "Ⅱ" : "▶";
+        _playIcon.Source = Skin.IconSource(isPlaying ? Skin.Art.Pause : Skin.Art.Play, Skin.Parchment);
         _playButton.ToolTip = isPlaying ? "暂停" : "播放";
     }
 
@@ -536,11 +548,11 @@ internal sealed class MusicPlayerWindow : Window
         _paintedActiveBars = activeBars;
     }
 
-    private static void ShowQueueHint(Button queueButton)
+    private static void ShowQueueHint(UIElement icon, UIElement count)
     {
-        var label = Skin.LabelOf(queueButton);
-        label.Text = label.Text == "≡" ? "1 / 1" : "≡";
-        label.FontSize = label.Text == "≡" ? 22 : 12;
+        var showCount = icon.Visibility == Visibility.Visible;
+        icon.Visibility = showCount ? Visibility.Collapsed : Visibility.Visible;
+        count.Visibility = showCount ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void OnPreviewKeyDown(object sender, KeyEventArgs e)

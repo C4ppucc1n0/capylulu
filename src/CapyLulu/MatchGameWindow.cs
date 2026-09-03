@@ -146,13 +146,22 @@ internal sealed class MatchGameWindow : Window
         var bar = new Grid
         {
             Background = Brushes.Transparent,
-            Margin = new Thickness(24, 8, 16, 0)
+            Margin = new Thickness(4, 2, 2, 0)
         };
         bar.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         bar.MouseLeftButtonDown += (_, _) => DragMove();
 
-        bar.Children.Add(new TextBlock
+        // 徽标换成麦穗点阵：原来那个纯色小方块是整条标题栏最像占位符的地方。
+        var brand = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        var wheat = Skin.Icon(Skin.Art.Wheat, 2, Skin.Accent);
+        wheat.Margin = new Thickness(0, 0, 8, 0);
+        brand.Children.Add(wheat);
+        brand.Children.Add(new TextBlock
         {
             Text = "CAPYLULU  ·  消消乐",
             Foreground = Skin.Ink,
@@ -160,6 +169,7 @@ internal sealed class MatchGameWindow : Window
             FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center
         });
+        bar.Children.Add(brand);
 
         // 两个 34x34 紧挨着，所以最小化按钮的中心还在原来那个位置。
         var buttons = new StackPanel
@@ -167,9 +177,14 @@ internal sealed class MatchGameWindow : Window
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center
         };
-        buttons.Children.Add(Skin.CreateButton(
-            "－", 34, 34, () => WindowState = WindowState.Minimized, 15));
-        buttons.Children.Add(Skin.CreateButton("×", 34, 34, Close, 17));
+        var minimize = Skin.CreateButton(
+            Skin.Icon(Skin.Art.Minimize, 2, Skin.Ink),
+            34,
+            34,
+            () => WindowState = WindowState.Minimized);
+        minimize.Margin = new Thickness(0, 0, 6, 0);
+        buttons.Children.Add(minimize);
+        buttons.Children.Add(Skin.CreateButton(Skin.Icon(Skin.Art.Close, 2, Skin.Ink), 34, 34, Close));
         Grid.SetColumn(buttons, 1);
         bar.Children.Add(buttons);
         return bar;
@@ -232,7 +247,7 @@ internal sealed class MatchGameWindow : Window
         boardLayers.Children.Add(boardCanvas);
 
         // 棋盘是内凹的一块田：方块躺在里面，清场后 GIF 就在这块地方演。
-        var panel = Skin.Sunken(boardLayers, BoardPadding, Skin.Field);
+        var panel = Skin.Plot(boardLayers, BoardPadding, Skin.Field);
         panel.HorizontalAlignment = HorizontalAlignment.Center;
         panel.VerticalAlignment = VerticalAlignment.Center;
         return panel;
@@ -240,7 +255,7 @@ internal sealed class MatchGameWindow : Window
 
     private Grid BuildFooter(out TextBlock hintText)
     {
-        var footer = new Grid { Margin = new Thickness(38, 16, 38, 26) };
+        var footer = new Grid { Margin = new Thickness(6, 10, 6, 8) };
         footer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         footer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 

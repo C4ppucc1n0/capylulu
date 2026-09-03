@@ -10,15 +10,15 @@
         <!-- 菜单和子菜单共用这一副木框，画法和 Skin.Bevel 一样：外描边 + 木框带 +
              左上高光 + 右下阴影 + 羊皮纸底。写成模板而不是抄两遍，改一处两边都跟着变。 -->
         <ControlTemplate x:Key="MenuFrame" TargetType="ContentControl">
-            <Border Padding="4"
-                    Background="{x:Static local:Skin.WoodMid}"
+            <Border Padding="8"
+                    Background="{x:Static local:Skin.WoodGrain}"
                     BorderBrush="{x:Static local:Skin.Outline}"
-                    BorderThickness="2">
-                <Border BorderBrush="{x:Static local:Skin.Highlight}" BorderThickness="2,2,0,0">
+                    BorderThickness="4">
+                <Border BorderBrush="{x:Static local:Skin.Highlight}" BorderThickness="4,4,0,0">
                     <Border Padding="0,4"
                             Background="{x:Static local:Skin.Parchment}"
                             BorderBrush="{x:Static local:Skin.Shadow}"
-                            BorderThickness="0,0,2,2">
+                            BorderThickness="0,0,4,4">
                         <ContentPresenter />
                     </Border>
                 </Border>
@@ -47,7 +47,7 @@
         </Style>
 
         <Style TargetType="MenuItem">
-            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Padding" Value="12,6" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="MenuItem">
@@ -124,8 +124,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Separator">
-                        <Border Margin="10,4" BorderBrush="{x:Static local:Skin.Shadow}" BorderThickness="0,1,0,0">
-                            <Border BorderBrush="{x:Static local:Skin.Highlight}" BorderThickness="0,1,0,0" />
+                        <Border Margin="12,5" BorderBrush="{x:Static local:Skin.Shadow}" BorderThickness="0,2,0,0">
+                            <Border BorderBrush="{x:Static local:Skin.Highlight}" BorderThickness="0,2,0,0" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>

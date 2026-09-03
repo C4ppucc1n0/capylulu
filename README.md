@@ -61,7 +61,7 @@ dist/CapyLulu/CapyLulu.exe
 ## 功能规格
 
 - 消消乐已进入运行时代码：右键菜单打开，同时只允许一个棋盘窗口；窗口固定 560x726 DIP、不置顶、标题栏可最小化。拖动规则、下落补块、奖励演出（Bonus Time 卡片 → 彩纸 → 逐格清场 → 庆祝 GIF 铺满 7x7 棋盘区 → 继续）和验收标准见 `docs/match-game-requirements.md`，参考视频关键帧保存在 `docs/assets/match-game-reference/`。
-- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、凸起/内凹斜面和按钮只有那一份，改一个值全局生效。消消乐、音乐播放器和桌宠气泡/应援条/倒计时都从那里取色。右键菜单的模板在 `App.xaml` 的 `Application.Resources` 里（菜单是独立弹出窗口，隐式样式从这一级覆盖最省事），颜色同样取自 `Skin`。
+- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、四种框（`Raised`/`Sunken`/`Plot`/`Shell`）、像素图标和按钮只有那一份，改一个值全局生效。所有边框厚度都是美术像素 `Skin.U` 的整数倍——改这一个常量就能整体调粗调细。图标是点阵字符串（`Skin.Art`），加一个图标就是加一个字符串数组，不引入图片资源。消消乐、音乐播放器和桌宠气泡/应援条/倒计时都从那里取色。右键菜单的模板在 `App.xaml` 的 `Application.Resources` 里（菜单是独立弹出窗口，隐式样式从这一级覆盖最省事），颜色同样取自 `Skin`。
 
 ## 仓库目录职责
 

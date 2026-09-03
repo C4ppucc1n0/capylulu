@@ -88,7 +88,7 @@ internal sealed partial class MainWindow : Window
 
         // 应援按钮不写在 XAML 里：走 Skin.CreateButton 才能和两个窗口共用同一副斜面。
         _singingSupportButton = Skin.CreateButton(
-            "♥", 44, 44, RegisterSingingSupport, 22, Skin.Crimson, Skin.Parchment, "Segoe UI Symbol");
+            Skin.Icon(Skin.Art.Heart, 3, Skin.Parchment), 44, 44, RegisterSingingSupport, Skin.Crimson);
         _singingSupportButton.Margin = new Thickness(10, 0, 0, 0);
         _singingSupportButton.VerticalAlignment = VerticalAlignment.Center;
         _singingSupportButton.ToolTip = "给宠物应援";

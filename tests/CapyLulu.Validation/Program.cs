@@ -516,16 +516,42 @@ static void AssertSkin()
 
     // LabelOf 拆的正是 CreateButton 自己搭的那三层，两边一旦对不上就是运行时崩。
     Equal("测试", Skin.LabelOf(button).Text);
+
+    // 框的总厚度决定棋盘那块 Field 区还是不是 468 DIP，而 match-harness 就是靠
+    // 这个尺寸认出棋盘的。改厚一层不会有任何编译或运行错误，只会让 harness 全线失准。
+    Equal(Skin.U, Inset(Skin.Raised()));
+    Equal(Skin.U, Inset(Skin.Sunken()));
+    Equal(Skin.U * 3, Inset(Skin.Plot(null, 0, Skin.Field)));
+
+    // 点阵按 Bgra32 逐字节写，通道写反了图标照样出得来，只是颜色不对。
+    var icon = Skin.IconSource([".0"], Skin.Crimson);
+    var read = new uint[2];
+    icon.CopyPixels(read, 8, 0);
+    Equal(0u, read[0]);
+    Equal(0xFF000000u | ((uint)Skin.Crimson.Color.R << 16)
+        | ((uint)Skin.Crimson.Color.G << 8) | Skin.Crimson.Color.B, read[1]);
+}
+
+// 一层层数过去把左边框加起来 —— Frame 是由外向内套的，左边框的总和就是内容的缩进。
+static double Inset(Border frame)
+{
+    var total = 0.0;
+    for (Border? band = frame; band is not null; band = band.Child as Border)
+    {
+        total += band.BorderThickness.Left;
+    }
+
+    return total;
 }
 
 // 反射枚举而不是逐个点名：以后往调色板里加颜色，冻结这条自动就管上了。
-static IEnumerable<(string Name, SolidColorBrush Brush)> SkinBrushes()
+static IEnumerable<(string Name, Brush Brush)> SkinBrushes()
 {
     foreach (var field in typeof(Skin).GetFields(BindingFlags.Public | BindingFlags.Static))
     {
         switch (field.GetValue(null))
         {
-            case SolidColorBrush brush:
+            case Brush brush:
                 yield return (field.Name, brush);
                 break;
             case SolidColorBrush[] palette:
