@@ -42,9 +42,9 @@ internal sealed class MusicPlayerWindow : Window
     {
         Title = "CapyLulu 音乐播放器";
         Width = 740;
-        Height = 580;
+        Height = 620;
         MinWidth = 700;
-        MinHeight = 560;
+        MinHeight = 600;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
         WindowStyle = WindowStyle.None;
         AllowsTransparency = true;
@@ -65,20 +65,28 @@ internal sealed class MusicPlayerWindow : Window
         root.Children.Add(content);
 
         var stage = new Grid();
-        stage.RowDefinitions.Add(new RowDefinition { Height = new GridLength(52) });
+        stage.RowDefinitions.Add(new RowDefinition { Height = new GridLength(76) });
         stage.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
         stage.RowDefinitions.Add(new RowDefinition { Height = new GridLength(142) });
         content.Children.Add(stage);
 
-        var trackHeader = BuildTrackHeader();
+        var trackHeader = Skin.Raised(BuildTrackHeader(), Skin.U * 1.5);
+        trackHeader.HorizontalAlignment = HorizontalAlignment.Left;
+        trackHeader.VerticalAlignment = VerticalAlignment.Center;
         Grid.SetRow(trackHeader, 0);
         stage.Children.Add(trackHeader);
 
         var record = BuildRecord(out _coverImage, out var rotatingVinyl);
         rotatingVinyl.RenderTransform = _recordRotation;
         rotatingVinyl.RenderTransformOrigin = new Point(0.5, 0.5);
-        Grid.SetRow(record, 1);
-        stage.Children.Add(record);
+
+        // 唱片搁在一个浅木盘里。原来它孤零零悬在一大片奶油底中间，
+        // 左右两侧那片空白是这个窗口最显空的地方。
+        var tray = Skin.Plot(record, Skin.U * 3, Skin.WoodDark);
+        tray.HorizontalAlignment = HorizontalAlignment.Center;
+        tray.VerticalAlignment = VerticalAlignment.Center;
+        Grid.SetRow(tray, 1);
+        stage.Children.Add(tray);
 
         var player = BuildPlayer(
             out _playButton,
@@ -204,6 +212,7 @@ internal sealed class MusicPlayerWindow : Window
         vinylLayer = new Grid();
         holder.Children.Add(vinylLayer);
 
+
         // 唱片压成两段平色 + 一圈硬描边。原来是三段径向渐变，
         // 那种写实打光是另一套语言，跟别处的平涂对不上。
         vinylLayer.Children.Add(new Ellipse
@@ -266,7 +275,7 @@ internal sealed class MusicPlayerWindow : Window
     {
         var player = new Grid
         {
-            Width = 300,
+            Width = 360,
             HorizontalAlignment = HorizontalAlignment.Center
         };
         player.RowDefinitions.Add(new RowDefinition { Height = new GridLength(34) });

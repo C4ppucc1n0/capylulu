@@ -16,7 +16,7 @@
                     BorderThickness="4">
                 <Border BorderBrush="{x:Static local:Skin.Highlight}" BorderThickness="4,4,0,0">
                     <Border Padding="0,4"
-                            Background="{x:Static local:Skin.Parchment}"
+                            Background="{x:Static local:Skin.Paper}"
                             BorderBrush="{x:Static local:Skin.Shadow}"
                             BorderThickness="0,0,4,4">
                         <ContentPresenter />

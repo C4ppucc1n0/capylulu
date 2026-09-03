@@ -24,7 +24,7 @@ internal sealed class MatchGameWindow : Window
     private readonly Border?[,] _tiles = new Border?[Rows, Columns];
     private readonly Canvas _boardCanvas;
     private readonly Canvas _confettiCanvas;
-    private readonly TextBlock _progressText;
+    private readonly Image[] _progressStars;
     private readonly TextBlock _hintText;
     private readonly Grid _showLayer;
     private readonly Border _bonusCard;
@@ -90,7 +90,7 @@ internal sealed class MatchGameWindow : Window
         root.Children.Add(content);
 
         AddRow(content, 0, BuildTitleBar());
-        AddRow(content, 1, BuildHeader(out _progressText));
+        AddRow(content, 1, BuildHeader(out _progressStars));
         AddRow(content, 2, BuildBoardArea(out _boardCanvas, out var boardLayers));
         AddRow(content, 3, BuildFooter(out _hintText));
 
@@ -169,7 +169,13 @@ internal sealed class MatchGameWindow : Window
             FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center
         });
-        bar.Children.Add(brand);
+
+        // 标题钉在一块木牌上，而不是浮在羊皮纸上——空着的那片奶油底是上一版
+        // 最像"没做完"的地方。
+        var plaque = Skin.Raised(brand, Skin.U * 1.5);
+        plaque.HorizontalAlignment = HorizontalAlignment.Left;
+        plaque.VerticalAlignment = VerticalAlignment.Center;
+        bar.Children.Add(plaque);
 
         // 两个 34x34 紧挨着，所以最小化按钮的中心还在原来那个位置。
         var buttons = new StackPanel
@@ -190,8 +196,9 @@ internal sealed class MatchGameWindow : Window
         return bar;
     }
 
-    // 进度做成内凹的读数槽，和棋盘底板一套语言。
-    private static Border BuildHeader(out TextBlock progressText)
+    // 进度做成内凹的读数槽，和棋盘底板一套语言。槽里是一排星星，
+    // 每消一轮点亮一颗——比一行"3/10"直观，也是星露谷到处在用的读数方式。
+    private static Border BuildHeader(out Image[] progressStars)
     {
         var row = new StackPanel
         {
@@ -207,14 +214,14 @@ internal sealed class MatchGameWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 10, 0)
         });
-        progressText = new TextBlock
+        progressStars = new Image[RewardWaveTarget];
+        for (var index = 0; index < progressStars.Length; index++)
         {
-            Foreground = Skin.Accent,
-            FontSize = 22,
-            FontWeight = FontWeights.Bold,
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        row.Children.Add(progressText);
+            var star = Skin.Icon(Skin.Art.Star, 3, Skin.WoodMid);
+            star.Margin = new Thickness(2, 0, 2, 0);
+            progressStars[index] = star;
+            row.Children.Add(star);
+        }
 
         var badge = Skin.Sunken(row);
         badge.HorizontalAlignment = HorizontalAlignment.Center;
@@ -368,8 +375,14 @@ internal sealed class MatchGameWindow : Window
         Canvas.SetTop(tile, CoordinateOf(row));
     }
 
-    private void UpdateProgress() =>
-        _progressText.Text = $"{Math.Min(_board.ClearedWaveCount, RewardWaveTarget)}/{RewardWaveTarget}";
+    private void UpdateProgress()
+    {
+        for (var index = 0; index < _progressStars.Length; index++)
+        {
+            _progressStars[index].Source = Skin.IconSource(
+                Skin.Art.Star, index < _board.ClearedWaveCount ? Skin.Gold : Skin.WoodMid);
+        }
+    }
 
     private void Restart()
     {

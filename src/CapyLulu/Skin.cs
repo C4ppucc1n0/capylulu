@@ -52,6 +52,10 @@ internal static class Skin
     // 有这道线才像一条条木板拼起来的。
     public static readonly DrawingBrush WoodGrain = Grain();
 
+    // 纸纹：几点比底色深一档的细斑。大片平色的奶油底看着像塑料板，有这点噪点才像纸。
+    // 压得很淡（只差 4 个色阶、半个美术像素大），任何靠取色判读界面的验证都感觉不到。
+    public static readonly DrawingBrush Paper = PaperTexture();
+
     // 彩纸沿用方块那一组颜色。方块素材待换，所以这里先各留一份，
     // 等 MatchTileArt 换正式素材时两边一起收敛。
     public static readonly SolidColorBrush[] Confetti =
@@ -92,7 +96,7 @@ internal static class Skin
     // 六条band 从外到内是 描边/亮木/木纹/暗木/描边，合起来 6U。
     public static UIElement Shell(UIElement content)
     {
-        var frame = Frame(content, Parchment, 0,
+        var frame = Frame(content, Paper, 0,
             (new Thickness(U), Outline),
             (new Thickness(U), WoodLight),
             (new Thickness(U * 2), WoodGrain),
@@ -371,17 +375,32 @@ internal static class Skin
             "0......00"
         ];
 
+        // 环上开一道口、口边带箭头，才读得出是"转回去"而不是一个停止键。
         public static readonly string[] Loop =
         [
-            "..00000..",
-            ".00...00.",
-            "00.....00",
-            "0.......0",
-            "0.......0",
-            "0.......0",
-            "00.....00",
-            ".00...00.",
-            "..00000.."
+            "...00000...",
+            "..00...00..",
+            ".00.....000",
+            "00.......00",
+            "0.........0",
+            "0..........",
+            "0..........",
+            "00.........",
+            ".00.....00.",
+            "..00...00..",
+            "...00000..."
+        ];
+
+        // 奖励进度用一排星星代替"0/10"：满一颗是一轮，比读数字直观。
+        public static readonly string[] Star =
+        [
+            "...0...",
+            "..000..",
+            "0000000",
+            ".00000.",
+            "..000..",
+            ".00.00.",
+            "0.....0"
         ];
 
         public static readonly string[] Queue =
@@ -437,6 +456,29 @@ internal static class Skin
         {
             VisualTree = new FrameworkElementFactory(typeof(ContentPresenter))
         };
+    }
+
+    // 斑点位置是错开的，不然平铺出来是一眼看得见的方格阵。
+    private static DrawingBrush PaperTexture()
+    {
+        var speck = Hex(0xFBEFD0);
+        var group = new DrawingGroup();
+        group.Children.Add(new GeometryDrawing(
+            Parchment, null, new RectangleGeometry(new Rect(0, 0, U * 8, U * 8))));
+        foreach (var (x, y) in new[] { (0.0, 1.0), (3.0, 4.0), (5.0, 0.0), (6.0, 6.0), (2.0, 7.0) })
+        {
+            group.Children.Add(new GeometryDrawing(
+                speck, null, new RectangleGeometry(new Rect(x * U, y * U, U / 2, U / 2))));
+        }
+
+        var paper = new DrawingBrush(group)
+        {
+            TileMode = TileMode.Tile,
+            Viewport = new Rect(0, 0, U * 8, U * 8),
+            ViewportUnits = BrushMappingMode.Absolute
+        };
+        paper.Freeze();
+        return paper;
     }
 
     private static DrawingBrush Grain()
