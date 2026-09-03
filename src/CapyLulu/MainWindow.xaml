@@ -12,6 +12,7 @@
         SizeToContent="WidthAndHeight"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
+        FontFamily="{x:Static local:Skin.Font}"
         TextOptions.TextFormattingMode="Display"
         TextOptions.TextRenderingMode="Aliased"
         Loaded="OnLoaded"
@@ -43,7 +44,6 @@
                            Margin="16,9"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           FontFamily="Microsoft YaHei UI"
                            FontSize="14"
                            FontWeight="SemiBold"
                            Foreground="{x:Static local:Skin.Ink}"
@@ -93,8 +93,6 @@
                     <Image.ContextMenu>
                         <ContextMenu x:Name="_petContextMenu"
                                      Closed="OnPetContextMenuClosed"
-                                     FontFamily="Microsoft YaHei UI"
-                                     FontSize="13"
                                      Opened="OnPetContextMenuOpened">
                             <MenuItem x:Name="_characterMenu" Header="更换角色" />
                             <MenuItem x:Name="_loafingMenu"
@@ -141,7 +139,6 @@
                 Visibility="Collapsed">
             <TextBlock x:Name="_singingResponseText"
                        HorizontalAlignment="Center"
-                       FontFamily="Microsoft YaHei UI"
                        FontSize="13"
                        FontWeight="SemiBold"
                        Foreground="{x:Static local:Skin.Crimson}"
@@ -162,7 +159,6 @@
                 Visibility="Collapsed">
             <TextBlock x:Name="_focusCountdownText"
                        HorizontalAlignment="Center"
-                       FontFamily="Microsoft YaHei UI"
                        FontSize="14"
                        FontWeight="SemiBold"
                        Foreground="{x:Static local:Skin.Parchment}"

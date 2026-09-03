@@ -13,6 +13,7 @@ namespace CapyLulu;
 internal static class Skin
 {
     public const string FontName = "Microsoft YaHei UI";
+    public static readonly FontFamily Font = new(FontName);
 
     // 描边与文字
     public static readonly SolidColorBrush Outline = Hex(0x4A2C18);
@@ -186,7 +187,7 @@ internal static class Skin
     // 每个窗口的开场都一样：像素味的字、整数对齐、不抗锯齿。
     public static void ApplyChrome(Window window)
     {
-        window.FontFamily = new FontFamily(FontName);
+        window.FontFamily = Font;
         window.UseLayoutRounding = true;
         window.SnapsToDevicePixels = true;
         TextOptions.SetTextFormattingMode(window, TextFormattingMode.Display);
