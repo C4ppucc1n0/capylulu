@@ -13,12 +13,23 @@
             <Border Padding="8"
                     Background="{x:Static local:Skin.WoodGrain}"
                     BorderBrush="{x:Static local:Skin.Outline}"
-                    BorderThickness="4">
-                <Border BorderBrush="{x:Static local:Skin.Highlight}" BorderThickness="4,4,0,0">
+                    BorderThickness="4"
+                    CornerRadius="12">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="0"
+                                      Color="#5A321A"
+                                      Direction="315"
+                                      Opacity="0.55"
+                                      ShadowDepth="5" />
+                </Border.Effect>
+                <Border BorderBrush="{x:Static local:Skin.Highlight}"
+                        BorderThickness="4,4,0,0"
+                        CornerRadius="9">
                     <Border Padding="0,4"
                             Background="{x:Static local:Skin.Paper}"
                             BorderBrush="{x:Static local:Skin.Shadow}"
-                            BorderThickness="0,0,4,4">
+                            BorderThickness="0,0,4,4"
+                            CornerRadius="7">
                         <ContentPresenter />
                     </Border>
                 </Border>
@@ -59,10 +70,19 @@
                         <Border Background="{x:Static local:Skin.WoodGrain}"
                                 BorderBrush="{x:Static local:Skin.Outline}"
                                 BorderThickness="2"
+                                CornerRadius="9"
                                 Padding="2">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="0"
+                                                  Color="#5A321A"
+                                                  Direction="315"
+                                                  Opacity="0.45"
+                                                  ShadowDepth="3" />
+                            </Border.Effect>
                             <Border Background="{x:Static local:Skin.Paper}"
                                     BorderBrush="{x:Static local:Skin.Highlight}"
                                     BorderThickness="2,2,0,0"
+                                    CornerRadius="7"
                                     Padding="8,5">
                                 <ContentPresenter />
                             </Border>
@@ -80,8 +100,10 @@
                         <!-- 一个模板覆盖菜单里的四种角色：叶子项、可勾选项、子菜单头、
                              禁用项，差别只是勾和箭头显不显示，不必按角色各写一份。 -->
                         <Border x:Name="_row"
+                                Margin="2,1"
                                 Padding="{TemplateBinding Padding}"
-                                Background="Transparent">
+                                Background="Transparent"
+                                CornerRadius="6">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="26" />

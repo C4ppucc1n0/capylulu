@@ -85,14 +85,14 @@ internal static class Skin
     // 凸起面板：面板、卡片、按钮的脸都用这个。三层的结构是固定的，
     // SetPressed 靠它往里数两层找到那两条斜面边。
     public static Border Raised(UIElement? child = null, double padding = 0, SolidColorBrush? body = null) =>
-        Frame(child, body ?? Parchment, padding,
+        Frame(child, body ?? Parchment, padding, 8,
             (new Thickness(U / 2), Outline),
             (new Thickness(U / 2, U / 2, 0, 0), Highlight),
             (new Thickness(0, 0, U / 2, U / 2), Shadow));
 
     // 内凹槽位：棋盘底板、进度槽这类"陷进去"的地方。高光与阴影对调即内凹。
     public static Border Sunken(UIElement? child = null, double padding = 0, SolidColorBrush? body = null) =>
-        Frame(child, body ?? ParchmentDim, padding,
+        Frame(child, body ?? ParchmentDim, padding, 7,
             (new Thickness(U / 2), Outline),
             (new Thickness(U / 2, U / 2, 0, 0), Shadow),
             (new Thickness(0, 0, U / 2, U / 2), Highlight));
@@ -101,7 +101,7 @@ internal static class Skin
     // 和 Sunken 分开是因为进度槽只有 16 DIP 高，套 12 DIP 的框会把它整个糊住。
     // 3U 这个厚度是挑出来的：Field 区正好还是 468 DIP，靠取色认棋盘的验证不用改。
     public static Border Plot(UIElement? child, double padding, SolidColorBrush body) =>
-        Frame(child, body, padding,
+        Frame(child, body, padding, 10,
             (new Thickness(U), Outline),
             (new Thickness(U), WoodGrain),
             (new Thickness(U, U, 0, 0), WoodDark),
@@ -111,7 +111,7 @@ internal static class Skin
     // 六条band 从外到内是 描边/亮木/木纹/暗木/描边，合起来 6U。
     public static UIElement Shell(UIElement content)
     {
-        var frame = Frame(content, Paper, 0,
+        var frame = Frame(content, Paper, 0, 12,
             (new Thickness(U), Outline),
             (new Thickness(U), WoodLight),
             (new Thickness(U * 2), WoodGrain),
@@ -150,6 +150,7 @@ internal static class Skin
         UIElement? child,
         Brush body,
         double padding,
+        double cornerRadius,
         params (Thickness Band, Brush Brush)[] bands)
     {
         // 底色挂在最内那条 band 上，不另起一层：SetPressed 和 LabelOf 都是照层数
@@ -159,6 +160,7 @@ internal static class Skin
             BorderBrush = bands[^1].Brush,
             BorderThickness = bands[^1].Band,
             Background = body,
+            CornerRadius = new CornerRadius(Math.Max(3, cornerRadius - ((bands.Length - 1) * 2))),
             Padding = new Thickness(padding),
             Child = child
         };
@@ -169,6 +171,7 @@ internal static class Skin
             {
                 BorderBrush = bands[index].Brush,
                 BorderThickness = bands[index].Band,
+                CornerRadius = new CornerRadius(Math.Max(3, cornerRadius - (index * 2))),
                 Child = current
             };
         }

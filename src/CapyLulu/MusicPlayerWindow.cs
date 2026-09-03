@@ -195,7 +195,7 @@ internal sealed class MusicPlayerWindow : Window
         header.Children.Add(new TextBlock
         {
             Text = "CapyLulu  ·  花园散步电台",
-            FontSize = 11,
+            FontSize = 12,
             Foreground = Skin.Muted
         });
         return header;
@@ -253,7 +253,9 @@ internal sealed class MusicPlayerWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Clip = new EllipseGeometry(new Point(83, 83), 83, 83)
         };
-        RenderOptions.SetBitmapScalingMode(coverImage, BitmapScalingMode.HighQuality);
+        // 封面降采样后用最近邻放大，让 3D 原图也能融进像素界面，而不是像一张
+        // 平滑照片贴在木框中央。
+        RenderOptions.SetBitmapScalingMode(coverImage, BitmapScalingMode.NearestNeighbor);
 
         // 封面是这张唱片的标签面，压在纹路之上、且什么都不许盖在它上面。
         // 原来中心还画了个 16 DIP 的轴孔，正好戳在噜噜脸上。
@@ -408,7 +410,7 @@ internal sealed class MusicPlayerWindow : Window
     {
         Text = text,
         FontFamily = Skin.Font,
-        FontSize = 11,
+        FontSize = 12,
         Foreground = Skin.Muted,
         HorizontalAlignment = alignment,
         VerticalAlignment = VerticalAlignment.Center
@@ -457,6 +459,7 @@ internal sealed class MusicPlayerWindow : Window
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.DecodePixelWidth = 83;
             bitmap.StreamSource = stream;
             bitmap.EndInit();
             bitmap.Freeze();

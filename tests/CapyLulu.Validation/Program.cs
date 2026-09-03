@@ -569,6 +569,8 @@ static void AssertSkin()
     // 肉眼也很难分出凸起和内凹，正是需要断言的地方。
     var raised = Skin.Raised();
     var sunken = Skin.Sunken();
+    True(raised.CornerRadius.TopLeft > 0, "凸起面板必须保留圆角");
+    True(sunken.CornerRadius.TopLeft > 0, "内凹面板必须保留圆角");
     Equal(Skin.Highlight, TopLeftEdge(raised));
     Equal(Skin.Shadow, BottomRightEdge(raised));
     Equal(Skin.Shadow, TopLeftEdge(sunken));
@@ -596,6 +598,9 @@ static void AssertSkin()
     Equal(Skin.U, Inset(Skin.Raised()));
     Equal(Skin.U, Inset(Skin.Sunken()));
     Equal(Skin.U * 3, Inset(Skin.Plot(null, 0, Skin.Field)));
+
+    True(Skin.Font.Source.Contains(Skin.FontName, StringComparison.Ordinal),
+        "全局字体必须指向内嵌像素字体");
 
     // 点阵按 Bgra32 逐字节写，通道写反了图标照样出得来，只是颜色不对。
     var icon = Skin.IconSource([".0"], Skin.Crimson);

@@ -39,12 +39,22 @@
                     Background="{x:Static local:Skin.WoodGrain}"
                     BorderBrush="{x:Static local:Skin.Outline}"
                     BorderThickness="2"
+                    CornerRadius="12"
                     Visibility="Hidden">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="0"
+                                      Color="#5A321A"
+                                      Direction="315"
+                                      Opacity="0.45"
+                                      ShadowDepth="3" />
+                </Border.Effect>
                 <Border Background="{x:Static local:Skin.Paper}"
                         BorderBrush="{x:Static local:Skin.Highlight}"
-                        BorderThickness="2,2,0,0">
+                        BorderThickness="2,2,0,0"
+                        CornerRadius="9">
                     <Border BorderBrush="{x:Static local:Skin.Shadow}"
-                            BorderThickness="0,0,2,2">
+                            BorderThickness="0,0,2,2"
+                            CornerRadius="7">
                         <TextBlock x:Name="_bubbleText"
                                    Margin="16,9"
                                    HorizontalAlignment="Center"
@@ -109,9 +119,11 @@
                                       Header="摸鱼模式"
                                       IsCheckable="True"
                                       Click="OnLoafingMenuClick" />
+                            <Separator />
                             <MenuItem x:Name="_singingMenu" Header="唱歌" Click="OnSingingMenuClick" />
                             <MenuItem x:Name="_musicMenu" Header="音乐播放器" Click="OnMusicPlayerMenuClick" />
                             <MenuItem x:Name="_matchMenu" Header="消消乐" Click="OnMatchGameMenuClick" />
+                            <Separator />
                             <MenuItem x:Name="_focusMenu"
                                       Header="专注模式：10 分钟"
                                       Click="OnFocusMenuClick" />
@@ -143,13 +155,15 @@
                 Background="{x:Static local:Skin.WoodGrain}"
                 BorderBrush="{x:Static local:Skin.Outline}"
                 BorderThickness="2"
+                CornerRadius="10"
                 IsHitTestVisible="False"
                 MaxWidth="290"
                 Visibility="Collapsed">
             <Border Padding="10,4"
                     Background="{x:Static local:Skin.Paper}"
                     BorderBrush="{x:Static local:Skin.Highlight}"
-                    BorderThickness="2,2,0,0">
+                    BorderThickness="2,2,0,0"
+                    CornerRadius="7">
                 <TextBlock x:Name="_singingResponseText"
                            HorizontalAlignment="Center"
                            FontSize="13"
@@ -168,12 +182,14 @@
                 Background="{x:Static local:Skin.WoodGrain}"
                 BorderBrush="{x:Static local:Skin.Outline}"
                 BorderThickness="2"
+                CornerRadius="10"
                 IsHitTestVisible="False"
                 Visibility="Collapsed">
             <Border Padding="12,5"
                     Background="{x:Static local:Skin.Field}"
                     BorderBrush="{x:Static local:Skin.Highlight}"
-                    BorderThickness="2,2,0,0">
+                    BorderThickness="2,2,0,0"
+                    CornerRadius="7">
                 <TextBlock x:Name="_focusCountdownText"
                            HorizontalAlignment="Center"
                            FontSize="14"

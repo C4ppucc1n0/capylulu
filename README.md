@@ -62,7 +62,7 @@ dist/CapyLulu/CapyLulu.exe
 
 - 消消乐已进入运行时代码：右键菜单打开，同时只允许一个棋盘窗口；窗口固定 560x726 DIP、不置顶、标题栏可最小化。每局从 24 个方块 GIF 中随机抽取 6 个作为本局方块种类；方块以半速播放且同类同步。每次奖励演出从 `celebrate/` 下的 3 段 GIF 中随机播放 1 段。拖动规则、下落补块和验收标准见 `docs/match-game-requirements.md`，参考视频关键帧保存在 `docs/assets/match-game-reference/`。
 - 消消乐的基础难度由 `MatchGameOptions` 的两个常量决定：`TileKindCount`（方块种类，上限是 `MatchTileArt` 备好的图案数）和 `OpeningSwapCap`（开局允许的合法交换数上限）。难度的度量就是 `MatchBoard.CountLegalSwaps()`，验证程序会逐局把它卡在上限内。
-- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、四种框（`Raised`/`Sunken`/`Plot`/`Shell`）、像素图标、按钮悬停反馈和木纹只有一份。界面使用内嵌的 Fusion Pixel 12px 简体中文像素字体；右键菜单、ToolTip、桌宠气泡、播放器和消消乐共用同一套木框、羊皮纸和点阵图标。
+- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、四种圆角框（`Raised`/`Sunken`/`Plot`/`Shell`）、像素图标、按钮悬停反馈和木纹只有一份。界面使用内嵌的 Fusion Pixel 12px 简体中文像素字体；右键菜单、ToolTip、桌宠气泡、播放器和消消乐共用同一套圆角木框、硬边阴影、羊皮纸和点阵图标。
 
 ## 仓库目录职责
 
