@@ -42,6 +42,12 @@
     <EmbeddedResource Include="..\..\gif_resources\*.png">
       <LogicalName>CapyLulu.GifResources.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\gif_resources\match-game\block\*.gif">
+      <LogicalName>CapyLulu.GifResources.MatchGame.Block.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\gif_resources\match-game\celebrate\*.gif">
+      <LogicalName>CapyLulu.GifResources.MatchGame.Celebrate.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
     <Resource Remove="Resources\dialogues.zh-CN.json" />
     <EmbeddedResource Include="Resources\dialogues.zh-CN.json"
                       LogicalName="CapyLulu.Resources.dialogues.zh-CN.json">

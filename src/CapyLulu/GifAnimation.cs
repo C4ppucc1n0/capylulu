@@ -3,6 +3,7 @@ using System.Windows.Media.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace CapyLulu;
 
@@ -44,7 +45,7 @@ internal sealed class GifAnimation
         return Frames.Count - 1;
     }
 
-    public static GifAnimation Load(Stream stream)
+    public static GifAnimation Load(Stream stream, int? maxPixelDimension = null)
     {
         using var image = SixLabors.ImageSharp.Image.Load<Bgra32>(stream);
         if (image.Frames.Count == 0)
@@ -58,18 +59,27 @@ internal sealed class GifAnimation
         for (var index = 0; index < image.Frames.Count; index++)
         {
             using var frameImage = image.Frames.CloneFrame(index);
-            frames.Add(ToBitmapSource(frameImage));
-
             var delayHundredths = frameImage.Frames.RootFrame.Metadata.GetGifMetadata().FrameDelay;
             elapsedSeconds += Math.Max(2, delayHundredths) / 100.0;
             frameEndSeconds.Add(elapsedSeconds);
+
+            if (maxPixelDimension is > 0
+                && Math.Max(frameImage.Width, frameImage.Height) > maxPixelDimension.Value)
+            {
+                var scale = maxPixelDimension.Value / (double)Math.Max(frameImage.Width, frameImage.Height);
+                frameImage.Mutate(context => context.Resize(
+                    Math.Max(1, (int)Math.Round(frameImage.Width * scale)),
+                    Math.Max(1, (int)Math.Round(frameImage.Height * scale))));
+            }
+
+            frames.Add(ToBitmapSource(frameImage));
         }
 
         return new GifAnimation(
             frames,
             frameEndSeconds,
-            image.Width,
-            image.Height);
+            frames[0].PixelWidth,
+            frames[0].PixelHeight);
     }
 
     private static BitmapSource ToBitmapSource(Image<Bgra32> image)

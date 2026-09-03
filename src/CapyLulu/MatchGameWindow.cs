@@ -27,19 +27,24 @@ internal sealed class MatchGameWindow : Window
     private readonly Image[] _progressStars;
     private readonly TextBlock _hintText;
     private readonly Grid _showLayer;
+    private readonly Border _bonusDimmer;
     private readonly Border _bonusCard;
     private readonly Image _celebrationImage;
     private readonly TextBlock _celebrationText;
     private readonly Button _continueButton;
     private readonly CancellationTokenSource _lifetime = new();
-    private readonly DispatcherTimer _celebrationTimer;
-    private readonly Stopwatch _celebrationClock = new();
+    private readonly DispatcherTimer _animationTimer;
+    private readonly Stopwatch _animationClock = new();
+    private readonly Random _visualRandom = new();
 
     // 同时只允许一个棋盘。守在窗口自己身上，任何调用方都绕不过去，
     // 也省得每个调用方各自记一个字段。
     private static MatchGameWindow? _open;
 
+    private GifAnimation?[] _tileAnimations = [];
+    private double[] _tilePhaseOffsets = new double[TileKindCount];
     private GifAnimation? _celebration;
+    private double _celebrationStartedSeconds;
     private TaskCompletionSource? _continueSignal;
     private Cell _dragCell;
     private Point _dragOrigin;
@@ -96,18 +101,22 @@ internal sealed class MatchGameWindow : Window
 
         _showLayer = BuildShowLayer(
             out _confettiCanvas,
+            out _bonusDimmer,
             out _bonusCard,
             out _celebrationImage,
             out _celebrationText,
             out _continueButton);
         boardLayers.Children.Add(_showLayer);
 
-        _celebrationTimer = new DispatcherTimer(DispatcherPriority.Render)
+        _animationTimer = new DispatcherTimer(DispatcherPriority.Render)
         {
             Interval = TimeSpan.FromMilliseconds(25)
         };
-        _celebrationTimer.Tick += OnCelebrationTick;
+        _animationTimer.Tick += OnAnimationTick;
+        _animationClock.Start();
+        _animationTimer.Start();
 
+        SelectTileAnimations();
         BuildTiles();
         UpdateProgress();
 
@@ -127,7 +136,8 @@ internal sealed class MatchGameWindow : Window
     private void OnClosed(object? sender, EventArgs e)
     {
         _open = null;
-        _celebrationTimer.Stop();
+        _animationTimer.Stop();
+        _animationClock.Stop();
         // 取消会让所有等在 Task.Delay 上的动画流程立刻收场，不留悬挂的续体。
         _lifetime.Cancel();
         _lifetime.Dispose();
@@ -257,6 +267,7 @@ internal sealed class MatchGameWindow : Window
             Height = BoardHeight,
             ClipToBounds = true
         };
+        boardLayers.Children.Add(BuildBoardGrid());
         boardLayers.Children.Add(boardCanvas);
 
         // 棋盘是内凹的一块田：方块躺在里面，清场后 GIF 就在这块地方演。
@@ -264,6 +275,40 @@ internal sealed class MatchGameWindow : Window
         panel.HorizontalAlignment = HorizontalAlignment.Center;
         panel.VerticalAlignment = VerticalAlignment.Center;
         return panel;
+    }
+
+    // 方块消失后仍保留明确的 7x7 格位。底色与格线独立于方块 Canvas，
+    // 所以普通消除、斜向清场和结算 GIF 阶段都不会把棋盘结构一起擦掉。
+    private static Canvas BuildBoardGrid()
+    {
+        var grid = new Canvas
+        {
+            Width = BoardWidth,
+            Height = BoardHeight,
+            Background = Skin.MatchBoardBase,
+            IsHitTestVisible = false
+        };
+
+        for (var row = 0; row < Rows; row++)
+        {
+            for (var column = 0; column < Columns; column++)
+            {
+                var cell = new Border
+                {
+                    Width = TileSize,
+                    Height = TileSize,
+                    Background = Skin.MatchBoardCell,
+                    BorderBrush = Skin.MatchBoardLine,
+                    BorderThickness = new Thickness(1.5),
+                    CornerRadius = new CornerRadius(2)
+                };
+                Canvas.SetLeft(cell, CoordinateOf(column));
+                Canvas.SetTop(cell, CoordinateOf(row));
+                grid.Children.Add(cell);
+            }
+        }
+
+        return grid;
     }
 
     private Grid BuildFooter(out TextBlock hintText)
@@ -297,6 +342,7 @@ internal sealed class MatchGameWindow : Window
     // 演出全程只占棋盘那块方形区域，不加全窗遮罩：地方是方块自己淡出腾出来的。
     private Grid BuildShowLayer(
         out Canvas confettiCanvas,
+        out Border bonusDimmer,
         out Border bonusCard,
         out Image celebrationImage,
         out TextBlock celebrationText,
@@ -309,10 +355,20 @@ internal sealed class MatchGameWindow : Window
             Visibility = Visibility.Collapsed
         };
 
+        // 暗化只作用于底下的棋盘。前景 Bonus、美术 GIF 和彩纸都放在它后面，
+        // 因而保持本来的亮度与饱和度。
+        bonusDimmer = new Border
+        {
+            Background = Skin.MatchBonusDim,
+            IsHitTestVisible = false
+        };
+        layer.Children.Add(bonusDimmer);
+
         // 拉伸对齐 + Uniform：铺满腾空的 7x7 区域，同时保住 GIF 自己的画面比例。
         celebrationImage = new Image
         {
             Stretch = Stretch.Uniform,
+            Opacity = 1,
             Visibility = Visibility.Collapsed
         };
         layer.Children.Add(celebrationImage);
@@ -328,17 +384,7 @@ internal sealed class MatchGameWindow : Window
         };
         layer.Children.Add(celebrationText);
 
-        // 卡片这一段方块还在，底下是花的，所以用金色底 + 硬描边把字托出来。
-        bonusCard = Skin.Raised(
-            new TextBlock
-            {
-                Text = "Bonus Time!",
-                Foreground = Skin.Outline,
-                FontSize = 28,
-                FontWeight = FontWeights.Bold,
-                Margin = new Thickness(28, 10, 28, 12)
-            },
-            body: Skin.Gold);
+        bonusCard = BuildBonusCard();
         bonusCard.HorizontalAlignment = HorizontalAlignment.Center;
         bonusCard.VerticalAlignment = VerticalAlignment.Center;
         bonusCard.Visibility = Visibility.Collapsed;
@@ -363,6 +409,139 @@ internal sealed class MatchGameWindow : Window
         return layer;
     }
 
+    // 参考画面的核心轮廓是「水豚头从橙色飘带后探出来」。这里直接用 WPF
+    // 矢量元素组成，缩放时不会糊，也不需要把短视频里的水印或背景裁进素材。
+    private static Border BuildBonusCard()
+    {
+        var art = new Canvas { Width = 330, Height = 210 };
+
+        art.Children.Add(new Polygon
+        {
+            Points = new PointCollection
+            {
+                new(8, 146), new(56, 126), new(61, 178), new(14, 194), new(26, 164)
+            },
+            Fill = Skin.MatchBonusRibbon,
+            Stroke = Skin.MatchBonusRibbonDark,
+            StrokeThickness = 4,
+            StrokeLineJoin = PenLineJoin.Round
+        });
+        art.Children.Add(new Polygon
+        {
+            Points = new PointCollection
+            {
+                new(322, 146), new(274, 126), new(269, 178), new(316, 194), new(304, 164)
+            },
+            Fill = Skin.MatchBonusRibbon,
+            Stroke = Skin.MatchBonusRibbonDark,
+            StrokeThickness = 4,
+            StrokeLineJoin = PenLineJoin.Round
+        });
+
+        AddBonusEllipse(art, 82, 35, 55, 55, Skin.MatchBonusEar);
+        AddBonusEllipse(art, 193, 35, 55, 55, Skin.MatchBonusEar);
+        AddBonusEllipse(art, 72, 40, 186, 137, Skin.MatchBonusFur, 5);
+        AddBonusEllipse(art, 108, 88, 114, 72, Skin.MatchBonusMuzzle);
+        AddBonusEllipse(art, 113, 76, 18, 23, Skin.Parchment);
+        AddBonusEllipse(art, 199, 76, 18, 23, Skin.Parchment);
+        AddBonusEllipse(art, 119, 82, 9, 13, Skin.Outline);
+        AddBonusEllipse(art, 202, 82, 9, 13, Skin.Outline);
+        AddBonusEllipse(art, 157, 105, 17, 13, Skin.Outline);
+
+        art.Children.Add(new Line
+        {
+            X1 = 165,
+            Y1 = 117,
+            X2 = 165,
+            Y2 = 128,
+            Stroke = Skin.Outline,
+            StrokeThickness = 3
+        });
+        art.Children.Add(new Line
+        {
+            X1 = 165,
+            Y1 = 128,
+            X2 = 153,
+            Y2 = 135,
+            Stroke = Skin.Outline,
+            StrokeThickness = 3
+        });
+        art.Children.Add(new Line
+        {
+            X1 = 165,
+            Y1 = 128,
+            X2 = 177,
+            Y2 = 135,
+            Stroke = Skin.Outline,
+            StrokeThickness = 3
+        });
+
+        var ribbon = new Border
+        {
+            Width = 270,
+            Height = 58,
+            CornerRadius = new CornerRadius(7),
+            Background = Skin.MatchBonusRibbon,
+            BorderBrush = Skin.MatchBonusRibbonDark,
+            BorderThickness = new Thickness(4),
+            Child = new TextBlock
+            {
+                Text = "Bonus Time!",
+                FontFamily = Skin.Font,
+                FontSize = 30,
+                FontWeight = FontWeights.Bold,
+                Foreground = Skin.Parchment,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Color.FromRgb(116, 51, 24),
+                    BlurRadius = 0,
+                    ShadowDepth = 2,
+                    Opacity = 0.9
+                }
+            }
+        };
+        Canvas.SetLeft(ribbon, 30);
+        Canvas.SetTop(ribbon, 132);
+        art.Children.Add(ribbon);
+
+        return new Border
+        {
+            Width = 330,
+            Height = 210,
+            Background = Brushes.Transparent,
+            Child = art,
+            RenderTransformOrigin = new Point(0.5, 0.5),
+            RenderTransform = new TransformGroup
+            {
+                Children = { new ScaleTransform(1, 1), new TranslateTransform() }
+            }
+        };
+    }
+
+    private static void AddBonusEllipse(
+        Canvas canvas,
+        double left,
+        double top,
+        double width,
+        double height,
+        Brush fill,
+        double strokeThickness = 3)
+    {
+        var ellipse = new Ellipse
+        {
+            Width = width,
+            Height = height,
+            Fill = fill,
+            Stroke = Skin.Outline,
+            StrokeThickness = strokeThickness
+        };
+        Canvas.SetLeft(ellipse, left);
+        Canvas.SetTop(ellipse, top);
+        canvas.Children.Add(ellipse);
+    }
+
     // ---------- 棋盘视觉 ----------
 
     private static double CoordinateOf(int index) => index * TilePitch;
@@ -374,7 +553,7 @@ internal sealed class MatchGameWindow : Window
         {
             for (var column = 0; column < Columns; column++)
             {
-                var tile = MatchTileArt.Create(_board.GetKind(row, column));
+                var tile = CreateTile(_board.GetKind(row, column));
                 PlaceTile(tile, row, column);
                 _tiles[row, column] = tile;
                 _boardCanvas.Children.Add(tile);
@@ -386,6 +565,31 @@ internal sealed class MatchGameWindow : Window
     {
         Canvas.SetLeft(tile, CoordinateOf(column));
         Canvas.SetTop(tile, CoordinateOf(row));
+    }
+
+    private Border CreateTile(int kind)
+    {
+        var animation = kind >= 0 && kind < _tileAnimations.Length
+            ? _tileAnimations[kind]
+            : null;
+        var phaseOffset = kind >= 0 && kind < _tilePhaseOffsets.Length
+            ? _tilePhaseOffsets[kind]
+            : 0;
+        return MatchTileArt.Create(kind, animation, phaseOffset);
+    }
+
+    private void SelectTileAnimations()
+    {
+        _tileAnimations = MatchTileArt.LoadRandomAnimations(_visualRandom);
+        _tilePhaseOffsets = new double[TileKindCount];
+        for (var kind = 0; kind < _tileAnimations.Length; kind++)
+        {
+            if (_tileAnimations[kind] is { DurationSeconds: > 0 } animation)
+            {
+                // 同一种方块共用相位，盘面不会出现 49 个互不相干的动作节奏。
+                _tilePhaseOffsets[kind] = _visualRandom.NextDouble() * animation.DurationSeconds;
+            }
+        }
     }
 
     private void UpdateProgress()
@@ -406,6 +610,7 @@ internal sealed class MatchGameWindow : Window
 
         _board.Reset();
         _board.ResetWaveCount();
+        SelectTileAnimations();
         BuildTiles();
         UpdateProgress();
         _hintText.Text = "拖动相邻的两个方块交换位置";
@@ -639,7 +844,7 @@ internal sealed class MatchGameWindow : Window
 
         foreach (var spawn in fall.Spawns)
         {
-            var tile = MatchTileArt.Create(spawn.Kind);
+            var tile = CreateTile(spawn.Kind);
             _tiles[spawn.To.Row, spawn.To.Column] = tile;
             _boardCanvas.Children.Add(tile);
             longest = Math.Max(longest, SlideIn(tile, new Cell(spawn.EntryRow, spawn.To.Column), spawn.To));
@@ -709,12 +914,19 @@ internal sealed class MatchGameWindow : Window
         _celebrationImage.Visibility = Visibility.Collapsed;
         _celebrationText.Visibility = Visibility.Collapsed;
         _continueButton.Visibility = Visibility.Collapsed;
+        _bonusDimmer.BeginAnimation(OpacityProperty, null);
+        _bonusDimmer.Opacity = 0;
         _showLayer.Visibility = Visibility.Visible;
 
-        // 一、Bonus Time 卡片压在棋盘正中，彩纸同时开始落
+        _bonusDimmer.BeginAnimation(
+            OpacityProperty,
+            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)));
+
+        // 一、水豚与飘带从棋盘正中弹入；底盘独立暗化，前景和彩纸保持明亮。
         _bonusCard.BeginAnimation(OpacityProperty, null);
         _bonusCard.Opacity = 1;
         _bonusCard.Visibility = Visibility.Visible;
+        PlayBonusEntrance();
         SpawnConfetti();
         await Delay(BonusHoldMs);
 
@@ -740,6 +952,39 @@ internal sealed class MatchGameWindow : Window
         _board.ResetWaveCount();
         UpdateProgress();
         await RestoreBoardAsync();
+    }
+
+    private void PlayBonusEntrance()
+    {
+        if (_bonusCard.RenderTransform is not TransformGroup group
+            || group.Children.Count < 2
+            || group.Children[0] is not ScaleTransform scale
+            || group.Children[1] is not TranslateTransform offset)
+        {
+            return;
+        }
+
+        scale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        scale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+        offset.BeginAnimation(TranslateTransform.YProperty, null);
+        scale.ScaleX = 1;
+        scale.ScaleY = 1;
+        offset.Y = 0;
+
+        var pop = new BackEase { Amplitude = 0.35, EasingMode = EasingMode.EaseOut };
+        var duration = TimeSpan.FromMilliseconds(280);
+        scale.BeginAnimation(
+            ScaleTransform.ScaleXProperty,
+            new DoubleAnimation(0.72, 1, duration) { EasingFunction = pop });
+        scale.BeginAnimation(
+            ScaleTransform.ScaleYProperty,
+            new DoubleAnimation(0.72, 1, duration) { EasingFunction = pop });
+        offset.BeginAnimation(
+            TranslateTransform.YProperty,
+            new DoubleAnimation(12, 0, duration)
+            {
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+            });
     }
 
     // 反对角线推进：row + column 相同的一批同时淡出，看着像从左上角扫到右下角。
@@ -806,7 +1051,7 @@ internal sealed class MatchGameWindow : Window
 
     private async Task ShowCelebrationAsync()
     {
-        _celebration = LoadCelebration();
+        _celebration = LoadRandomCelebration(_visualRandom);
         if (_celebration is null)
         {
             // 素材没放或读坏了都走这条路：说清楚，不拿别的 GIF 顶替。
@@ -816,27 +1061,33 @@ internal sealed class MatchGameWindow : Window
         }
 
         _celebrationImage.Visibility = Visibility.Visible;
-        _celebrationClock.Restart();
-        _celebrationTimer.Start();
-        OnCelebrationTick(this, EventArgs.Empty);
+        _celebrationStartedSeconds = _animationClock.Elapsed.TotalSeconds;
+        OnAnimationTick(this, EventArgs.Empty);
         await Delay((int)(_celebration.DurationSeconds * 1000));
     }
 
-    private void OnCelebrationTick(object? sender, EventArgs e)
+    private void OnAnimationTick(object? sender, EventArgs e)
     {
+        var elapsedSeconds = _animationClock.Elapsed.TotalSeconds;
+        foreach (var tile in _tiles)
+        {
+            if (tile is not null)
+            {
+                MatchTileArt.ShowFrame(tile, elapsedSeconds);
+            }
+        }
+
         if (_celebration is not { DurationSeconds: > 0 } animation)
         {
             return;
         }
 
-        var loopSeconds = _celebrationClock.Elapsed.TotalSeconds % animation.DurationSeconds;
+        var loopSeconds = (elapsedSeconds - _celebrationStartedSeconds) % animation.DurationSeconds;
         _celebrationImage.Source = animation.Frames[animation.GetFrameIndex(loopSeconds)];
     }
 
     private void StopCelebration()
     {
-        _celebrationTimer.Stop();
-        _celebrationClock.Reset();
         _celebration = null;
         _celebrationImage.Source = null;
         _celebrationImage.Visibility = Visibility.Collapsed;
@@ -845,18 +1096,35 @@ internal sealed class MatchGameWindow : Window
         _confettiCanvas.Children.Clear();
     }
 
-    private static GifAnimation? LoadCelebration()
+    private static GifAnimation? LoadRandomCelebration(Random random)
     {
-        try
+        var assembly = Assembly.GetExecutingAssembly();
+        var resourceNames = assembly.GetManifestResourceNames()
+            .Where(name => name.StartsWith(CelebrationResourcePrefix, StringComparison.Ordinal))
+            .ToArray();
+        for (var index = resourceNames.Length - 1; index > 0; index--)
         {
-            using var stream = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream(CelebrationResourceName);
-            return stream is null ? null : GifAnimation.Load(stream);
+            var swapWith = random.Next(index + 1);
+            (resourceNames[index], resourceNames[swapWith]) = (resourceNames[swapWith], resourceNames[index]);
         }
-        catch (Exception exception) when (exception is InvalidDataException or NotSupportedException or IOException)
+
+        foreach (var resourceName in resourceNames)
         {
-            return null;
+            try
+            {
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream is not null)
+                {
+                    return GifAnimation.Load(stream);
+                }
+            }
+            catch (Exception exception) when (exception is InvalidDataException or NotSupportedException or IOException)
+            {
+                // 随机到坏素材就继续试下一段。
+            }
         }
+
+        return null;
     }
 
     private void SpawnConfetti()

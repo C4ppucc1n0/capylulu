@@ -406,6 +406,8 @@ static void TestMatchGameOptions()
     True(MatchGameOptions.RewardWaveTarget > 0, "奖励目标必须为正");
     True(MatchGameOptions.OpeningSwapCap > 0, "开局合法交换上限必须为正");
     True(MatchGameOptions.OpeningTries > 0, "开局重抽次数必须为正");
+    True(MatchGameOptions.BlockPlaybackRate > 0 && MatchGameOptions.BlockPlaybackRate <= 1,
+        "方块 GIF 播放倍率必须在 0–1 之间");
 
     // 清场是「反对角线依次淡出」，总时长必须真的等于最后一条对角线的起始
     // 加一次淡出，否则 GIF 会压在还没淡完的方块上。
@@ -425,17 +427,25 @@ static void TestMatchGameOptions()
         (MatchGameOptions.Rows * MatchGameOptions.TilePitch) - MatchGameOptions.TileGap,
         MatchGameOptions.BoardHeight);
 
-    // 庆祝素材只认这一个名字。名字必须落在 csproj 给 gif_resources/ 的嵌入约定上，
-    // 否则把 GIF 放进那个目录也永远读不到。
-    Equal("CapyLulu.GifResources.match-game-celebration.gif", MatchGameOptions.CelebrationResourceName);
-    var celebration = typeof(CharacterCatalog).Assembly
-        .GetManifestResourceNames()
-        .Where(name => name == MatchGameOptions.CelebrationResourceName)
+    var resources = typeof(CharacterCatalog).Assembly.GetManifestResourceNames();
+    var blocks = resources
+        .Where(name => name.StartsWith(MatchGameOptions.BlockResourcePrefix, StringComparison.Ordinal))
         .ToArray();
-    True(celebration.Length <= 1, "同名庆祝素材不能有多份");
-    True(typeof(CharacterCatalog).Assembly
-            .GetManifestResourceNames()
-            .Any(name => name.StartsWith("CapyLulu.GifResources.", StringComparison.Ordinal)),
+    Equal(24, blocks.Length);
+
+    var celebrations = resources
+        .Where(name => name.StartsWith(MatchGameOptions.CelebrationResourcePrefix, StringComparison.Ordinal))
+        .OrderBy(name => name, StringComparer.Ordinal)
+        .ToArray();
+    Equal(3, celebrations.Length);
+    Equal(
+        "CapyLulu.GifResources.MatchGame.Celebrate.61534aaa-01-smile.gif",
+        celebrations[0]);
+    Equal(
+        "CapyLulu.GifResources.MatchGame.Celebrate.61534aaa-03-scooter.gif",
+        celebrations[^1]);
+
+    True(resources.Any(name => name.StartsWith("CapyLulu.GifResources.", StringComparison.Ordinal)),
         "gif_resources/ 的嵌入约定变了，庆祝素材的资源名也要跟着改");
 }
 
@@ -532,6 +542,12 @@ static void AssertTileArt()
 
     // 底色也必须两两不同：只靠形状区分的话，截图取色那一整套验证就分不出种类了。
     Equal(MatchGameOptions.TileKindCount, looks.Select(look => look.Background).Distinct().Count());
+
+    var selected = MatchTileArt.LoadRandomAnimations(new Random(20260903));
+    Equal(MatchGameOptions.TileKindCount, selected.Length);
+    True(selected.All(animation => animation is not null), "24 个方块 GIF 中必须能随机加载出 6 个");
+    var animatedTile = MatchTileArt.Create(0, selected[0]);
+    True(animatedTile.Child is Image, "正式方块应该显示 GIF 画面而不是几何占位图");
 }
 
 // 形状用"类型 + 顶点数"概括，够区分圆、方和各种角数的星。

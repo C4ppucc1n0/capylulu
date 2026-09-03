@@ -23,6 +23,7 @@ internal static class MatchGameOptions
     public const double TileSize = 56;
     public const double TileGap = 8;
     public const double TileCornerRadius = 14;
+    public const double BlockPlaybackRate = 0.5;
 
     // 与桌宠的 PetBehaviorOptions.DragThreshold 无关，棋盘用自己的阈值。
     public const double DragThresholdDip = 16;
@@ -51,9 +52,11 @@ internal static class MatchGameOptions
     // 手势没到阈值时，方块最多跟着指针挪这么远，让人看出「正在拖谁」。
     public const double FollowMaxOffset = TileSize * 0.42;
 
-    // 只认这一个名字；缺失时显示提示，不用别的 GIF 顶替。
-    public const string CelebrationResourceName =
-        "CapyLulu.GifResources.match-game-celebration.gif";
+    public const string BlockResourcePrefix =
+        "CapyLulu.GifResources.MatchGame.Block.";
+
+    public const string CelebrationResourcePrefix =
+        "CapyLulu.GifResources.MatchGame.Celebrate.";
 
     public const double TilePitch = TileSize + TileGap;
     public const double BoardWidth = (Columns * TilePitch) - TileGap;

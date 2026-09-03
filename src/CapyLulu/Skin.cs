@@ -48,6 +48,18 @@ internal static class Skin
     public static readonly SolidColorBrush Gold = Hex(0xF0B830);
     public static readonly SolidColorBrush Crimson = Hex(0xC7452C);
 
+    // 消消乐棋盘与结算演出的专用色。格子采用参考画面里的深蓝层次；
+    // Bonus 遮罩单独盖在棋盘上，不能再靠降低前景 GIF 的透明度冒充暗化。
+    public static readonly SolidColorBrush MatchBoardBase = Hex(0x12384F);
+    public static readonly SolidColorBrush MatchBoardCell = Hex(0x1D506B);
+    public static readonly SolidColorBrush MatchBoardLine = Hex(0x4C8199);
+    public static readonly SolidColorBrush MatchBonusDim = Frozen(Color.FromArgb(150, 7, 19, 30));
+    public static readonly SolidColorBrush MatchBonusFur = Hex(0xD8A46A);
+    public static readonly SolidColorBrush MatchBonusEar = Hex(0xB87543);
+    public static readonly SolidColorBrush MatchBonusMuzzle = Hex(0xEBC89A);
+    public static readonly SolidColorBrush MatchBonusRibbon = Hex(0xE8812E);
+    public static readonly SolidColorBrush MatchBonusRibbonDark = Hex(0xA94B20);
+
     // 木纹：每格底部一道暗线，横向平铺。平色的木框看着像塑料，
     // 有这道线才像一条条木板拼起来的。
     public static readonly DrawingBrush WoodGrain = Grain();
