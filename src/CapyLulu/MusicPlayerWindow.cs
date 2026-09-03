@@ -78,9 +78,8 @@ internal sealed class MusicPlayerWindow : Window
         Grid.SetRow(trackHeader, 0);
         stage.Children.Add(trackHeader);
 
-        var record = BuildRecord(out _coverImage, out var rotatingVinyl);
-        rotatingVinyl.RenderTransform = _recordRotation;
-        rotatingVinyl.RenderTransformOrigin = new Point(0.5, 0.5);
+        var record = BuildRecord(out _coverImage);
+        record.RenderTransform = _recordRotation;
 
         // 唱片搁在一个浅木盘里。原来它孤零零悬在一大片奶油底中间，
         // 左右两侧那片空白是这个窗口最显空的地方。
@@ -200,30 +199,31 @@ internal sealed class MusicPlayerWindow : Window
         return header;
     }
 
-    private static Grid BuildRecord(out Image coverImage, out Grid vinylLayer)
+    // 整张唱片是一个会转的整体：盘面、纹路、封面都在这一个 Grid 里。
+    // 原来封面单独挂在外层，只有盘面在转 —— 而盘面是一圈圈同心圆，
+    // 转起来和不转一模一样，看上去就是"没在转"。
+    private static Grid BuildRecord(out Image coverImage)
     {
-        var holder = new Grid
+        var record = new Grid
         {
             Width = 252,
             Height = 252,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, -4, 0, 0)
+            Margin = new Thickness(0, -4, 0, 0),
+            RenderTransformOrigin = new Point(0.5, 0.5)
         };
-
-        vinylLayer = new Grid();
-        holder.Children.Add(vinylLayer);
 
 
         // 唱片压成两段平色 + 一圈硬描边。原来是三段径向渐变，
         // 那种写实打光是另一套语言，跟别处的平涂对不上。
-        vinylLayer.Children.Add(new Ellipse
+        record.Children.Add(new Ellipse
         {
             Fill = Skin.Frozen(Color.FromRgb(42, 28, 18)),
             Stroke = Skin.Outline,
             StrokeThickness = Skin.U
         });
-        vinylLayer.Children.Add(new Ellipse
+        record.Children.Add(new Ellipse
         {
             Margin = new Thickness(Skin.U * 4),
             Fill = Skin.Frozen(Color.FromRgb(62, 44, 30)),
@@ -233,7 +233,7 @@ internal sealed class MusicPlayerWindow : Window
         // 纹路留着，但改成实色细线，不再靠半透明叠出层次。
         for (var inset = 24; inset <= 52; inset += 10)
         {
-            vinylLayer.Children.Add(new Ellipse
+            record.Children.Add(new Ellipse
             {
                 Margin = new Thickness(inset),
                 Stroke = Skin.Frozen(Color.FromRgb(94, 68, 46)),
@@ -252,20 +252,11 @@ internal sealed class MusicPlayerWindow : Window
             Clip = new EllipseGeometry(new Point(83, 83), 83, 83)
         };
         RenderOptions.SetBitmapScalingMode(coverImage, BitmapScalingMode.HighQuality);
-        holder.Children.Add(coverImage);
 
-        holder.Children.Add(new Ellipse
-        {
-            Width = Skin.U * 4,
-            Height = Skin.U * 4,
-            Fill = Skin.Parchment,
-            Stroke = Skin.Outline,
-            StrokeThickness = Skin.U / 2,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-            IsHitTestVisible = false
-        });
-        return holder;
+        // 封面是这张唱片的标签面，压在纹路之上、且什么都不许盖在它上面。
+        // 原来中心还画了个 16 DIP 的轴孔，正好戳在噜噜脸上。
+        record.Children.Add(coverImage);
+        return record;
     }
 
     private Grid BuildPlayer(
@@ -488,7 +479,8 @@ internal sealed class MusicPlayerWindow : Window
         }
 
         _elapsedSeconds += delta;
-        _recordRotation.Angle = (_recordRotation.Angle + delta * 8.5) % 360;
+        // WPF 的正角度就是顺时针。30 度/秒 = 12 秒一圈：看得出在转，又不闹眼。
+        _recordRotation.Angle = (_recordRotation.Angle + (delta * 30)) % 360;
 
         if (_elapsedSeconds >= SongDurationSeconds)
         {
