@@ -4,32 +4,28 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace CapyLulu;
 
+// 界面外观全在 Skin 里，这个文件只管播放器自己的结构和状态。
 internal sealed class MusicPlayerWindow : Window
 {
     private const string CoverResourceName =
         "CapyLulu.GifResources.music-player-cover.png";
     private const double SongDurationSeconds = 200;
 
-    // 波形条每 25ms 刷新一次；共用两支冻结画刷，避免每帧新建 76 个 SolidColorBrush。
-    private static readonly SolidColorBrush ActiveWaveBrush = CreateFrozenBrush(Color.FromArgb(170, 42, 155, 105));
-    private static readonly SolidColorBrush InactiveWaveBrush = CreateFrozenBrush(Color.FromArgb(68, 40, 49, 45));
-
     private readonly Image _coverImage;
     private readonly RotateTransform _recordRotation = new();
     private readonly Button _playButton;
     private readonly TextBlock _currentTimeText;
-    private readonly Slider _progressSlider;
+    // 进度用两根按比例分账的柱子表示，不存像素宽度，所以窗口拉伸时自己就对。
+    private readonly ColumnDefinition _playedLane;
+    private readonly ColumnDefinition _remainingLane;
     private readonly Rectangle[] _waveBars;
     private readonly DispatcherTimer _renderTimer;
     private readonly Stopwatch _tickClock = Stopwatch.StartNew();
@@ -54,30 +50,13 @@ internal sealed class MusicPlayerWindow : Window
         Background = Brushes.Transparent;
         ResizeMode = ResizeMode.CanResizeWithGrip;
         ShowInTaskbar = true;
-        FontFamily = new FontFamily("Microsoft YaHei UI");
-
-        var shell = new Border
-        {
-            Background = new SolidColorBrush(Color.FromRgb(250, 249, 245)),
-            CornerRadius = new CornerRadius(30),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(90, 255, 255, 255)),
-            BorderThickness = new Thickness(1),
-            Effect = new DropShadowEffect
-            {
-                BlurRadius = 35,
-                ShadowDepth = 8,
-                Opacity = 0.23,
-                Color = Color.FromRgb(49, 58, 53)
-            }
-        };
+        Skin.ApplyChrome(this);
 
         var root = new Grid { ClipToBounds = true };
         root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(56) });
         root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-        shell.Child = root;
-        Content = shell;
+        Content = Skin.Shell(root);
 
-        AddAmbientBackground(root);
         root.Children.Add(BuildTitleBar());
 
         var content = new Grid { Margin = new Thickness(38, 4, 38, 24) };
@@ -103,7 +82,8 @@ internal sealed class MusicPlayerWindow : Window
         var player = BuildPlayer(
             out _playButton,
             out _currentTimeText,
-            out _progressSlider,
+            out _playedLane,
+            out _remainingLane,
             out _waveBars);
         Grid.SetRow(player, 2);
         stage.Children.Add(player);
@@ -128,49 +108,6 @@ internal sealed class MusicPlayerWindow : Window
 
         Closed += (_, _) => _renderTimer.Stop();
         PreviewKeyDown += OnPreviewKeyDown;
-    }
-
-    private static void AddAmbientBackground(Grid root)
-    {
-        var wash = new Rectangle
-        {
-            IsHitTestVisible = false,
-            Fill = new LinearGradientBrush(
-                Color.FromRgb(252, 249, 241),
-                Color.FromRgb(234, 244, 231),
-                new Point(0, 0),
-                new Point(1, 1))
-        };
-        Grid.SetRowSpan(wash, 2);
-        root.Children.Add(wash);
-
-        var peachGlow = new Ellipse
-        {
-            Width = 410,
-            Height = 410,
-            Fill = new SolidColorBrush(Color.FromArgb(48, 255, 178, 124)),
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(0, 0, -90, -125),
-            Effect = new BlurEffect { Radius = 65 },
-            IsHitTestVisible = false
-        };
-        Grid.SetRowSpan(peachGlow, 2);
-        root.Children.Add(peachGlow);
-
-        var greenGlow = new Ellipse
-        {
-            Width = 460,
-            Height = 360,
-            Fill = new SolidColorBrush(Color.FromArgb(42, 123, 190, 145)),
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, -110, 100, 0),
-            Effect = new BlurEffect { Radius = 80 },
-            IsHitTestVisible = false
-        };
-        Grid.SetRowSpan(greenGlow, 2);
-        root.Children.Add(greenGlow);
     }
 
     private Grid BuildTitleBar()
@@ -200,17 +137,20 @@ internal sealed class MusicPlayerWindow : Window
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center
         };
-        brand.Children.Add(new Ellipse
+        brand.Children.Add(new Rectangle
         {
             Width = 10,
             Height = 10,
-            Fill = new SolidColorBrush(Color.FromRgb(42, 174, 117)),
-            Margin = new Thickness(0, 0, 10, 0)
+            Fill = Skin.Accent,
+            Stroke = Skin.Outline,
+            StrokeThickness = 2,
+            Margin = new Thickness(0, 0, 10, 0),
+            VerticalAlignment = VerticalAlignment.Center
         });
         brand.Children.Add(new TextBlock
         {
             Text = "CAPYLULU  ·  RADIO",
-            Foreground = new SolidColorBrush(Color.FromRgb(29, 37, 34)),
+            Foreground = Skin.Ink,
             FontFamily = new FontFamily("Segoe UI Semibold"),
             FontSize = 13,
             FontWeight = FontWeights.SemiBold,
@@ -219,37 +159,15 @@ internal sealed class MusicPlayerWindow : Window
         bar.Children.Add(brand);
 
         var windowButtons = new StackPanel { Orientation = Orientation.Horizontal };
-        var minimize = BuildChromeButton("—", "最小化");
-        minimize.Click += (_, _) => WindowState = WindowState.Minimized;
-        var close = BuildChromeButton("×", "关闭");
-        close.FontSize = 22;
-        close.Click += (_, _) => Close();
+        var minimize = Skin.CreateButton("－", 34, 34, () => WindowState = WindowState.Minimized, 15);
+        minimize.ToolTip = "最小化";
+        var close = Skin.CreateButton("×", 34, 34, Close, 17);
+        close.ToolTip = "关闭";
         windowButtons.Children.Add(minimize);
         windowButtons.Children.Add(close);
         Grid.SetColumn(windowButtons, 1);
         bar.Children.Add(windowButtons);
         return bar;
-    }
-
-    private static Button BuildChromeButton(string content, string toolTip)
-    {
-        var button = new Button
-        {
-            Content = content,
-            ToolTip = toolTip,
-            Width = 38,
-            Height = 34,
-            Padding = new Thickness(0),
-            Margin = new Thickness(4, 0, 0, 0),
-            FontSize = 16,
-            Foreground = new SolidColorBrush(Color.FromRgb(70, 78, 74)),
-            Background = new SolidColorBrush(Color.FromArgb(24, 32, 39, 35)),
-            BorderThickness = new Thickness(0),
-            Cursor = Cursors.Hand
-        };
-        button.Resources[SystemColors.ControlBrushKey] = Brushes.Transparent;
-        ApplyRoundedTemplate(button, 12);
-        return button;
     }
 
     private static StackPanel BuildTrackHeader()
@@ -265,14 +183,14 @@ internal sealed class MusicPlayerWindow : Window
             Text = "把晴天装进口袋",
             FontSize = 20,
             FontWeight = FontWeights.SemiBold,
-            Foreground = new SolidColorBrush(Color.FromRgb(28, 35, 32)),
+            Foreground = Skin.Ink,
             Margin = new Thickness(0, 0, 0, 3)
         });
         header.Children.Add(new TextBlock
         {
             Text = "CapyLulu  ·  花园散步电台",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.FromRgb(121, 127, 123))
+            Foreground = Skin.Muted
         });
         return header;
     }
@@ -285,61 +203,38 @@ internal sealed class MusicPlayerWindow : Window
             Height = 300,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, -4, 0, 0),
-            Effect = new DropShadowEffect
-            {
-                BlurRadius = 22,
-                ShadowDepth = 10,
-                Direction = 285,
-                Opacity = 0.33,
-                Color = Color.FromRgb(14, 18, 16)
-            }
+            Margin = new Thickness(0, -4, 0, 0)
         };
 
         vinylLayer = new Grid();
         holder.Children.Add(vinylLayer);
 
+        // 唱片压成两段平色 + 一圈硬描边。原来是三段径向渐变，
+        // 那种写实打光是另一套语言，跟别处的平涂对不上。
         vinylLayer.Children.Add(new Ellipse
         {
-            Fill = new RadialGradientBrush
-            {
-                GradientOrigin = new Point(0.40, 0.34),
-                Center = new Point(0.48, 0.48),
-                RadiusX = 0.6,
-                RadiusY = 0.6,
-                GradientStops =
-                {
-                    new GradientStop(Color.FromRgb(59, 62, 60), 0),
-                    new GradientStop(Color.FromRgb(18, 20, 19), 0.66),
-                    new GradientStop(Color.FromRgb(7, 8, 8), 1)
-                }
-            },
-            Stroke = new SolidColorBrush(Color.FromRgb(8, 9, 9)),
-            StrokeThickness = 2
+            Fill = Skin.Frozen(Color.FromRgb(30, 26, 24)),
+            Stroke = Skin.Outline,
+            StrokeThickness = 4
+        });
+        vinylLayer.Children.Add(new Ellipse
+        {
+            Margin = new Thickness(20),
+            Fill = Skin.Frozen(Color.FromRgb(46, 40, 36)),
+            IsHitTestVisible = false
         });
 
-        for (var inset = 12; inset <= 56; inset += 9)
+        // 纹路留着，但改成实色细线，不再靠半透明叠出层次。
+        for (var inset = 30; inset <= 66; inset += 12)
         {
             vinylLayer.Children.Add(new Ellipse
             {
                 Margin = new Thickness(inset),
-                Stroke = new SolidColorBrush(Color.FromArgb(105, 118, 121, 119)),
-                StrokeThickness = inset % 2 == 0 ? 1.2 : 0.75,
+                Stroke = Skin.Frozen(Color.FromRgb(72, 62, 55)),
+                StrokeThickness = 2,
                 IsHitTestVisible = false
             });
         }
-
-        vinylLayer.Children.Add(new Ellipse
-        {
-            Margin = new Thickness(27),
-            Stroke = new LinearGradientBrush(
-                Color.FromArgb(90, 255, 255, 255),
-                Color.FromArgb(8, 255, 255, 255),
-                new Point(0, 0),
-                new Point(1, 1)),
-            StrokeThickness = 2,
-            IsHitTestVisible = false
-        });
 
         coverImage = new Image
         {
@@ -355,11 +250,11 @@ internal sealed class MusicPlayerWindow : Window
 
         holder.Children.Add(new Ellipse
         {
-            Width = 14,
-            Height = 14,
-            Fill = new SolidColorBrush(Color.FromRgb(247, 244, 233)),
-            Stroke = new SolidColorBrush(Color.FromArgb(120, 42, 45, 43)),
-            StrokeThickness = 1,
+            Width = 16,
+            Height = 16,
+            Fill = Skin.Parchment,
+            Stroke = Skin.Outline,
+            StrokeThickness = 2,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             IsHitTestVisible = false
@@ -370,7 +265,8 @@ internal sealed class MusicPlayerWindow : Window
     private Grid BuildPlayer(
         out Button playButton,
         out TextBlock currentTime,
-        out Slider progress,
+        out ColumnDefinition playedLane,
+        out ColumnDefinition remainingLane,
         out Rectangle[] waveBars)
     {
         var player = new Grid
@@ -398,10 +294,8 @@ internal sealed class MusicPlayerWindow : Window
             {
                 Width = 2,
                 Height = height,
-                RadiusX = 1,
-                RadiusY = 1,
                 VerticalAlignment = VerticalAlignment.Center,
-                Fill = InactiveWaveBrush
+                Fill = Skin.Muted
             };
             bars.Add(bar);
             waveform.Children.Add(bar);
@@ -422,35 +316,45 @@ internal sealed class MusicPlayerWindow : Window
         Grid.SetColumn(totalTime, 2);
         progressRow.Children.Add(totalTime);
 
-        var progressControl = new Slider
+        // 自己画一条内凹的槽。WPF 的 Slider 顶着系统主题长相，Background/Foreground
+        // 根本管不到它的轨道，要改就得连 Track/Thumb 一起重写模板 —— 比这两根柱子长得多。
+        playedLane = new ColumnDefinition { Width = new GridLength(0, GridUnitType.Star) };
+        remainingLane = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+        var lanes = new Grid();
+        lanes.ColumnDefinitions.Add(playedLane);
+        lanes.ColumnDefinitions.Add(remainingLane);
+        lanes.Children.Add(new Rectangle { Fill = Skin.Accent });
+
+        var groove = Skin.Sunken(lanes);
+        groove.Height = 16;
+        groove.Cursor = Cursors.Hand;
+        groove.VerticalAlignment = VerticalAlignment.Center;
+        groove.MouseLeftButtonDown += (_, e) =>
         {
-            Minimum = 0,
-            Maximum = SongDurationSeconds,
-            Value = _elapsedSeconds,
-            Margin = new Thickness(0, 0, 0, 1),
-            VerticalAlignment = VerticalAlignment.Center,
-            Cursor = Cursors.Hand,
-            Foreground = new SolidColorBrush(Color.FromRgb(36, 43, 40)),
-            Background = new SolidColorBrush(Color.FromArgb(50, 36, 43, 40))
+            _isSeeking = true;
+            groove.CaptureMouse();
+            SeekTo(lanes, e);
         };
-        progressControl.PreviewMouseLeftButtonDown += (_, _) => _isSeeking = true;
-        progressControl.PreviewMouseLeftButtonUp += (_, _) =>
-        {
-            _elapsedSeconds = progressControl.Value;
-            _isSeeking = false;
-            UpdatePlaybackUi();
-        };
-        progressControl.ValueChanged += (_, _) =>
+        groove.MouseMove += (_, e) =>
         {
             if (_isSeeking)
             {
-                _elapsedSeconds = progressControl.Value;
-                UpdatePlaybackUi(updateSlider: false);
+                SeekTo(lanes, e);
             }
         };
-        Grid.SetColumn(progressControl, 1);
-        progressRow.Children.Add(progressControl);
-        progress = progressControl;
+        groove.MouseLeftButtonUp += (_, e) =>
+        {
+            if (!_isSeeking)
+            {
+                return;
+            }
+
+            SeekTo(lanes, e);
+            _isSeeking = false;
+            groove.ReleaseMouseCapture();
+        };
+        Grid.SetColumn(groove, 1);
+        progressRow.Children.Add(groove);
 
         var controls = new Grid { Margin = new Thickness(0, 5, 0, 0) };
         controls.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
@@ -459,15 +363,14 @@ internal sealed class MusicPlayerWindow : Window
         Grid.SetRow(controls, 2);
         player.Children.Add(controls);
 
-        var loopControl = BuildControlButton("↻", "循环播放", 25);
-        loopControl.HorizontalAlignment = HorizontalAlignment.Left;
-        loopControl.Click += (_, _) =>
+        Button? loopControl = null;
+        loopControl = BuildControlButton("↻", "循环播放", 22, () =>
         {
             _isLooping = !_isLooping;
-            loopControl.Foreground = new SolidColorBrush(_isLooping
-                ? Color.FromRgb(33, 167, 110)
-                : Color.FromRgb(43, 50, 47));
-        };
+            Skin.LabelOf(loopControl!).Foreground = _isLooping ? Skin.Accent : Skin.Ink;
+        });
+        loopControl.HorizontalAlignment = HorizontalAlignment.Left;
+        Skin.LabelOf(loopControl).Foreground = Skin.Accent;
         controls.Children.Add(loopControl);
 
         var transport = new StackPanel
@@ -475,30 +378,21 @@ internal sealed class MusicPlayerWindow : Window
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Center
         };
-        var previous = BuildControlButton("◀", "上一首", 19);
-        previous.Click += (_, _) => RestartSong();
-        transport.Children.Add(previous);
+        transport.Children.Add(BuildControlButton("◀", "上一首", 17, RestartSong));
 
-        playButton = BuildControlButton("Ⅱ", "暂停", 28);
-        playButton.Width = 54;
-        playButton.Height = 54;
-        playButton.FontSize = 24;
+        playButton = Skin.CreateButton(
+            "Ⅱ", 54, 54, TogglePlayback, 22, Skin.Accent, Skin.Parchment, "Segoe UI Symbol");
+        playButton.ToolTip = "暂停";
         playButton.Margin = new Thickness(14, 0, 14, 0);
-        playButton.BorderThickness = new Thickness(1.8);
-        playButton.BorderBrush = new SolidColorBrush(Color.FromRgb(30, 37, 34));
-        playButton.Background = new SolidColorBrush(Color.FromArgb(175, 255, 255, 255));
-        playButton.Click += (_, _) => TogglePlayback();
         transport.Children.Add(playButton);
 
-        var next = BuildControlButton("▶", "下一首", 19);
-        next.Click += (_, _) => RestartSong();
-        transport.Children.Add(next);
+        transport.Children.Add(BuildControlButton("▶", "下一首", 17, RestartSong));
         Grid.SetColumn(transport, 1);
         controls.Children.Add(transport);
 
-        var queue = BuildControlButton("≡", "播放列表", 27);
+        Button? queue = null;
+        queue = BuildControlButton("≡", "播放列表", 22, () => ShowQueueHint(queue!));
         queue.HorizontalAlignment = HorizontalAlignment.Right;
-        queue.Click += (_, _) => ShowQueueHint(queue);
         Grid.SetColumn(queue, 2);
         controls.Children.Add(queue);
         return player;
@@ -509,84 +403,31 @@ internal sealed class MusicPlayerWindow : Window
         Text = text,
         FontFamily = new FontFamily("Segoe UI"),
         FontSize = 11,
-        Foreground = new SolidColorBrush(Color.FromRgb(117, 122, 119)),
+        Foreground = Skin.Muted,
         HorizontalAlignment = alignment,
         VerticalAlignment = VerticalAlignment.Center
     };
 
-    private static Button BuildControlButton(string content, string toolTip, double fontSize)
+    // 三个走带键、循环键、列表键都是同一张 42x42 的木牌，只有字不同。
+    private static Button BuildControlButton(string content, string toolTip, double fontSize, Action onClick)
     {
-        var button = new Button
-        {
-            Content = content,
-            ToolTip = toolTip,
-            Width = 42,
-            Height = 42,
-            Padding = new Thickness(0),
-            FontFamily = new FontFamily("Segoe UI Symbol"),
-            FontSize = fontSize,
-            FontWeight = FontWeights.SemiBold,
-            Foreground = new SolidColorBrush(Color.FromRgb(43, 50, 47)),
-            Background = Brushes.Transparent,
-            BorderThickness = new Thickness(0),
-            Cursor = Cursors.Hand
-        };
-        ApplyRoundedTemplate(button, 21);
+        var button = Skin.CreateButton(
+            content, 42, 42, onClick, fontSize, fontFamily: "Segoe UI Symbol");
+        button.ToolTip = toolTip;
         return button;
-    }
-
-    private static void ApplyRoundedTemplate(Button button, double radius)
-    {
-        var border = new FrameworkElementFactory(typeof(Border));
-        border.SetValue(Border.CornerRadiusProperty, new CornerRadius(radius));
-        border.SetBinding(Border.BackgroundProperty, new Binding(nameof(Button.Background))
-        {
-            RelativeSource = RelativeSource.TemplatedParent
-        });
-        border.SetBinding(Border.BorderBrushProperty, new Binding(nameof(Button.BorderBrush))
-        {
-            RelativeSource = RelativeSource.TemplatedParent
-        });
-        border.SetBinding(Border.BorderThicknessProperty, new Binding(nameof(Button.BorderThickness))
-        {
-            RelativeSource = RelativeSource.TemplatedParent
-        });
-
-        var content = new FrameworkElementFactory(typeof(ContentPresenter));
-        content.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
-        content.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-        content.SetBinding(ContentPresenter.ContentProperty, new Binding(nameof(Button.Content))
-        {
-            RelativeSource = RelativeSource.TemplatedParent
-        });
-        content.SetBinding(TextElement.ForegroundProperty, new Binding(nameof(Button.Foreground))
-        {
-            RelativeSource = RelativeSource.TemplatedParent
-        });
-        border.AppendChild(content);
-
-        button.Template = new ControlTemplate(typeof(Button)) { VisualTree = border };
     }
 
     private Button BuildFavoriteButton()
     {
-        var button = BuildControlButton("♥", "收藏", 24);
-        button.Width = 80;
-        button.Height = 36;
-        button.Content = "♥  82";
-        button.FontSize = 16;
-        button.Foreground = new SolidColorBrush(Color.FromRgb(239, 105, 128));
-        button.Background = new SolidColorBrush(Color.FromArgb(145, 255, 255, 255));
-        button.BorderBrush = new SolidColorBrush(Color.FromArgb(45, 239, 105, 128));
-        button.BorderThickness = new Thickness(1);
-        button.Click += (_, _) =>
+        Button? button = null;
+        button = Skin.CreateButton("♥  82", 80, 36, () =>
         {
             _isFavorite = !_isFavorite;
-            button.Content = _isFavorite ? "♥  82" : "♡  81";
-            button.Foreground = new SolidColorBrush(_isFavorite
-                ? Color.FromRgb(239, 105, 128)
-                : Color.FromRgb(104, 111, 107));
-        };
+            var label = Skin.LabelOf(button!);
+            label.Text = _isFavorite ? "♥  82" : "♡  81";
+            label.Foreground = _isFavorite ? Skin.Crimson : Skin.Muted;
+        }, 16, foreground: Skin.Crimson, fontFamily: "Segoe UI Symbol");
+        button.ToolTip = "收藏";
         return button;
     }
 
@@ -617,7 +458,8 @@ internal sealed class MusicPlayerWindow : Window
         var now = _tickClock.Elapsed.TotalSeconds;
         var delta = Math.Min(0.1, now - _lastTickSeconds);
         _lastTickSeconds = now;
-        if (!_isPlaying)
+        // 拖动时不让时钟继续推进，否则槽里那段绿色会在手指位置和播放位置之间来回跳。
+        if (!_isPlaying || _isSeeking)
         {
             return;
         }
@@ -646,7 +488,7 @@ internal sealed class MusicPlayerWindow : Window
     private void SetPlayback(bool isPlaying)
     {
         _isPlaying = isPlaying;
-        _playButton.Content = isPlaying ? "Ⅱ" : "▶";
+        Skin.LabelOf(_playButton).Text = isPlaying ? "Ⅱ" : "▶";
         _playButton.ToolTip = isPlaying ? "暂停" : "播放";
     }
 
@@ -657,15 +499,26 @@ internal sealed class MusicPlayerWindow : Window
         UpdatePlaybackUi();
     }
 
-    private void UpdatePlaybackUi(bool updateSlider = true)
+    // 拖动时按落点在槽里的比例换算时间；用 lanes 而不是外层的槽，
+    // 免得把斜面那 4px 也算进总长。
+    private void SeekTo(Grid lanes, MouseEventArgs e)
     {
-        if (updateSlider && !_isSeeking)
+        if (lanes.ActualWidth <= 0)
         {
-            _progressSlider.Value = _elapsedSeconds;
+            return;
         }
 
+        var ratio = Math.Clamp(e.GetPosition(lanes).X / lanes.ActualWidth, 0, 1);
+        _elapsedSeconds = ratio * SongDurationSeconds;
+        UpdatePlaybackUi();
+    }
+
+    private void UpdatePlaybackUi()
+    {
         _currentTimeText.Text = FormatTime(_elapsedSeconds);
         var progress = Math.Clamp(_elapsedSeconds / SongDurationSeconds, 0, 1);
+        _playedLane.Width = new GridLength(progress, GridUnitType.Star);
+        _remainingLane.Width = new GridLength(1 - progress, GridUnitType.Star);
         // 只重绘状态真正变化的那几条；条数不变时整段循环都可以跳过。
         var activeBars = (int)Math.Round(progress * _waveBars.Length);
         if (activeBars == _paintedActiveBars)
@@ -677,23 +530,17 @@ internal sealed class MusicPlayerWindow : Window
         var end = Math.Max(activeBars, _paintedActiveBars);
         for (var index = start; index < end; index++)
         {
-            _waveBars[index].Fill = index < activeBars ? ActiveWaveBrush : InactiveWaveBrush;
+            _waveBars[index].Fill = index < activeBars ? Skin.Accent : Skin.Muted;
         }
 
         _paintedActiveBars = activeBars;
     }
 
-    private static SolidColorBrush CreateFrozenBrush(Color color)
+    private static void ShowQueueHint(Button queueButton)
     {
-        var brush = new SolidColorBrush(color);
-        brush.Freeze();
-        return brush;
-    }
-
-    private void ShowQueueHint(Button queueButton)
-    {
-        queueButton.Content = Equals(queueButton.Content, "≡") ? "1 / 1" : "≡";
-        queueButton.FontSize = Equals(queueButton.Content, "≡") ? 27 : 12;
+        var label = Skin.LabelOf(queueButton);
+        label.Text = label.Text == "≡" ? "1 / 1" : "≡";
+        label.FontSize = label.Text == "≡" ? 22 : 12;
     }
 
     private void OnPreviewKeyDown(object sender, KeyEventArgs e)

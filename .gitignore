@@ -9,3 +9,5 @@ dist/
 test-artifacts/
 .pet-work/
 output/
+# 开发期用别的 GIF 顶一下走通庆祝流程；正式素材到位前不许提交。
+gif_resources/match-game-celebration.gif

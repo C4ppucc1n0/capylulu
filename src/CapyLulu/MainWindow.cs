@@ -80,10 +80,20 @@ internal sealed partial class MainWindow : Window
     private HwndSource? _windowSource;
     private bool _hotkeyRegistered;
     private bool _startupPositionRestored;
+    private readonly Button _singingSupportButton;
 
     public MainWindow()
     {
         InitializeComponent();
+
+        // 应援按钮不写在 XAML 里：走 Skin.CreateButton 才能和两个窗口共用同一副斜面。
+        _singingSupportButton = Skin.CreateButton(
+            "♥", 44, 44, RegisterSingingSupport, 22, Skin.Crimson, Skin.Parchment, "Segoe UI Symbol");
+        _singingSupportButton.Margin = new Thickness(10, 0, 0, 0);
+        _singingSupportButton.VerticalAlignment = VerticalAlignment.Center;
+        _singingSupportButton.ToolTip = "给宠物应援";
+        _singingSupportButton.Visibility = Visibility.Collapsed;
+        _petRow.Children.Add(_singingSupportButton);
 
         _characterCatalog = new CharacterCatalog();
         _dialogues = PetDialogueCatalog.Load();
@@ -148,9 +158,9 @@ internal sealed partial class MainWindow : Window
 
     private void OnMusicPlayerMenuClick(object sender, RoutedEventArgs e) => OpenMusicPlayer();
 
-    private void OnFocusMenuClick(object sender, RoutedEventArgs e) => StartFocusSession();
+    private void OnMatchGameMenuClick(object sender, RoutedEventArgs e) => MatchGameWindow.ShowSingle();
 
-    private void OnSingingSupportClick(object sender, RoutedEventArgs e) => RegisterSingingSupport();
+    private void OnFocusMenuClick(object sender, RoutedEventArgs e) => StartFocusSession();
 
     private void OnTopmostMenuClick(object sender, RoutedEventArgs e)
     {

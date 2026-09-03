@@ -60,7 +60,8 @@ dist/CapyLulu/CapyLulu.exe
 
 ## 功能规格
 
-- 消消乐尚未进入运行时代码；后续实现范围、拖动规则、下落补块、奖励演出和验收标准见 `docs/match-game-requirements.md`，参考视频关键帧保存在 `docs/assets/match-game-reference/`。
+- 消消乐已进入运行时代码：右键菜单打开，同时只允许一个棋盘窗口；窗口固定 560x726 DIP、不置顶、标题栏可最小化。拖动规则、下落补块、奖励演出（Bonus Time 卡片 → 彩纸 → 逐格清场 → 庆祝 GIF 铺满 7x7 棋盘区 → 继续）和验收标准见 `docs/match-game-requirements.md`，参考视频关键帧保存在 `docs/assets/match-game-reference/`。
+- 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、凸起/内凹斜面和按钮只有那一份，改一个值全局生效。消消乐、音乐播放器和桌宠气泡/应援条/倒计时都从那里取色，右键菜单仍是系统样式。
 
 ## 仓库目录职责
 
