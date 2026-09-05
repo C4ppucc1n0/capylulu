@@ -296,6 +296,11 @@ internal sealed partial class MainWindow : Window
         }
 
         _startupPositionRestored = true;
+        if (_spriteSheet is not null)
+        {
+            // 宠物素材已加载且位置已恢复，此时才算一次成功启动。
+            ScreenCelebration.Fire();
+        }
     }
 
     private void BuildCharacterMenu()

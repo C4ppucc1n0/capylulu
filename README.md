@@ -1,6 +1,6 @@
 # CapyLulu Windows 桌面宠物
 
-CapyLulu 是一个完全离线运行的 Windows 10/11 x64 桌面宠物。构建时会将 `generated_actions` 中已经完成的动作图和 `gif_resources` 中的演出 GIF 内嵌进 EXE；运行时不读取 `raw_images`、外部动作图，也不包含图片生成、更新检查或数据收集功能。
+CapyLulu 是一个完全离线运行的 Windows 10/11 x64 桌面宠物。构建时会将 `assets/pet-atlases` 中已经完成的动作图和 `assets/animations` 中的演出 GIF 内嵌进 EXE；运行时不读取 `raw_images`、外部动作图，也不包含图片生成、更新检查或数据收集功能。
 
 ## 运行
 
@@ -35,13 +35,13 @@ dist/CapyLulu/CapyLulu.exe
 
 ## 动作资源
 
-打包时，程序会自动读取 `generated_actions` 中的 `.webp` 和 `.png` 文件并将其内嵌。动作图支持任意实际行列数；第 1 行是待机，后续每行都会作为一组互动循环播放。当前可自动识别以下单帧规格，并允许右侧或底部有少量透明补边：
+打包时，程序会自动读取 `assets/pet-atlases` 中的 `.webp` 和 `.png` 文件并将其内嵌。动作图支持任意实际行列数；第 1 行是待机，后续每行都会作为一组互动循环播放。当前可自动识别以下单帧规格，并允许右侧或底部有少量透明补边：
 
 - 288 × 312；
 - 192 × 208；
 - 透明背景。
 
-把新的合规动作图放进项目根目录的 `generated_actions` 后，重新执行构建脚本；新生成的单文件 EXE 会在右键“更换角色”中提供普通角色。摸鱼专属角色由“摸鱼模式”单独切换，不在普通角色列表重复显示。
+把新的合规动作图放进项目根目录的 `assets/pet-atlases` 后，重新执行构建脚本；新生成的单文件 EXE 会在右键“更换角色”中提供普通角色。摸鱼专属角色由“摸鱼模式”单独切换，不在普通角色列表重复显示。
 
 动作图旁可放置同名的 `*.pet.json` 角色清单。v2 资源使用 `8 × 11`、单格 `192 × 208` 的图集：前 9 行是语义动作，后 2 行是从 `000` 向上开始、每隔 `22.5°` 顺时针排列的 16 个注视方向。
 
@@ -61,22 +61,39 @@ dist/CapyLulu/CapyLulu.exe
 ## 功能规格
 
 - 消消乐已进入运行时代码：右键菜单打开，同时只允许一个棋盘窗口；窗口固定 560x726 DIP、不置顶、标题栏可最小化。每局从 24 个方块 GIF 中随机抽取 6 个作为本局方块种类；方块以半速播放且同类同步。每次奖励演出从 `celebrate/` 下的 3 段 GIF 中随机播放 1 段。拖动规则、下落补块和验收标准见 `docs/match-game-requirements.md`，参考视频关键帧保存在 `docs/assets/match-game-reference/`。
+- 宠物成功启动和消消乐达成奖励时，会额外播放一次覆盖整个虚拟桌面的“彩纸 + Emoji”庆祝动画。动画透明置顶、鼠标穿透且不抢焦点，以彩色 `🥳`、`🎉`、金色四角星为主体，从屏幕左右两侧扇形扩散并持续自转；消消乐原有 Bonus 卡片、庆祝 GIF 和继续流程保持不变。实现与验收细节见 `docs/confetti-animation-implementation.md`。
 - 消消乐的基础难度由 `MatchGameOptions` 的两个常量决定：`TileKindCount`（方块种类，上限是 `MatchTileArt` 备好的图案数）和 `OpeningSwapCap`（开局允许的合法交换数上限）。难度的度量就是 `MatchBoard.CountLegalSwaps()`，验证程序会逐局把它卡在上限内。
 - 界面外观集中在 `src/CapyLulu/Skin.cs`：调色板、四种圆角框（`Raised`/`Sunken`/`Plot`/`Shell`）、像素图标、按钮悬停反馈和木纹只有一份。界面使用内嵌的 Fusion Pixel 12px 简体中文像素字体；右键菜单、ToolTip、桌宠气泡、播放器和消消乐共用同一套圆角木框、硬边阴影、羊皮纸和点阵图标。
 
 ## 仓库目录职责
 
+正式素材与人物参考统一存放在 `assets/`，按用途分开，不混放：
+
+```text
+assets/
+├─ pet-atlases/             # 宠物动作图集 + 同名 .pet.json，打包进 EXE
+├─ animations/              # 演出 GIF 与配套封面，打包进 EXE
+│  └─ match-game/
+│     ├─ block/             # 消消乐方块 GIF
+│     └─ celebrate/         # 消消乐结算 GIF
+└─ character-references/    # 视频提取的分组 JPG、清单和浏览页，不打包
+```
+
+人物参考入口是 `assets/character-references/index.html`。视频提取技能默认输出到这里，`capylulu-pet` 从中选取少量素材，最终动作图输出到 `assets/pet-atlases/`。原始视频仍在 `video/`。本次目录归并不改变素材文件名、角色 ID、动作图格式或 EXE 内部资源标识；构建只显式收录图集与演出目录，不会把参考图片打包进去。
+
 - `.agents/skills/capylulu-pet/`：项目内的宠物资源制作与验收规范，供 Codex 在处理图集、注视方向和宠物 QA 时使用。
 - `.pet-work/`：可随时重新生成的中间文件，例如拆帧、临时预览和组装副本；该目录不会提交到 Git。
 - `artifacts/pet-qa/`：需要保留和评审的验收证据，例如方向检查、接触表、预览动画和验证报告。
-- `generated_actions/`：产品实际加载并打包进 EXE 的动作资源，是运行时资源的唯一正式来源。
-- `gif_resources/`：唱歌等演出 GIF；消消乐方块位于 `match-game/block/`，结算动画位于 `match-game/celebrate/`。构建时全部内嵌进 EXE，运行时不依赖外部文件；视频选段、避水印和导出验收见 `docs/gif-extraction-standards.md`。
+- `assets/pet-atlases/`：产品实际加载并打包进 EXE 的宠物动作图集与角色清单。
+- `assets/animations/`：唱歌等演出 GIF；消消乐方块位于 `match-game/block/`，结算动画位于 `match-game/celebrate/`。构建时全部内嵌进 EXE，运行时不依赖外部文件；视频选段、避水印和导出验收见 `docs/gif-extraction-standards.md`。
+- `assets/character-references/`：每段视频对应一组人物参考 JPG，通过 `index.html` 浏览；仅作为后续生成的输入，不是运行时依赖。
 - `raw_images/`：原始角色图片和其他输入素材，不作为运行时资源直接加载。
 - `src/CapyLulu/Resources/`：内嵌的产品文案等可变内容；发布后仍包含在单文件 EXE 中。
+- `src/CapyLulu/Resources/Celebration/`：屏幕庆祝使用的透明彩色 Emoji 位图，通过 WPF Resource 编入单文件 EXE。
 - `tests/CapyLulu.Validation/`：不依赖外部测试框架的离线验证程序，覆盖交互算法、角色清单和正式图集。
 - `dist/`：本地构建产物，不提交到 Git。
 
-原先的 `pet-runs/` 已按上述职责拆分，不再作为固定目录使用。
+目录迁移映射、技能输入输出和构建兼容边界见 [素材目录约定](docs/asset-layout.md)。原先的 `pet-runs/` 已按上述职责拆分，不再作为固定目录使用。
 
 ## 本地构建
 
@@ -92,7 +109,7 @@ dist/CapyLulu/CapyLulu.exe
 .\.dotnet\dotnet.exe run --project tests\CapyLulu.Validation\CapyLulu.Validation.csproj --configuration Debug
 ```
 
-验证程序会检查注视与手势算法、专注计时、文案资源、角色 ID 唯一性，并实际解码 `generated_actions` 中所有正式图集。对每张 v2 图集，还会确认 12 个语义动作都映射到有帧可播的行，以及 16 个注视方向都能取到画面。
+验证程序会检查注视与手势算法、专注计时、文案资源、角色 ID 唯一性，并实际解码 `assets/pet-atlases` 中所有正式图集。对每张 v2 图集，还会确认 12 个语义动作都映射到有帧可播的行，以及 16 个注视方向都能取到画面。
 
 ## 第三方字体
 

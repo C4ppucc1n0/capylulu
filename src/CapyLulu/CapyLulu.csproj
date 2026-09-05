@@ -28,29 +28,34 @@
   <ItemGroup>
     <!-- OFL 1.1 中文像素字体。作为 WPF Resource 内嵌，单文件发布无需系统安装。 -->
     <Resource Include="Resources\Fonts\FusionPixel12pxProportionalSC.ttf" />
+    <!-- WPF 只能把 Segoe UI Emoji 画成单色轮廓；庆祝动画使用预渲染彩色图，
+         保证任何 Windows 10/11 机器上的单文件 EXE 都和实录一致。 -->
+    <Resource Include="Resources\Celebration\*.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- 动作图编译进单文件 EXE，不在运行时从外部文件夹读取。 -->
-    <EmbeddedResource Include="..\..\generated_actions\*.webp">
+    <!-- 仅显式收录 assets 中的运行时素材；character-references 不打包。
+         磁盘目录可调整，LogicalName 保持稳定，兼容现有图集、清单和 GIF 加载器。
+         动作图编译进单文件 EXE，不在运行时从外部文件夹读取。 -->
+    <EmbeddedResource Include="..\..\assets\pet-atlases\*.webp">
       <LogicalName>CapyLulu.GeneratedActions.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\generated_actions\*.png">
+    <EmbeddedResource Include="..\..\assets\pet-atlases\*.png">
       <LogicalName>CapyLulu.GeneratedActions.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\generated_actions\*.pet.json">
+    <EmbeddedResource Include="..\..\assets\pet-atlases\*.pet.json">
       <LogicalName>CapyLulu.GeneratedActions.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\gif_resources\*.gif">
+    <EmbeddedResource Include="..\..\assets\animations\*.gif">
       <LogicalName>CapyLulu.GifResources.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\gif_resources\*.png">
+    <EmbeddedResource Include="..\..\assets\animations\*.png">
       <LogicalName>CapyLulu.GifResources.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\gif_resources\match-game\block\*.gif">
+    <EmbeddedResource Include="..\..\assets\animations\match-game\block\*.gif">
       <LogicalName>CapyLulu.GifResources.MatchGame.Block.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\gif_resources\match-game\celebrate\*.gif">
+    <EmbeddedResource Include="..\..\assets\animations\match-game\celebrate\*.gif">
       <LogicalName>CapyLulu.GifResources.MatchGame.Celebrate.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
     <Resource Remove="Resources\dialogues.zh-CN.json" />

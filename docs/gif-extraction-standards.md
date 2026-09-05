@@ -134,7 +134,7 @@ GIF 没有分辨率无关的表示，导出多大就得整段存多大、整段�
 ### 7.1 目录
 
 ```text
-gif_resources/
+assets/animations/
 └─ match-game/
    ├─ block/       # 消消乐方块 GIF
    └─ celebrate/   # 奖励结算 GIF

@@ -911,6 +911,8 @@ internal sealed class MatchGameWindow : Window
 
     private async Task CelebrateAsync()
     {
+        // 奖励阈值刚刚达成，只在这条结算入口触发一次屏幕级庆祝。
+        ScreenCelebration.Fire();
         _celebrationImage.Visibility = Visibility.Collapsed;
         _celebrationText.Visibility = Visibility.Collapsed;
         _continueButton.Visibility = Visibility.Collapsed;

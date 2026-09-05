@@ -16,6 +16,7 @@ var tests = new (string Name, Action Run)[]
     ("dialogue resource contains required groups", TestDialogueCatalog),
     ("character manifests expose stable unique ids", TestCharacterCatalog),
     ("all shipped sprite sheets match their manifests", TestSpriteSheets),
+    ("asset migration preserves embedded media and excludes references", TestEmbeddedMedia),
     ("match board deals a playable opening board", TestMatchBoardOpening),
     ("match board finds runs and dedupes overlaps", TestMatchBoardFindsRuns),
     ("match board validates swaps without mutating", TestMatchBoardValidatesSwaps),
@@ -26,6 +27,7 @@ var tests = new (string Name, Action Run)[]
     ("match board resolves the dominant drag axis", TestMatchBoardDragStep),
     ("match board progress counts only real clears", TestMatchBoardProgress),
     ("match game options stay inside the spec bands", TestMatchGameOptions),
+    ("screen celebration stays short and bounded", TestScreenCelebrationOptions),
     ("skin bevels mirror each other and press reversibly", TestSkin),
     ("match board opening keeps matches hard to spot", TestMatchBoardOpeningDifficulty),
     ("tile art gives every kind its own look", TestTileArt)
@@ -41,7 +43,7 @@ foreach (var test in tests)
     }
     catch (Exception exception)
     {
-        failures.Add($"FAIL {test.Name}: {exception.Message}");
+        failures.Add($"FAIL {test.Name}: {exception.GetBaseException().Message}");
     }
 }
 
@@ -57,6 +59,24 @@ if (failures.Count > 0)
 }
 
 Console.WriteLine($"Validated {tests.Length} scenarios.");
+
+static void TestEmbeddedMedia()
+{
+    var assembly = typeof(CharacterCatalog).Assembly;
+    var resources = assembly.GetManifestResourceNames();
+    foreach (var name in new[]
+    {
+        "CapyLulu.GifResources.flycapylulu.gif",
+        "CapyLulu.GifResources.c0000e47bf83481f725f2d6608e60fcf-ezgif.com-video-to-gif-converter.gif",
+        "CapyLulu.GifResources.music-player-cover.png"
+    })
+    {
+        using var stream = assembly.GetManifestResourceStream(name);
+        True(stream is { Length: > 0 }, $"迁移后缺少演出素材：{name}");
+    }
+    True(!resources.Any(name => name.Contains("character-references", StringComparison.OrdinalIgnoreCase)
+        || name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)), "人物参考素材不应被打包进 EXE");
+}
 
 static void TestGazeClockwiseWrap() => Equal(0, GazeDirectionMath.StepToward(15, 1));
 
@@ -446,7 +466,47 @@ static void TestMatchGameOptions()
         celebrations[^1]);
 
     True(resources.Any(name => name.StartsWith("CapyLulu.GifResources.", StringComparison.Ordinal)),
-        "gif_resources/ 的嵌入约定变了，庆祝素材的资源名也要跟着改");
+        "assets/animations/ 的嵌入约定变了，庆祝素材的资源名也要跟着改");
+}
+
+static void TestScreenCelebrationOptions()
+{
+    Between(2000, 3000, ScreenCelebration.DurationMs, "屏幕庆祝动画");
+    True(ScreenCelebration.ConfettiCount >= 100, "屏幕庆祝需要足够密集的彩纸");
+    True(ScreenCelebration.EmojiCount > 0, "屏幕庆祝至少要有一个 Emoji");
+    True(
+        ScreenCelebration.ConfettiCount + ScreenCelebration.EmojiCount <= 200,
+        "屏幕庆祝的总粒子数不能超过性能预算");
+    True(ScreenCelebration.CooldownMs > 0, "屏幕庆祝必须有限流");
+
+    using var stream = typeof(ScreenCelebration).Assembly
+        .GetManifestResourceStream("CapyLulu.g.resources")
+        ?? throw new InvalidOperationException("WPF 资源包不存在");
+    using var resources = new System.Resources.ResourceReader(stream);
+    var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    var entries = resources.GetEnumerator();
+    while (entries.MoveNext())
+    {
+        names.Add((string)entries.Key);
+    }
+
+    True(
+        names.Contains("resources/celebration/party-face.png"),
+        "屏幕庆祝缺少彩色派对脸资源");
+    True(
+        names.Contains("resources/celebration/party-popper.png"),
+        "屏幕庆祝缺少彩色礼花筒资源");
+
+    // 真正走一次覆盖层的静态资源加载路径；文件进了 g.resources 但 pack URI 写错时，
+    // 仅枚举资源名发现不了，运行到用户桌面才会爆。
+    OnSta(() =>
+    {
+        var surface = typeof(ScreenCelebration).GetNestedType(
+            "CelebrationSurface",
+            BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("找不到庆祝绘制层");
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(surface.TypeHandle);
+    });
 }
 
 static void Between(int low, int high, int actual, string subject)

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Character Reference"
+  short_description: "Automatically extract compact JPG references from videos"
+  default_prompt: "Use $video-character-reference to batch these videos into compact JPG reference groups with automatic frame selection."
