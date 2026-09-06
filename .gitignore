@@ -10,7 +10,6 @@ test-artifacts/
 .pet-work/
 output/
 # 本地生成输入与试产材料，不影响从仓库构建 EXE。
-/video/
 /assets/character-references/
 /artifacts/pet-qa/lulu-character-reference/
 /artifacts/pet-qa/lulu-skill-evaluation/
