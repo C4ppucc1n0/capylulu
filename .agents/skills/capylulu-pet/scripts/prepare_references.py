@@ -89,11 +89,13 @@ def prepare(library, run, limit=4, groups=None, baseline=None):
 
 Inspect only the selected boards listed in reference-selection.json. They ground character identity and useful views; their timestamps are not animation timing and their labels are not verified action labels.
 
-Establish ONE canonical full-body image, shared outfit/material/palette and compact identity lock. Use real observed details to resolve uncertainty. Discard slate frames, scene backgrounds and watermarks; do not copy props or outfits merely because they occur in another video. Add a reference group only if an important feature remains unclear.
+Establish ONE canonical full-body image, shared outfit/material/palette and compact identity lock. Use real observed details to resolve uncertainty. Discard slate frames, scene backgrounds and watermarks; do not copy props or outfits merely because they occur in another video. Add a reference group only to resolve an important character feature or missing pose evidence for a chosen action.
+
+Choose concrete performances from the user's intent, trigger context and selected visual evidence before mapping them to helper filenames. In this brief, add one short line per requested row: trigger -> chosen performance -> reference/pose evidence -> key phases within the fixed frame count. Avoid the same default waving/running routine for every atlas; examples and helper names are not a whitelist. Add only a targeted reference if the chosen action needs more pose evidence. Deliberate small props may support a compatible action if they remain coherent and fit the cells; do not copy scenery or change the outfit.
 
 For each requested action, attach the canonical image first and only the relevant observed views as supplements. Generate the entire row as one coherent sequence at constant camera/scale/lighting, with anticipation, motion and recovery (or seamless loop). Preserve the same head, muzzle, eyes, ears, top detail, short limbs and costume across all rows. Do not stitch unrelated video poses into an animation.
 
-Follow capylulu-pet/references/atlas-contract.md for physical rows, frame counts, neutral cell and clockwise gaze order. Use deterministic assembly. Compare identity and motion to the selected evidence and prior accepted atlas if present; do not ship a regression because structure alone passes.
+Follow capylulu-pet/references/atlas-contract.md for trigger constraints, physical rows, frame counts, neutral cell and clockwise gaze order. Keep helper filenames unchanged: waving is an interaction slot, not a compulsory wave; non-directional running is working, not locomotion. Preserve directional movement, lift/reversed-drop compatibility and exact gaze semantics. Use deterministic assembly. Judge the chosen performance and trigger rather than literal helper names; compare identity and motion quality, not identical poses, to the prior accepted atlas. Do not ship a regression because structure alone passes.
 '''
     (run / 'generation-brief.md').write_text(brief, encoding='utf-8')
     selection_path.write_text(json.dumps(packet, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

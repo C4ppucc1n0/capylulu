@@ -6,12 +6,12 @@ This file describes the existing contract, not a new asset format. Authoritative
 
 Standard v2: lossless transparent PNG/WebP, **1536 x 2288**, **8 columns x 11 rows**, **192 x 208** per cell. Preserve row positions and left-to-right frame order. No scene background, text, watermarks, guides, detached effects or ground shadows.
 
-| Row | CapyLulu meaning | Helper strip name | Used columns |
+| Row | CapyLulu trigger/state | Helper strip name (interface only) | Used columns |
 | --- | --- | --- | --- |
 | 0 | idle | idle | 0–5; column 6 is the neutral reference |
 | 1 | drag right | running-right | 0–7 |
 | 2 | drag left | running-left | 0–7 |
-| 3 | click/greeting | waving | 0–3 |
+| 3 | click/interaction | waving | 0–3 |
 | 4 | lift/drop/lift-drop gesture | jumping | 0–4 |
 | 5 | flick/shake reaction | failed | 0–7 |
 | 6 | waiting | waiting | 0–5 |
@@ -25,6 +25,16 @@ The four currently shipped atlases all contain the neutral cell at row 0, column
 Gaze is clockwise in screen coordinates: `000 up`, `022.5`, `045`, `067.5`, `090 right`, `112.5`, `135`, `157.5` in row 9; `180 down`, `202.5`, `225`, `247.5`, `270 left`, `292.5`, `315`, `337.5` in row 10. These are gaze directions, not a whole-body turnaround. Preserve the canonical body/camera and make eyes/head readable at display size. Generate and verify four cardinal anchors first; generate row 9 coherently from them, then row 10 from the same anchors plus accepted row 9. Repair a failing gaze row as a whole, not as an isolated pasted cell.
 
 Each atlas has a sibling `<atlas-basename>.pet.json`. For standard v2 keep only the existing identity fields: `id`, `displayName`, `roles`, `spriteVersionNumber: 2`. Preserve the current `id` and roles on replacement. Do not write the helper's geometry/direction report as this runtime manifest. Custom `actions`, `clickRows`, `lookRows` overrides are retained only for an existing or explicitly requested nonstandard layout. Legacy assets without manifests and 288 x 312 cells remain supported; do not migrate them as a side effect.
+
+## Action freedom within the contract
+
+Fix the storage layout and trigger meaning, not a catalogue of gestures. Select a performance from the user's request, observed character behavior and available pose evidence, then map it to the existing row/helper name. `waving` need not depict a wave, `failed` need not depict failure, and the non-directional `running` means working rather than foot-running. Keep these filenames unchanged so extraction, assembly and previews still work. Do not import generic helper state prompts as creative requirements.
+
+Click, waiting, working and review rows allow varied expressions and actions compatible with their contexts. A greeting could be a nod or bashful smile; waiting could involve hand rubbing or gentle swaying. These are examples, not a whitelist. Other observed actions, including deliberate use of a small prop, are allowed when they fit the trigger, remain legible inside the existing cells, and preserve character/outfit continuity. A chosen prop must stay coherent throughout that row, not appear accidentally from another video's scenery. Do not force novelty, add props unnecessarily, or cram a long action into too few frames.
+
+Retain functional constraints: idle must suit resting playback; directional drag rows must read as movement/reacting toward the corresponding screen side, though not necessarily a conventional run; lift/drop share row 4, so its phases must make sense for lift and reversed drop playback; row 5 must read as a flick/shake reaction; gaze rows retain their exact directions. Check gait only when the chosen performance actually contains stepping. A dance or other free-form action belongs in a compatible interaction/state row, not an arbitrary gaze or lift slot. No new rows, frame counts, runtime action keys or manifest fields are required to vary performances.
+
+Keep the per-row choice and key phases in the existing generation brief, not a new mandatory action taxonomy or extra planning document. Use helper preview timings as a starting point and judge motion with the applicable runtime playback behavior; passing a generic wave/run checklist is not acceptance of a different performance.
 
 ## Reuse deterministic helpers
 
@@ -47,7 +57,7 @@ Generate rows with a shared flat chroma key absent from the character palette wh
 
 Compare the candidate to the observed reference set, the canonical image, and the previous accepted atlas/preview when replacing an asset. Record a concise `qa/review.json` containing selected references, baseline path if any, structural results, identity/appearance verdict, per-row motion verdicts and 16 ordered gaze verdicts with visual reasons. Technical validation cannot prove appearance quality.
 
-Block release for: changed character features/proportions or outfit between frames, clipped anatomy, empty required slots, detached fragments, flickering scale/position, broken loop or reversed drag cadence, incorrect action meaning, wrong/ambiguous cardinal gaze, wrong-quadrant diagonals or a visible reversal in the gaze loop. Review metric warnings visually; a numerical pass does not excuse an obvious defect. Do not lower thresholds to pass a candidate. Keep the prior runtime atlas until its replacement passes. Recheck affected rows after repairs and ensure the final assembled file still validates.
+Block release for: changed character features/proportions or outfit between frames, clipped anatomy, empty required slots, detached fragments, flickering scale/position, broken loop, drag motion contradicting its screen direction (including reversed gait when stepping), a performance incompatible with its trigger or chosen action, wrong/ambiguous cardinal gaze, wrong-quadrant diagonals or a visible reversal in the gaze loop. Review metric warnings visually; a numerical pass does not excuse an obvious defect. Do not lower thresholds to pass a candidate. Keep the prior runtime atlas until its replacement passes. Recheck affected rows after repairs and ensure the final assembled file still validates.
 
 Retain final validation, contact sheet, per-row previews and gaze review in `artifacts/pet-qa/<pet-id>/`. After accepting and copying an atlas/manifest pair into `assets/pet-atlases/`, run the repository's offline consumer check:
 
