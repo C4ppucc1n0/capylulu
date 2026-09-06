@@ -15,6 +15,14 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+#if DEBUG
+        // 调试入口排在互斥锁前面：桌宠已经开着的时候，也要能再单独开一个窗口来看布局。
+        if (DebugStartup.TryHandle(e.Args, this))
+        {
+            return;
+        }
+#endif
+
         _singleInstanceMutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out var isFirstInstance);
         _ownsSingleInstanceMutex = isFirstInstance;
         if (!isFirstInstance)

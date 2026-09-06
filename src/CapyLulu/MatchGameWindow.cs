@@ -69,6 +69,24 @@ internal sealed class MatchGameWindow : Window
         _open.Activate();
     }
 
+#if DEBUG
+    // 调试入口：开窗后直接跑一遍奖励演出，省去真的玩到达成阈值那几分钟。
+    internal static void ShowSingleCelebrating()
+    {
+        ShowSingle();
+        // 等首帧渲染完再开演：卡片弹入和方块淡出都要用已经排好的布局尺寸。
+        _open!.ContentRendered += OnFirstRender;
+
+        static void OnFirstRender(object? sender, EventArgs e)
+        {
+            var window = (MatchGameWindow)sender!;
+            window.ContentRendered -= OnFirstRender;
+            // 走正常流程那条入口：一样锁输入，窗口中途关掉也一样收场。
+            window.RunGuarded(window.CelebrateAsync);
+        }
+    }
+#endif
+
     private MatchGameWindow()
     {
         Title = "CapyLulu 消消乐";
