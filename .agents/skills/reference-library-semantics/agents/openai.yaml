@@ -1,0 +1,4 @@
+interface:
+  display_name: "素材库语义标注"
+  short_description: "为视频素材生成带来源证据的动作与形态语义索引，支持增量标注和后续按需选材"
+  default_prompt: "使用 $reference-library-semantics，为 reference-library/actions/ 中尚未标注的素材生成可检索的动作与形态描述，并缓存来源证据。"

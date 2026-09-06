@@ -14,7 +14,7 @@ dist/CapyLulu/CapyLulu.exe
 
 ## 操作
 
-- 左键点击：按顺序播放第 2 行起的互动动画，并显示随机中文气泡。
+- 左键点击：按角色清单配置的互动行顺序播放动画，并显示随机中文气泡；无对应配置时从第 2 行起依次播放。
 - 左键拖动：移动桌宠；开始拖动时会中断互动。移动按渲染帧更新，动作速度跟随实际拖动距离，左右换向带防抖滞回。
 - 鼠标滚轮：缩放桌宠。
 - 右键：更换普通角色、切换摸鱼模式、唱歌、启动 10 分钟专注计时、状态切换、注视方式、置顶或退出。
@@ -35,7 +35,7 @@ dist/CapyLulu/CapyLulu.exe
 
 ## 动作资源
 
-打包时，程序会自动读取 `assets/pet-atlases` 中的 `.webp` 和 `.png` 文件并将其内嵌。动作图支持任意实际行列数；第 1 行是待机，后续每行都会作为一组互动循环播放。当前可自动识别以下单帧规格，并允许右侧或底部有少量透明补边：
+打包时，程序会自动读取 `assets/pet-atlases` 中的 `.webp` 和 `.png` 文件并将其内嵌。动作图按实际尺寸识别行列，动作和注视映射由角色清单决定；旧资源默认第 1 行待机、其余行互动。当前可自动识别以下单帧规格，并允许右侧或底部有少量透明补边：
 
 - 288 × 312；
 - 192 × 208；
@@ -43,7 +43,7 @@ dist/CapyLulu/CapyLulu.exe
 
 把新的合规动作图放进项目根目录的 `assets/pet-atlases` 后，重新执行构建脚本；新生成的单文件 EXE 会在右键“更换角色”中提供普通角色。摸鱼专属角色由“摸鱼模式”单独切换，不在普通角色列表重复显示。
 
-动作图旁可放置同名的 `*.pet.json` 角色清单。v2 资源使用 `8 × 11`、单格 `192 × 208` 的图集：前 9 行是语义动作，后 2 行是从 `000` 向上开始、每隔 `22.5°` 顺时针排列的 16 个注视方向。
+动作图旁可放置同名的 `*.pet.json` 角色清单。v2 默认布局为 8 列 × 11 行、单格 `192 × 208`：前 9 行映射动作，后 2 行是从 `000` 向上开始、每隔 `22.5°` 顺时针排列的 16 个注视方向。动作名称表示播放映射，具体表演可以自由设计；默认点击列表也会播放等待、工作和检查状态对应的行。
 
 因为 v2 的行序是固定约定，清单只需要写角色身份，动作表由程序按约定补齐：
 
@@ -67,7 +67,7 @@ dist/CapyLulu/CapyLulu.exe
 
 ## 仓库目录职责
 
-正式素材与人物参考统一存放在 `assets/`，按用途分开，不混放：
+正式素材放在 `assets/`；新动作参考和语义索引放在独立的 `reference-library/`，按用途分开：
 
 ```text
 assets/
@@ -76,12 +76,21 @@ assets/
 │  └─ match-game/
 │     ├─ block/             # 消消乐方块 GIF
 │     └─ celebrate/         # 消消乐结算 GIF
-└─ character-references/    # 视频提取的分组 JPG、清单和浏览页，不打包
+└─ character-references/    # 原有视频参考技能输出，不打包
+reference-library/
+├─ actions/                # 连续动作帧、摘要、预览与来源，本地长期保留
+└─ semantics/              # 带证据的动作与形态语义记录，可提交 Git
 ```
 
-人物参考入口是 `assets/character-references/index.html`。视频提取技能默认输出到这里，`capylulu-pet` 从中选取少量素材，最终动作图输出到 `assets/pet-atlases/`。原始视频仍在 `video/`。本次目录归并不改变素材文件名、角色 ID、动作图格式或 EXE 内部资源标识；构建只显式收录图集与演出目录，不会把参考图片打包进去。
+原有 `video-character-reference` 技能继续输出到 `assets/character-references/`，供 `capylulu-pet` 使用。原始视频保存在 `video/`；构建只显式收录图集与演出目录，不会把参考媒体或语义索引打包进去。
+
+需要连续动作参考时，使用独立命令行工具 [video-actions](video-actions/README.md)：自动切分一个视频中的多个动作候选，导出连续采样帧、8 帧摘要及原速预览，默认保存在项目根目录的 [reference-library/actions/](reference-library/actions/index.html)，无需调用模型或技能。素材库与工具代码分开长期保存，目录约定见 [素材库说明](reference-library/README.md)。
+
+[reference-library-semantics](.agents/skills/reference-library-semantics/SKILL.md) 根据实际图像增量标注动作模式、形态、视角和道具依赖，写入 `reference-library/semantics/index.jsonl`。[pet-action-atlas](.agents/skills/pet-action-atlas/SKILL.md) 先固定角色图及身体约束，再按需读取这些记录选择参考；动作没有命中时仍保留角色依据，自由设计相容动作。当前流程与已验证范围见 [生成流程](docs/pet-generation-pipeline.md)。
 
 - `.agents/skills/capylulu-pet/`：项目内的宠物资源制作与验收规范，供 Codex 在处理图集、注视方向和宠物 QA 时使用。
+- `.agents/skills/pet-action-atlas/`：固定角色、按需选材、逐行生成与局部修复的流程。
+- `.agents/skills/reference-library-semantics/`：素材语义标注与缓存规则，动作和形态可分别检索。
 - `.pet-work/`：可随时重新生成的中间文件，例如拆帧、临时预览和组装副本；该目录不会提交到 Git。
 - `artifacts/pet-qa/`：需要保留和评审的验收证据，例如方向检查、接触表、预览动画和验证报告。
 - `assets/pet-atlases/`：产品实际加载并打包进 EXE 的宠物动作图集与角色清单。
