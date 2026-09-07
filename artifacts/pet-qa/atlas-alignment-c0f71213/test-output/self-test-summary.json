@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "rgba_lossless_reconstruction": true,
+  "rgba_layout_validation": true,
+  "chroma_layout_alpha_validation": true,
+  "effective_frames": 57,
+  "empty_slots": 15,
+  "test_root": "C:\\workspace\\capylulu\\artifacts\\pet-qa\\atlas-alignment-c0f71213\\test-output"
+}

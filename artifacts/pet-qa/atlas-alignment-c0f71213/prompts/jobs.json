@@ -1,0 +1,70 @@
+{
+  "generation_mode": null,
+  "accepted_target_character": null,
+  "first_trial_row": 6,
+  "jobs": [
+    {
+      "row": 1,
+      "input": "input/rows/row-01.png",
+      "prompt": "prompts/row-01.txt",
+      "effective_frames": 6,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 2,
+      "input": "input/rows/row-02.png",
+      "prompt": "prompts/row-02.txt",
+      "effective_frames": 8,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 3,
+      "input": "input/rows/row-03.png",
+      "prompt": "prompts/row-03.txt",
+      "effective_frames": 8,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 4,
+      "input": "input/rows/row-04.png",
+      "prompt": "prompts/row-04.txt",
+      "effective_frames": 4,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 5,
+      "input": "input/rows/row-05.png",
+      "prompt": "prompts/row-05.txt",
+      "effective_frames": 5,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 6,
+      "input": "input/rows/row-06.png",
+      "prompt": "prompts/row-06.txt",
+      "effective_frames": 8,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 7,
+      "input": "input/rows/row-07.png",
+      "prompt": "prompts/row-07.txt",
+      "effective_frames": 6,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 8,
+      "input": "input/rows/row-08.png",
+      "prompt": "prompts/row-08.txt",
+      "effective_frames": 6,
+      "status": "prepared_not_generated"
+    },
+    {
+      "row": 9,
+      "input": "input/rows/row-09.png",
+      "prompt": "prompts/row-09.txt",
+      "effective_frames": 6,
+      "status": "prepared_not_generated"
+    }
+  ]
+}

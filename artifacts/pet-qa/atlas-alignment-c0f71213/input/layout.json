@@ -1,0 +1,912 @@
+{
+  "source_sha256": "69323f1ba4ce35bc5228a62c5336d7f495abe96e1b5cbce39bf2729b92a16007",
+  "width": 1050,
+  "height": 1280,
+  "rows": [
+    {
+      "row": 1,
+      "rectangle": [
+        0,
+        0,
+        1050,
+        142
+      ],
+      "effective_frames": 6,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            0,
+            131,
+            142
+          ],
+          "occupied": true,
+          "file": "input/frames/row-01-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            0,
+            262,
+            142
+          ],
+          "occupied": true,
+          "file": "input/frames/row-01-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            0,
+            394,
+            142
+          ],
+          "occupied": true,
+          "file": "input/frames/row-01-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            0,
+            525,
+            142
+          ],
+          "occupied": true,
+          "file": "input/frames/row-01-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            0,
+            656,
+            142
+          ],
+          "occupied": true,
+          "file": "input/frames/row-01-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            0,
+            788,
+            142
+          ],
+          "occupied": true,
+          "file": "input/frames/row-01-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            0,
+            919,
+            142
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            0,
+            1050,
+            142
+          ],
+          "occupied": false,
+          "file": null
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "rectangle": [
+        0,
+        142,
+        1050,
+        284
+      ],
+      "effective_frames": 8,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            142,
+            131,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            142,
+            262,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            142,
+            394,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            142,
+            525,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            142,
+            656,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            142,
+            788,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            142,
+            919,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-07.png"
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            142,
+            1050,
+            284
+          ],
+          "occupied": true,
+          "file": "input/frames/row-02-frame-08.png"
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "rectangle": [
+        0,
+        284,
+        1050,
+        427
+      ],
+      "effective_frames": 8,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            284,
+            131,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            284,
+            262,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            284,
+            394,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            284,
+            525,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            284,
+            656,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            284,
+            788,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            284,
+            919,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-07.png"
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            284,
+            1050,
+            427
+          ],
+          "occupied": true,
+          "file": "input/frames/row-03-frame-08.png"
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "rectangle": [
+        0,
+        427,
+        1050,
+        569
+      ],
+      "effective_frames": 4,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            427,
+            131,
+            569
+          ],
+          "occupied": true,
+          "file": "input/frames/row-04-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            427,
+            262,
+            569
+          ],
+          "occupied": true,
+          "file": "input/frames/row-04-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            427,
+            394,
+            569
+          ],
+          "occupied": true,
+          "file": "input/frames/row-04-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            427,
+            525,
+            569
+          ],
+          "occupied": true,
+          "file": "input/frames/row-04-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            427,
+            656,
+            569
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            427,
+            788,
+            569
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            427,
+            919,
+            569
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            427,
+            1050,
+            569
+          ],
+          "occupied": false,
+          "file": null
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "rectangle": [
+        0,
+        569,
+        1050,
+        711
+      ],
+      "effective_frames": 5,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            569,
+            131,
+            711
+          ],
+          "occupied": true,
+          "file": "input/frames/row-05-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            569,
+            262,
+            711
+          ],
+          "occupied": true,
+          "file": "input/frames/row-05-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            569,
+            394,
+            711
+          ],
+          "occupied": true,
+          "file": "input/frames/row-05-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            569,
+            525,
+            711
+          ],
+          "occupied": true,
+          "file": "input/frames/row-05-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            569,
+            656,
+            711
+          ],
+          "occupied": true,
+          "file": "input/frames/row-05-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            569,
+            788,
+            711
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            569,
+            919,
+            711
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            569,
+            1050,
+            711
+          ],
+          "occupied": false,
+          "file": null
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "rectangle": [
+        0,
+        711,
+        1050,
+        853
+      ],
+      "effective_frames": 8,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            711,
+            131,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            711,
+            262,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            711,
+            394,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            711,
+            525,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            711,
+            656,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            711,
+            788,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            711,
+            919,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-07.png"
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            711,
+            1050,
+            853
+          ],
+          "occupied": true,
+          "file": "input/frames/row-06-frame-08.png"
+        }
+      ]
+    },
+    {
+      "row": 7,
+      "rectangle": [
+        0,
+        853,
+        1050,
+        995
+      ],
+      "effective_frames": 6,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            853,
+            131,
+            995
+          ],
+          "occupied": true,
+          "file": "input/frames/row-07-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            853,
+            262,
+            995
+          ],
+          "occupied": true,
+          "file": "input/frames/row-07-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            853,
+            394,
+            995
+          ],
+          "occupied": true,
+          "file": "input/frames/row-07-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            853,
+            525,
+            995
+          ],
+          "occupied": true,
+          "file": "input/frames/row-07-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            853,
+            656,
+            995
+          ],
+          "occupied": true,
+          "file": "input/frames/row-07-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            853,
+            788,
+            995
+          ],
+          "occupied": true,
+          "file": "input/frames/row-07-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            853,
+            919,
+            995
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            853,
+            1050,
+            995
+          ],
+          "occupied": false,
+          "file": null
+        }
+      ]
+    },
+    {
+      "row": 8,
+      "rectangle": [
+        0,
+        995,
+        1050,
+        1138
+      ],
+      "effective_frames": 6,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            995,
+            131,
+            1138
+          ],
+          "occupied": true,
+          "file": "input/frames/row-08-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            995,
+            262,
+            1138
+          ],
+          "occupied": true,
+          "file": "input/frames/row-08-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            995,
+            394,
+            1138
+          ],
+          "occupied": true,
+          "file": "input/frames/row-08-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            995,
+            525,
+            1138
+          ],
+          "occupied": true,
+          "file": "input/frames/row-08-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            995,
+            656,
+            1138
+          ],
+          "occupied": true,
+          "file": "input/frames/row-08-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            995,
+            788,
+            1138
+          ],
+          "occupied": true,
+          "file": "input/frames/row-08-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            995,
+            919,
+            1138
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            995,
+            1050,
+            1138
+          ],
+          "occupied": false,
+          "file": null
+        }
+      ]
+    },
+    {
+      "row": 9,
+      "rectangle": [
+        0,
+        1138,
+        1050,
+        1280
+      ],
+      "effective_frames": 6,
+      "slots": [
+        {
+          "column": 1,
+          "rectangle": [
+            0,
+            1138,
+            131,
+            1280
+          ],
+          "occupied": true,
+          "file": "input/frames/row-09-frame-01.png"
+        },
+        {
+          "column": 2,
+          "rectangle": [
+            131,
+            1138,
+            262,
+            1280
+          ],
+          "occupied": true,
+          "file": "input/frames/row-09-frame-02.png"
+        },
+        {
+          "column": 3,
+          "rectangle": [
+            262,
+            1138,
+            394,
+            1280
+          ],
+          "occupied": true,
+          "file": "input/frames/row-09-frame-03.png"
+        },
+        {
+          "column": 4,
+          "rectangle": [
+            394,
+            1138,
+            525,
+            1280
+          ],
+          "occupied": true,
+          "file": "input/frames/row-09-frame-04.png"
+        },
+        {
+          "column": 5,
+          "rectangle": [
+            525,
+            1138,
+            656,
+            1280
+          ],
+          "occupied": true,
+          "file": "input/frames/row-09-frame-05.png"
+        },
+        {
+          "column": 6,
+          "rectangle": [
+            656,
+            1138,
+            788,
+            1280
+          ],
+          "occupied": true,
+          "file": "input/frames/row-09-frame-06.png"
+        },
+        {
+          "column": 7,
+          "rectangle": [
+            788,
+            1138,
+            919,
+            1280
+          ],
+          "occupied": false,
+          "file": null
+        },
+        {
+          "column": 8,
+          "rectangle": [
+            919,
+            1138,
+            1050,
+            1280
+          ],
+          "occupied": false,
+          "file": null
+        }
+      ]
+    }
+  ],
+  "frame_count": 57,
+  "frame_durations": null,
+  "runtime_contract": null,
+  "notes": "按可见透明间隔记录裁切坐标；不是已确认的运行时网格。帧时长未知。",
+  "lossless_row_reassembly_verified": true
+}

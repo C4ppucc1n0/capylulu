@@ -1,0 +1,32 @@
+[
+  {
+    "file": "references/front-body.jpg",
+    "source": "reference-library/actions/97da0c558d42bf6b374dea1598cbc751-39bce745a943/action-04/summary/01.jpg",
+    "sha256": "d97cdcd55e66b35d302ee8b6552f1bd41e891b4df070f7a1c40a8d37fd633fad",
+    "clip_id": "007cdccc6ccc2e73108b3f66f1bf4452a15b19c18f1bc4106d2ac6d9b3a99b25",
+    "source_time_seconds": 7.6,
+    "use": "正面全身比例与四肢",
+    "identity_basis": "visual comparison; character_id is null",
+    "semantic_review_status": "model_annotated"
+  },
+  {
+    "file": "references/side-body.jpg",
+    "source": "reference-library/actions/8704e3fe0f9322142a3eb052b2a39f13-a28bddcd8530/action-01/summary/04.jpg",
+    "sha256": "b1822513f369b91335689b150e7f05acbb3e5a4088f68bafd85767269030b444",
+    "clip_id": "211fa1dc238dab1ff7f5b71e671655977528bcd65d6ac80a3b872ac3670d4ea6",
+    "source_time_seconds": 1.433333,
+    "use": "侧面口鼻厚度与肢体连接",
+    "identity_basis": "visual comparison; character_id is null",
+    "semantic_review_status": "model_annotated"
+  },
+  {
+    "file": "references/front-face.jpg",
+    "source": "reference-library/actions/22e8cf8ca76742f928803ac3d02c3292-f7db5dca1485/action-02/summary/06.jpg",
+    "sha256": "d99a3cd6b626a4618457561634948300a7e0d75cc566d12e7fae4f8129033cb0",
+    "clip_id": "84b9aee48e6f42da52229f4cb171e54333c4c570ccf5336dc9fb51d2a2450c39",
+    "source_time_seconds": 3.5,
+    "use": "眼睛、口鼻、耳朵与头顶果实",
+    "identity_basis": "visual comparison; character_id is null",
+    "semantic_review_status": "model_annotated"
+  }
+]

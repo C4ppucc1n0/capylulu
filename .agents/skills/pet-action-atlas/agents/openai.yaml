@@ -1,4 +1,4 @@
 interface:
   display_name: "宠物动作图集"
-  short_description: "根据固定角色图与可选动作参考生成连贯图集，支持局部修复并保持形象一致"
-  default_prompt: "使用 $pet-action-atlas，根据这张角色图与可选动作参考，生成形象一致、动作自然衔接的宠物动作图集。"
+  short_description: "生成连贯宠物图集，或保留已有动作并从素材库匹配角色特征、校准形象"
+  default_prompt: "使用 $pet-action-atlas，根据角色图生成连贯动作；若输入已有动作图集或序列帧，则从素材库查找对应角色的形态证据，保留动作、布局和常驻道具并校准形象。"

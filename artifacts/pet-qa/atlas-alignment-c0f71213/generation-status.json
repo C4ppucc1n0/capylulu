@@ -1,0 +1,26 @@
+{
+  "updated_at": "2026-09-07T08:35:22.189661+00:00",
+  "state": "awaiting_explicit_upload_scope_confirmation",
+  "user_approved_fallback_api": true,
+  "endpoint": "https://api.openai.com/v1/images/edits",
+  "model": "gpt-image-2",
+  "successful_generations": 0,
+  "attempts": [
+    {
+      "kind": "sandbox_api_request",
+      "stage": "TLS connection",
+      "outcome": "failed: unexpected EOF during TLS handshake; no image returned"
+    },
+    {
+      "kind": "unsandboxed_retry_approval",
+      "outcome": "auto-review rejected: destination and image upload scope not explicit enough"
+    },
+    {
+      "kind": "retry_after_destination_and_payload_verification",
+      "outcome": "auto-review rejected: requires user confirmation after disclosure of api.openai.com destination and local image payload"
+    }
+  ],
+  "pending_question_scope": "current action atlas and derived frames, three selected cartoon character references, generated target character references and prompts sent to official OpenAI API for this optimization",
+  "local_preparation": "9 contact grids, 57 source frames, 3 verified reference images, per-row prompts, local alpha/assembly/review tool prepared",
+  "originals_unchanged": true
+}
