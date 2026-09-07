@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>橘子噜噜 · 完整动作图集</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4efe6;color:#3b3125;font:16px/1.6 system-ui,'Microsoft YaHei',sans-serif}main{max-width:1200px;margin:auto;padding:36px 24px}h1{margin:0;font-size:30px}p{color:#766751}a{color:#91620c}header{margin-bottom:28px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}article{background:#fffaf1;border:1px solid #e1d6c2;border-radius:18px;padding:16px;text-align:center}h2{font-size:18px;margin:0 0 8px}article img,canvas{display:block;margin:auto;width:192px;height:208px}small{color:#7d715f}section{margin:32px 0}.contact{max-width:100%;height:auto;border-radius:12px}button,select,input{font:inherit}button,select{padding:6px 12px;background:#fffaf1;border:1px solid #c4af8a;border-radius:8px}.gaze-controls{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap}.stage{padding:12px;background:#fffaf1;border-radius:18px;margin-bottom:12px}body.dark .stage,body.dark article{background:#30343a}#status{color:#846e48}
+</style>
+<main><header><h1>橘子噜噜 · 完整动作图集</h1><p>1536 × 2288 · 8 列 × 11 行 · 192 × 208 / 格 · 透明无损 WebP</p>
+<a href="../../../assets/pet-atlases/lulu-orange-v2.webp">最终图集</a> · <a href="../../../assets/pet-atlases/lulu-orange-v2.pet.json">角色配置</a> · <a href="validation.json">结构校验</a> · <a href="review.md">检查说明</a>
+<p>下方为从最终图集切出的动作预览；提起／放下按正向与逆向播放。注视按方向选帧，不是普通循环动作。</p><button id="bg">切换深浅背景</button></header>
+<div class="grid" id="actions"></div>
+<section><h2>16 方向注视 · 顺时针</h2><div class="stage"><canvas id="gaze" width="192" height="208"></canvas></div><div class="gaze-controls"><button id="play">暂停巡览</button><input id="direction" aria-label="注视方向" type="range" min="0" max="15" value="0"><output id="angle">0° · 正上方</output></div><p id="status">正在加载最终图集…</p></section>
+<section><h2>方向对照</h2><img class="contact" src="gaze-contact.jpg" alt="16 个注视方向逐帧对照"></section>
+<section><h2>整套动作逐帧总览</h2><img class="contact" src="contact-sheet.jpg" alt="完整 11 行图集总览"></section></main>
+<script>
+const rows=[['idle','待机',6],['running-right','向右拖动反应',8],['running-left','向左拖动反应',8],['waving','点击招呼',4],['jumping','提起 / 放下',5],['failed','轻晃后的反应',8],['waiting','等待 · 合手',6],['running','专注 · 托腮',6],['review','认可 · 点头',6]];
+const grid=document.querySelector('#actions');for(const [id,name,count] of rows){const card=document.createElement('article');card.innerHTML=`<h2>${name}</h2><img src="${id}.gif" alt="${name}动作预览"><small>${count} 帧 · ${id}</small>`;grid.append(card)}
+const img=new Image(),canvas=document.querySelector('#gaze'),ctx=canvas.getContext('2d'),slider=document.querySelector('#direction'),label=document.querySelector('#angle'),play=document.querySelector('#play');let ready=false,playing=true,n=0;
+function draw(){if(!ready)return;ctx.clearRect(0,0,192,208);ctx.drawImage(img,n%8*192,(9+Math.floor(n/8))*208,192,208,0,0,192,208);slider.value=n;label.textContent=`${n*22.5}°${n%4===0?' · '+['正上方','正右方','正下方','正左方'][n/4]:''}`;canvas.dataset.frame=n}
+img.onload=()=>{ready=true;document.querySelector('#status').textContent='已加载最终 WebP。拖动滑块逐方向检查；所有动作按原始像素尺寸显示。';draw()};img.onerror=()=>document.querySelector('#status').textContent='图集加载失败，请保留本页面与 assets 目录的相对位置。';img.src='../../../assets/pet-atlases/lulu-orange-v2.webp';
+setInterval(()=>{if(ready&&playing){n=(n+1)%16;draw()}},240);play.onclick=()=>{playing=!playing;play.textContent=playing?'暂停巡览':'播放巡览'};slider.oninput=()=>{playing=false;play.textContent='播放巡览';n=Number(slider.value);draw()};document.querySelector('#bg').onclick=()=>document.body.classList.toggle('dark');
+</script></html>

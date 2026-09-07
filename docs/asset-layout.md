@@ -22,6 +22,8 @@
 
 ## 版本管理与恢复
 
+标准 v2 横条的后处理使用 `pet-action-atlas/scripts/atlas_pipeline.py`，见 [程序处理说明](../.agents/skills/pet-action-atlas/references/program-processing.md)。配置、行缓存及候选预览保存在 `.pet-work/<run>/`；视觉验收后再按上述正式目录交付，程序不自动发布或改变运行时契约。
+
 - 提交工具代码、测试、技能、文档和可复用的语义记录。语义记录使用相对路径、源视频哈希和时间区间定位证据；模型标注不等于人工验收。
 - `reference-library/actions/` 和 `assets/character-references/` 的提取媒体与浏览页不提交 Git；在本机长期保存。虚拟环境、缓存、`.pet-work/` 和构建产物也不提交。
 - 新检出仓库按 [提取工具说明](../video-actions/README.md) 安装依赖后，运行 `video-actions/extract.py video` 恢复动作媒体。历史实验图不属于普通提取输出，文档中的相关链接仅在保留实验记录的本机可用。

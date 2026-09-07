@@ -1,0 +1,207 @@
+{
+  "status": "complete_atlas_structural_and_ordered_frame_review",
+  "not_verified": [
+    "live browser playback",
+    "full application interaction"
+  ],
+  "canonical": ".pet-work/lulu-complete-20260907/decoded/base.png",
+  "baseline": ".pet-work/lulu-skill-evaluation",
+  "structural": "pass: validation.json",
+  "appearance": "reviewed against canonical and completed ordered contact sheet",
+  "rows": [
+    {
+      "row": 0,
+      "state": "idle",
+      "count": 6,
+      "ordered_frame_review": "pass",
+      "reason": "逐帧可见眨眼后睁眼，身体与橘子稳定。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 1,
+      "state": "running-right",
+      "count": 8,
+      "ordered_frame_review": "pass",
+      "reason": "全程朝画面右侧，保留抬升与回落的拖动反应。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 2,
+      "state": "running-left",
+      "count": 8,
+      "ordered_frame_review": "pass",
+      "reason": "全程朝画面左侧，无裁切；姿态变化较轻，不宣称步态。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 3,
+      "state": "waving",
+      "count": 4,
+      "ordered_frame_review": "pass",
+      "reason": "画面左侧手抬起再回收，头部和服装一致。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 4,
+      "state": "jumping",
+      "count": 5,
+      "ordered_frame_review": "pass",
+      "reason": "休息、准备、抬升、悬起顺序完整，可反向放下。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 5,
+      "state": "failed",
+      "count": 8,
+      "ordered_frame_review": "pass",
+      "reason": "惊讶、闭眼、睁眼恢复，嘴部小圆点是张口表情。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 6,
+      "state": "waiting",
+      "count": 6,
+      "ordered_frame_review": "pass",
+      "reason": "双手靠拢、合手、放下，未加入道具。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 7,
+      "state": "running",
+      "count": 6,
+      "ordered_frame_review": "pass",
+      "reason": "单手靠近下颌后收回，为专注而非跑步。",
+      "live_playback": "not verified"
+    },
+    {
+      "row": 8,
+      "state": "review",
+      "count": 6,
+      "ordered_frame_review": "pass",
+      "reason": "双手抬起配合愉快点头后恢复。",
+      "live_playback": "not verified"
+    }
+  ],
+  "gaze": [
+    {
+      "angle": 0,
+      "row": 9,
+      "column": 0,
+      "ordered_frame_review": "pass",
+      "reason": "双眼上抬，正面抬头。"
+    },
+    {
+      "angle": 22.5,
+      "row": 9,
+      "column": 1,
+      "ordered_frame_review": "pass_with_small_adjacent_difference",
+      "reason": "朝上略偏右。"
+    },
+    {
+      "angle": 45,
+      "row": 9,
+      "column": 2,
+      "ordered_frame_review": "pass_with_small_adjacent_difference",
+      "reason": "朝右上，相邻上一帧区别较轻。"
+    },
+    {
+      "angle": 67.5,
+      "row": 9,
+      "column": 3,
+      "ordered_frame_review": "pass",
+      "reason": "右侧视线为主并略抬头。"
+    },
+    {
+      "angle": 90,
+      "row": 9,
+      "column": 4,
+      "ordered_frame_review": "pass",
+      "reason": "头吻朝右，右侧注视可辨。"
+    },
+    {
+      "angle": 112.5,
+      "row": 9,
+      "column": 5,
+      "ordered_frame_review": "pass",
+      "reason": "右侧视线开始下移。"
+    },
+    {
+      "angle": 135,
+      "row": 9,
+      "column": 6,
+      "ordered_frame_review": "pass",
+      "reason": "低头并看右下。"
+    },
+    {
+      "angle": 157.5,
+      "row": 9,
+      "column": 7,
+      "ordered_frame_review": "pass",
+      "reason": "进一步低头，仍保留向右分量。"
+    },
+    {
+      "angle": 180,
+      "row": 10,
+      "column": 0,
+      "ordered_frame_review": "pass",
+      "reason": "正面俯视，双眼下移。"
+    },
+    {
+      "angle": 202.5,
+      "row": 10,
+      "column": 1,
+      "ordered_frame_review": "pass",
+      "reason": "低头稍偏左。"
+    },
+    {
+      "angle": 225,
+      "row": 10,
+      "column": 2,
+      "ordered_frame_review": "pass",
+      "reason": "朝左下，脸部逐渐向左。"
+    },
+    {
+      "angle": 247.5,
+      "row": 10,
+      "column": 3,
+      "ordered_frame_review": "pass",
+      "reason": "左侧为主，保留低头。"
+    },
+    {
+      "angle": 270,
+      "row": 10,
+      "column": 4,
+      "ordered_frame_review": "pass",
+      "reason": "侧脸朝画面左侧。"
+    },
+    {
+      "angle": 292.5,
+      "row": 10,
+      "column": 5,
+      "ordered_frame_review": "pass",
+      "reason": "侧脸开始上抬。"
+    },
+    {
+      "angle": 315,
+      "row": 10,
+      "column": 6,
+      "ordered_frame_review": "pass",
+      "reason": "朝左上，抬头更明显。"
+    },
+    {
+      "angle": 337.5,
+      "row": 10,
+      "column": 7,
+      "ordered_frame_review": "pass",
+      "reason": "接近正面朝上，改善了原稿一直侧向左的问题。"
+    }
+  ],
+  "runtime_consumer_tests": {
+    "passed": 24
+  },
+  "repairs": [
+    "left strip clipping: one regeneration",
+    "gaze second half pitch/size: one pose regeneration, one background-only correction, fixed whole-row scale adjustment 1.08"
+  ],
+  "release_note": "Complete files delivered; browser playback acceptance remains explicitly unverified, not inferred from numeric validation."
+}
