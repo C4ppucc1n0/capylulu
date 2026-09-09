@@ -7,11 +7,13 @@
 使用已安装 Pillow 的 Python；程序复用 `hatch-pet/scripts`，默认从 `CODEX_HOME` 或用户 `.codex` 解析，可用 `--helpers <目录>` 指定，不自动下载或调用图像 API。
 
 ```powershell
-python .agents/skills/pet-action-atlas/scripts/atlas_pipeline.py init --run .pet-work/<run>
-python .agents/skills/pet-action-atlas/scripts/atlas_pipeline.py build --run .pet-work/<run>
+python .agents/skills/pet-action-atlas/scripts/atlas_pipeline.py init --run artifacts/work/<run>
+python .agents/skills/pet-action-atlas/scripts/atlas_pipeline.py build --run artifacts/work/<run>
 ```
 
-`init` 只生成 `pipeline.json`，已有配置不覆盖。把逐行生成结果保存到该目录的 `decoded/<行名>.png`，或修改 `rows.<行名>.source`。所有相对路径按工作目录解析。先检查固定角色、背景与输入行，再运行 `build`，不必阅读脚本或临时编写拼接代码。
+`init` 创建任务记录及 `pipeline.json`，已有配置不覆盖。工作目录使用 `artifacts/work/<run>/`，避免候选写进 `pet-qa/` 或共享目录根层。把逐行生成结果保存到该目录的 `decoded/<行名>.png`，或修改 `rows.<行名>.source`。所有相对路径按工作目录解析。先检查固定角色、背景与输入行，再运行 `build`，不必阅读脚本或临时编写拼接代码。
+
+绘图调用按 [任务目录与复盘记录](run-records.md) 保存请求及返回结果。`build` 自动把本次配置与实际行图保存为输入快照，并将开始、每行处理与缓存命中、完成或失败追加到 `events.jsonl`；`processing.json` 关联这些快照与最终图集指纹。外部输入被复制到任务内后处理，任务记录不会只剩失效的外部路径。
 
 行名和数量自动初始化：idle 6、running-right 8、running-left 8、waving 4、jumping 5、failed 8、waiting 6、running 6、review 6、look-row-9 8、look-row-10 8。语义以 [项目契约](../../capylulu-pet/references/atlas-contract.md) 为准；不是通用宠物动作菜单。
 
@@ -33,7 +35,7 @@ python .agents/skills/pet-action-atlas/scripts/atlas_pipeline.py build --run .pe
 
 源文件内容、参数和工具实现参与缓存指纹。修改一行再执行同一命令，其他行复用缓存；整体仍重新拼接、清边和验证。不确定姿态数量、触边或缩放溢出时报错，不自动丢帧、裁切、逐帧缩小或用等分猜测来凑齐。
 
-候选保存在 `.pet-work/<run>/pipeline-output/<指纹>/`，缓存位于同一 run 的 `pipeline-cache/`；旧候选保留。失败返回非零，不能使用失败目录作为交付物。相同输入复跑可复用已核验的行缓存，**仍需最后的整套视觉复核**。
+候选保存在 `artifacts/work/<run>/pipeline-output/<指纹>/`，缓存位于同一 run 的 `pipeline-cache/`；旧候选保留。失败返回非零，不能使用失败目录作为交付物。相同输入复跑可复用已核验的行缓存，**仍需最后的整套视觉复核**。
 
 检查候选的总览、实际尺寸动作播放、16 方向与跨行衔接，记录视觉结论。播放访问受限时如实保留未验证项，不绕过浏览器限制、不将静帧检查冒充动态验收。
 

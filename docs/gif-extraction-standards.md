@@ -140,7 +140,7 @@ assets/animations/
    └─ celebrate/   # 奖励结算 GIF
 ```
 
-临时帧、调色板、接触表和试剪文件放入 `.pet-work/` 或 `output/`，不能混入正式资源目录。
+临时帧、调色板、接触表和试剪文件统一放入 `artifacts/work/<run>/`，不能混入正式资源目录。
 
 ### 7.2 命名
 

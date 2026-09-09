@@ -6,9 +6,9 @@ src/**/obj/
 tests/**/bin/
 tests/**/obj/
 dist/
-test-artifacts/
-.pet-work/
-output/
+# 开发过程产物统一存放于 artifacts，仅精选验收资料可提交。
+/artifacts/*
+!/artifacts/pet-qa/
 # 本地生成输入与试产材料，不影响从仓库构建 EXE。
 /assets/character-references/
 /artifacts/pet-qa/lulu-character-reference/

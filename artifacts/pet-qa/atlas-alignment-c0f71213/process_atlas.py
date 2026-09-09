@@ -22,7 +22,7 @@ from PIL import Image, ImageDraw, ImageOps
 RUN = Path(__file__).resolve().parent
 REPO_ROOT = RUN.parents[2]
 DEFAULT_LAYOUT = RUN / "input" / "layout.json"
-DEFAULT_OUTPUT = REPO_ROOT / "output" / "imagegen" / "capylulu-atlas-aligned-v2.png"
+DEFAULT_OUTPUT = REPO_ROOT / "artifacts" / "work" / "imagegen" / "capylulu-atlas-aligned-v2.png"
 CONTACT_SIZE = (1536, 1024)
 CONTACT_COLUMNS = 4
 CONTACT_ROWS = 2

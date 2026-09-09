@@ -91,8 +91,7 @@ reference-library/
 - `.agents/skills/capylulu-pet/`：项目内的宠物资源制作与验收规范，供 Codex 在处理图集、注视方向和宠物 QA 时使用。
 - `.agents/skills/pet-action-atlas/`：固定角色、按需选材、逐行生成与局部修复的流程。
 - `.agents/skills/reference-library-semantics/`：素材语义标注与缓存规则，动作和形态可分别检索。
-- `.pet-work/`：可随时重新生成的中间文件，例如拆帧、临时预览和组装副本；该目录不会提交到 Git。
-- `artifacts/pet-qa/`：需要保留和评审的验收证据，例如方向检查、接触表、预览动画和验证报告。
+- `artifacts/`：开发过程产物的统一目录，不打包进 EXE。`work/<run>/` 存放生成输入、提示词、拆帧、候选和临时报告；`tests/` 存放测试截图与日志；这两类不提交 Git，完成任务并保存必要记录后可清理。`pet-qa/` 保留需要评审的方向检查、接触表、预览动画和验证报告，按现有规则纳入版本管理。
 - `assets/pet-atlases/`：产品实际加载并打包进 EXE 的宠物动作图集与角色清单。
 - `assets/animations/`：唱歌等演出 GIF；消消乐方块位于 `match-game/block/`，结算动画位于 `match-game/celebrate/`。构建时全部内嵌进 EXE，运行时不依赖外部文件；视频选段、避水印和导出验收见 `docs/gif-extraction-standards.md`。
 - `assets/character-references/`：每段视频对应一组人物参考 JPG，通过 `index.html` 浏览；仅作为后续生成的输入，不是运行时依赖。

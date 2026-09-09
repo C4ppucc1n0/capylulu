@@ -10,11 +10,13 @@ Reusable instructions for Codex. This directory contains workflow guidance, refe
 
 Primary character-reference input: one JPG reference group per source video, with `index.json`, `reference-board.jpg` and per-group `manifest.json`. Sample a small subset for one character/run. These are visual evidence, not animation frames or runtime dependencies. Keep the library unchanged while generating a pet; copy only selected inputs into the run directory. Files must retain normal inherited access permissions.
 
-## `.pet-work/<pet-id>`
+## `artifacts/work/<pet-id>`
 
 Disposable work area for one pet-generation or repair run. Typical contents include prompts, canonical references copied for the run, decoded image-generation outputs, extracted frames, repair candidates, registration intermediates, and verbose per-row diagnostics.
 
 Everything here may be removed after the final atlas and selected QA evidence have been copied elsewhere.
+
+All development outputs share the top-level `artifacts/` directory. Temporary generation files and general task reports go in `work/`; test screenshots, logs and local debugging materials go in `tests/`. These are ignored by Git. Only curated `pet-qa/` evidence is eligible for version control, with its existing local exclusions preserved.
 
 ## `artifacts/pet-qa/<pet-id>`
 

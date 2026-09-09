@@ -15,7 +15,7 @@ Input: per-video JPG groups in `assets/character-references/`. Output: the same 
 4. **Assemble and accept.** Use the existing deterministic tools listed in the contract. Require structural validation AND visual comparison against references/canonical/baseline at normal pet size. Judge the chosen performance and its trigger compatibility, not whether it literally waves or runs; the old atlas is a quality baseline, not a pose template. Check complete action cycles, first/last transitions, no size popping, no cropped/blank cells, no identity drift, and all 16 gaze directions in order. Reject regressions even when file validation passes. Copy only accepted assets to `assets/pet-atlases/` and concise evidence to `artifacts/pet-qa/<pet-id>/`.
 
 ```powershell
-python .agents/skills/capylulu-pet/scripts/prepare_references.py --run-dir .pet-work/lulu-next
+python .agents/skills/capylulu-pet/scripts/prepare_references.py --run-dir artifacts/work/lulu-next
 ```
 
 Use `--limit 5` for a larger initial sample, repeat `--group <group-id-or-prefix>` for chosen groups, or use `--references <directory>` for another reference library. For an atlas replacement, pass `--baseline assets/pet-atlases/<name>.webp` to record the existing atlas and manifest. Reuse the same run for the same selection; use a new run to change it. The helper prepares inputs only; it does not generate images or publish assets.
@@ -27,4 +27,4 @@ Use `--limit 5` for a larger initial sample, repeat `--group <group-id-or-prefix
 - A normal run needs one final visual review of the atlas and motion previews. Add focused review for a failed or ambiguous row; do not replace quality checks with automatic approval or add repeated whole-run reviews.
 - Build/launch only when delivering changed runtime assets or when explicitly requested. A skill edit or reference preparation alone does not require rebuilding the app.
 - Preserve source videos, `assets/character-references/`, `raw_images/`, existing runtime identities and legacy support. Never use a source JPG as a sprite frame or change application loading code to accommodate a malformed atlas.
-- Keep temporary inputs/prompts/retries in `.pet-work/<pet-id>/`. Read [references/repository-layout.md](references/repository-layout.md) only when moving, cleaning or packaging assets. Export with normal inherited permissions, not private temporary-directory ACLs.
+- Keep temporary inputs/prompts/retries in `artifacts/work/<pet-id>/`. Read [references/repository-layout.md](references/repository-layout.md) only when moving, cleaning or packaging assets. Export with normal inherited permissions, not private temporary-directory ACLs.

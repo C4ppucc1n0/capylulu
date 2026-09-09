@@ -12,6 +12,9 @@ import time
 
 from PIL import Image
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import atlas_run as runs
+
 STATES = [('idle', 6), ('running-right', 8), ('running-left', 8),
           ('waving', 4), ('jumping', 5), ('failed', 8), ('waiting', 6),
           ('running', 6), ('review', 6), ('look-row-9', 8), ('look-row-10', 8)]
@@ -38,6 +41,7 @@ def helpers(folder=None):
 
 
 def init(run):
+    runs.initialize(run, 'generate')
     run.mkdir(parents=True, exist_ok=True)
     config = run/'pipeline.json'
     if config.exists():
@@ -48,6 +52,7 @@ def init(run):
                        'baseline': 199, 'preserve_y': state in {'jumping', 'running-right', 'running-left'}}
     write_json(config, {'profile': 'capylulu-v2', 'chroma_key': '#00FF00',
                         'threshold': 96, 'rows': rows})
+    runs.event(run, 'configure', 'completed', config='pipeline.json', profile='capylulu-v2')
     return {'config': str(config), 'next': 'Supply decoded strips; calibrate whole-row scales, then build.'}
 
 
@@ -96,6 +101,7 @@ def extract_row(source, spec, count, key, threshold, modules):
 
 def build(run, helper_dir=None):
     started = time.perf_counter()
+    runs.initialize(run, 'generate')
     cfg = json.loads((run/'pipeline.json').read_text(encoding='utf-8'))
     if cfg.get('profile') != 'capylulu-v2' or set(cfg['rows']) != {n for n,_ in STATES}:
         raise ValueError('Only explicit capylulu-v2 with all 11 named rows is supported')
@@ -106,6 +112,10 @@ def build(run, helper_dir=None):
     missing = [str(p) for p in sources.values() if not p.is_file()]
     if missing:
         raise ValueError('Missing strips: ' + ', '.join(missing))
+    saved_config = runs.snapshot(run, run/'pipeline.json', 'pipeline_config')
+    inputs = {name: runs.snapshot(run, path, 'row:' + name) for name,path in sources.items()}
+    sources = {name: runs.inside(run, entry['path']) for name,entry in inputs.items()}
+    runs.event(run, 'build', 'started', config=saved_config['path'], inputs=inputs)
     for state,count in STATES:
         durations = cfg['rows'][state].get('durations_ms',previews.ROW_DURATIONS.get(state,[180]*count))
         if len(durations) != count or any(not isinstance(d,int) or d <= 0 for d in durations):
@@ -121,7 +131,8 @@ def build(run, helper_dir=None):
         stamp = hashlib.sha256((version+digest(sources[state])+json.dumps([count,spec,key,cfg.get('threshold',96)],sort_keys=True)).encode()).hexdigest()
         cached, meta = cache/(stamp+'.png'), cache/(stamp+'.json')
         info = json.loads(meta.read_text()) if meta.exists() else None
-        if cached.exists() and info and info.get('sha256') == digest(cached):
+        cache_hit = bool(cached.exists() and info and info.get('sha256') == digest(cached))
+        if cache_hit:
             with Image.open(cached) as im:
                 strip = im.convert('RGBA')
             hits += 1
@@ -135,6 +146,9 @@ def build(run, helper_dir=None):
             write_json(meta,info)
         atlas.alpha_composite(strip,(0,row*208))
         reports.append({'row': row, 'state':state, 'source_sha256':digest(sources[state]), **info})
+        runs.event(run, 'process_row', 'completed', row=state,
+                   cache_hit=cache_hit,
+                   source=inputs[state]['path'], cache=cached.relative_to(run).as_posix())
     atlas.alpha_composite(atlas.crop((0,0,192,208)),(1152,0))
     original = atlas
     atlas, cleanup = despill.decontaminate_image(atlas,chroma_key=key)
@@ -186,24 +200,28 @@ def build(run, helper_dir=None):
     report = {'output':str(out),'cache_hits':hits,'processed_rows':len(STATES)-hits,
               'elapsed_seconds':round(time.perf_counter()-started,3),
               'structural':'pass','visual_review':'pending','rows':reports,
-              'edge_cleanup':cleanup,'config':cfg,'atlas_sha256':digest(atlas_path)}
+              'edge_cleanup':cleanup,'config':cfg,'config_snapshot':saved_config,
+              'inputs':inputs,'atlas_sha256':digest(atlas_path)}
     write_json(out/'processing.json',report)
+    runs.event(run, 'build', 'completed', output=out.relative_to(run).as_posix(),
+               atlas_sha256=report['atlas_sha256'], cache_hits=hits,
+               elapsed_seconds=report['elapsed_seconds'], structural='pass', visual_review='pending')
     return {k:report[k] for k in ['output','cache_hits','processed_rows','elapsed_seconds','structural','visual_review']}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command',choices=['init','build'])
-    parser.add_argument('--run',type=Path,required=True,help='Work directory; never a runtime asset directory')
+    parser.add_argument('--run',type=Path,required=True,help='Work directory, e.g. artifacts/work/<run>; never runtime assets or curated QA')
     parser.add_argument('--helpers',type=Path,help='Installed hatch-pet/scripts directory')
     args = parser.parse_args()
     try:
-        run = args.run.resolve()
-        if any(p in {'assets','artifacts','.agents'} for p in run.parts):
-            raise ValueError('Use a disposable work directory such as .pet-work/<run>')
+        run = runs.work_directory(args.run)
         result = init(run) if args.command == 'init' else build(run,args.helpers)
         print(json.dumps(result,ensure_ascii=False))
     except (ValueError,KeyError,OSError) as exc:
+        if 'run' in locals() and (run/'run.json').exists():
+            runs.event(run, args.command, 'failed', error=str(exc))
         print(json.dumps({'error':str(exc)},ensure_ascii=False),file=sys.stderr)
         return 1
     return 0
